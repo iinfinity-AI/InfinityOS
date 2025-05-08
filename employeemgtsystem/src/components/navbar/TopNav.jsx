@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { FaBars, FaBell, FaEnvelope } from "react-icons/fa";
-import axios from "axios"; // Run: npm install axios
+import axios from "axios";
 
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bellCount, setBellCount] = useState(0);
   const [mailCount, setMailCount] = useState(0);
+  const [activeLink, setActiveLink] = useState("Dashboard");
 
   useEffect(() => {
-    // 🔄 Replace with your actual backend API endpoint
     axios.get("http://localhost:5000/api/notifications")
       .then((res) => {
         setBellCount(res.data.bell || 0);
@@ -18,6 +18,8 @@ export default function TopNav() {
         console.error("Error fetching notifications:", err);
       });
   }, []);
+
+  const navItems = ["Dashboard", "Requests", "Payroll", "Company", "Extras"];
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md px-4 py-3 flex justify-between items-center">
@@ -29,16 +31,23 @@ export default function TopNav() {
         >
           <FaBars />
         </button>
-        <span className="text-lg font-bold text-gray-800">InfinityOS</span>
+        
       </div>
 
       {/* Center - Navigation Links (Desktop Only) */}
       <div className="hidden md:flex gap-6 text-gray-800 font-medium">
-        <a href="#" className="border-b-2 border-yellow-400 pb-1">Dashboard</a>
-        <a href="#">Requests</a>
-        <a href="#">Payroll</a>
-        <a href="#">Company</a>
-        <a href="#">Extras</a>
+        {navItems.map((item) => (
+          <a
+            key={item}
+            href="#"
+            onClick={() => setActiveLink(item)}
+            className={`pb-1 ${
+              activeLink === item ? "border-b-2 border-yellow-400" : ""
+            }`}
+          >
+            {item}
+          </a>
+        ))}
       </div>
 
       {/* Right - Notification Icons + Avatar */}
@@ -73,11 +82,21 @@ export default function TopNav() {
       {/* Mobile Nav Links Dropdown */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-white flex flex-col p-4 gap-3 shadow-md md:hidden z-10">
-          <a href="#" className="text-gray-800">Dashboard</a>
-          <a href="#" className="text-gray-800">Requests</a>
-          <a href="#" className="text-gray-800">Payroll</a>
-          <a href="#" className="text-gray-800">Company</a>
-          <a href="#" className="text-gray-800">Extras</a>
+          {navItems.map((item) => (
+            <a
+              key={item}
+              href="#"
+              onClick={() => {
+                setActiveLink(item);
+                setMenuOpen(false);
+              }}
+              className={`text-gray-800 ${
+                activeLink === item ? "font-semibold text-yellow-600" : ""
+              }`}
+            >
+              {item}
+            </a>
+          ))}
         </div>
       )}
     </div>
