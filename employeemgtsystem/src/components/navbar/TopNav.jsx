@@ -26,15 +26,23 @@ export default function TopNav() {
         <a href="#">Extras</a>
       </div>
 
-      {/* Right - Icons + Avatar */}
+      {/* Right - Notification Icons + Avatar */}
       <div className="flex items-center gap-4">
         <div className="relative">
-          <FaBell className="text-gray-700 text-xl" />
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">2</span>
+          <div className="bg-indigo-900 text-white p-2 rounded-full">
+            <FaBell className="text-xl" />
+          </div>
+          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
+            13
+          </span>
         </div>
         <div className="relative">
-          <FaEnvelope className="text-green-600 text-xl" />
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">3</span>
+          <div className="bg-green-700 text-white p-2 rounded-full">
+            <FaEnvelope className="text-xl" />
+          </div>
+          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
+            13
+          </span>
         </div>
         <img
           src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
