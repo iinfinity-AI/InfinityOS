@@ -3,7 +3,7 @@ const connectDB = require('./config/db');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const authRoutes = require('./routes/auth');
+const routes = require('./routes/auth');
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ connectDB();
 
 
 
-app.use('/api/auth', authRoutes);
+app.use("/api", routes);
 
 
 const PORT = process.env.PORT || 5000;
