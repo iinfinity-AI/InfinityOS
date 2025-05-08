@@ -18,10 +18,6 @@ app.use(cookieParser());
 
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
 
 
 app.use('/api/auth', authRoutes);
