@@ -37,7 +37,7 @@ export default function TopNav() {
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">3</span>
         </div>
         <img
-          src="https://i.pravatar.cc/40"
+          src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
           alt="profile"
           className="w-8 h-8 rounded-full border"
         />
