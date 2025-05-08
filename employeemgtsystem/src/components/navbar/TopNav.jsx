@@ -1,8 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaBars, FaBell, FaEnvelope } from "react-icons/fa";
+import axios from "axios"; // Run: npm install axios
 
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bellCount, setBellCount] = useState(0);
+  const [mailCount, setMailCount] = useState(0);
+
+  useEffect(() => {
+    // 🔄 Replace with your actual backend API endpoint
+    axios.get("http://localhost:5000/api/notifications")
+      .then((res) => {
+        setBellCount(res.data.bell || 0);
+        setMailCount(res.data.message || 0);
+      })
+      .catch((err) => {
+        console.error("Error fetching notifications:", err);
+      });
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md px-4 py-3 flex justify-between items-center">
@@ -32,17 +47,21 @@ export default function TopNav() {
           <div className="bg-indigo-900 text-white p-2 rounded-full">
             <FaBell className="text-xl" />
           </div>
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
-            13
-          </span>
+          {bellCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
+              {bellCount}
+            </span>
+          )}
         </div>
         <div className="relative">
           <div className="bg-green-700 text-white p-2 rounded-full">
             <FaEnvelope className="text-xl" />
           </div>
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
-            13
-          </span>
+          {mailCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
+              {mailCount}
+            </span>
+          )}
         </div>
         <img
           src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
