@@ -1,6 +1,6 @@
 const Task = require("../models/Task");
 
-// Create Task
+
 const createTask = async (req, res) => {
   try {
     const { title, description, status, assignedTo, dueDate } = req.body;
@@ -21,7 +21,7 @@ const createTask = async (req, res) => {
   }
 };
 
-// Update Task
+
 const updateTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
@@ -30,10 +30,7 @@ const updateTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    // Optional: Check if the current user is allowed to update
-    // if (task.createdBy.toString() !== req.user.id) {
-    //   return res.status(403).json({ error: "Unauthorized" });
-    // }
+
 
     const updates = req.body;
     Object.assign(task, updates);
