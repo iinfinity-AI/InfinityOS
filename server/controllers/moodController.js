@@ -1,6 +1,6 @@
 const Mood = require("../models/Mood");
 
-// POST /api/mood - Save mood
+
 const saveMood = async (req, res) => {
   try {
     const { mood, note } = req.body;
@@ -18,7 +18,6 @@ const saveMood = async (req, res) => {
   }
 };
 
-// GET /api/mood - Get moods
 const getMoods = async (req, res) => {
   try {
     const moods = await Mood.find({ user: req.user.id }).sort({ createdAt: -1 });
