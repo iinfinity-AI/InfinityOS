@@ -34,23 +34,21 @@ export default function TopNav() {
         </button>
       </div>
 
-      {/* Center - Navigation Links (Desktop Only) */}
+      {/* Center - Navigation Links */}
       <div className="hidden md:flex gap-6 text-gray-800 font-medium">
         {navItems.map((item) => (
           <a
             key={item}
             href="#"
             onClick={() => setActiveLink(item)}
-            className={`pb-1 ${
-              activeLink === item ? "border-b-2 border-yellow-400" : ""
-            }`}
+            className={`pb-1 ${activeLink === item ? "border-b-2 border-yellow-400" : ""}`}
           >
             {item}
           </a>
         ))}
       </div>
 
-      {/* Right - Notification Icons + Avatar */}
+      {/* Right - Notifications & Avatar */}
       <div className="flex items-center gap-4">
         <div className="relative">
           <div className="bg-indigo-900 text-white p-2 rounded-full">
@@ -81,7 +79,7 @@ export default function TopNav() {
         </Link>
       </div>
 
-      {/* Mobile Nav Links Dropdown */}
+      {/* Mobile Nav */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-white flex flex-col p-4 gap-3 shadow-md md:hidden z-10">
           {navItems.map((item) => (
@@ -92,9 +90,7 @@ export default function TopNav() {
                 setActiveLink(item);
                 setMenuOpen(false);
               }}
-              className={`text-gray-800 ${
-                activeLink === item ? "font-semibold text-yellow-600" : ""
-              }`}
+              className={`text-gray-800 ${activeLink === item ? "font-semibold text-yellow-600" : ""}`}
             >
               {item}
             </a>
