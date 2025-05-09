@@ -7,13 +7,26 @@ export default function GuarantorDetails() {
     occupation: "",
     phone: ""
   });
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.occupation.trim()) newErrors.occupation = "Occupation is required";
+    if (!form.phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^\d{10,}$/.test(form.phone)) newErrors.phone = "Enter a valid phone number";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.occupation || !form.phone) return;
+    if (!validate()) return;
 
     setGuarantors([...guarantors, form]);
     setForm({ name: "", occupation: "", phone: "" });
+    setErrors({});
   };
 
   return (
@@ -24,7 +37,6 @@ export default function GuarantorDetails() {
 
       {/* Scrollable content section */}
       <div className="flex-1 overflow-auto space-y-8">
-        {/* Form Section */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-1">Guarantor’s Name</label>
@@ -33,9 +45,12 @@ export default function GuarantorDetails() {
               placeholder="Birhanu Alemu"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full bg-blue-100 p-2 rounded"
               required
+              className={`w-full p-2 rounded bg-blue-100 border ${
+                errors.name ? "border-red-500" : "border-transparent"
+              }`}
             />
+            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -45,9 +60,14 @@ export default function GuarantorDetails() {
               placeholder="Accountant"
               value={form.occupation}
               onChange={(e) => setForm({ ...form, occupation: e.target.value })}
-              className="w-full bg-blue-100 p-2 rounded"
               required
+              className={`w-full p-2 rounded bg-blue-100 border ${
+                errors.occupation ? "border-red-500" : "border-transparent"
+              }`}
             />
+            {errors.occupation && (
+              <p className="text-red-500 text-xs mt-1">{errors.occupation}</p>
+            )}
           </div>
 
           <div>
@@ -57,9 +77,21 @@ export default function GuarantorDetails() {
               placeholder="09345545455"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full bg-blue-100 p-2 rounded"
               required
+              className={`w-full p-2 rounded bg-blue-100 border ${
+                errors.phone ? "border-red-500" : "border-transparent"
+              }`}
             />
+            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+          </div>
+
+          <div className="text-center pt-2">
+            <button
+              type="submit"
+              className="bg-green-700 text-white px-6 py-2 rounded shadow hover:bg-green-800"
+            >
+              Update
+            </button>
           </div>
         </form>
 
@@ -79,17 +111,6 @@ export default function GuarantorDetails() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Update Button at Bottom */}
-      <div className="pt-4 mt-6 text-center">
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="bg-green-700 text-white px-6 py-2 rounded shadow hover:bg-green-800"
-        >
-          Update
-        </button>
       </div>
     </div>
   );
