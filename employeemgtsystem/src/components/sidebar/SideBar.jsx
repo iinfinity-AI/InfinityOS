@@ -4,8 +4,7 @@ export default function SideBar({ activeItem, setActiveItem }) {
   const items = [
     "Personal Details",
     "Contact Details",
-    "My Tasks",
-    "Next of kin Details",
+    "My Tasks", // You can change this to "Next of kin Details" if needed
     "Education Qualifications",
     "Guarantor Details",
     "Family Details",
@@ -14,15 +13,15 @@ export default function SideBar({ activeItem, setActiveItem }) {
   ];
 
   return (
-    <div className="w-full md:w-64 bg-white rounded-lg shadow-md p-4 space-y-3">
+    <div className="w-full md:w-64 bg-white rounded-lg shadow-md py-6 px-4 space-y-4">
       {items.map((item) => (
         <button
           key={item}
           onClick={() => setActiveItem(item)}
-          className={`w-full text-left px-4 py-2 rounded-lg font-medium ${
+          className={`w-full text-center px-4 py-3 rounded-lg font-semibold text-sm ${
             activeItem === item
               ? "bg-yellow-400 text-black"
-              : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+              : "bg-blue-100 hover:bg-blue-200 text-gray-800"
           }`}
         >
           {item}

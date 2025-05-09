@@ -7,7 +7,8 @@ function App() {
     <Router>
       <TopNav />
       <Routes>
-        <Route path="/profile" element={<AvatarPage />} />
+        <Route path="/profile" element={<AvatarPage />} /> 
+        
       </Routes>
     </Router>
   );
