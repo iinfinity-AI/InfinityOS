@@ -9,7 +9,7 @@ export default function PersonalDetails({
   avatarUrl
 }) {
   return (
-    <div className="relative py-10 px-6 h-full bg-white rounded-lg shadow-md">
+    <div className="relative h-full bg-white rounded-lg shadow-md flex items-center justify-center py-10 px-6">
       {/* Edit button top-right */}
       <div className="absolute top-4 right-4 text-gray-600 text-sm cursor-pointer hover:underline flex items-center gap-1">
         <FaEdit className="text-base" />
