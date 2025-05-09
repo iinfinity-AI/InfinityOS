@@ -7,6 +7,7 @@ import EducationQualifications from "../../components/sidebar/EducationQualifica
 import GuarantorDetails from "../../components/sidebar/GuarantorDetails";
 import FamilyDetails from "../../components/sidebar/FamilyDetails"; 
 import JobDetails from "../../components/sidebar/JobDetails";
+import FinancialDetails from "../../components/sidebar/FinancialDetails"
 
 export default function AvatarPage() {
   const [activeItem, setActiveItem] = useState("Personal Details");
@@ -48,6 +49,8 @@ export default function AvatarPage() {
           {activeItem === "Family Details" && <FamilyDetails />} 
 
           {activeItem === "Job Details" && <JobDetails />} 
+
+           {activeItem === "Financial Details" && <FinancialDetails />} 
 
         </div>
       </div>
