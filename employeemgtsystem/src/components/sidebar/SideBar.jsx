@@ -1,8 +1,6 @@
-import { useState } from "react";
+import React from "react";
 
-export default function Sidebar() {
-  const [activeItem, setActiveItem] = useState("Personal Details");
-
+export default function SideBar({ activeItem, setActiveItem }) {
   const items = [
     "Personal Details",
     "Contact Details",

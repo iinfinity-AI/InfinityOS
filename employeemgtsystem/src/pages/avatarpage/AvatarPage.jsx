@@ -1,38 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import BreadCrumb from "../../components/sidebar/BreadCrumb";
+import SideBar from "../../components/sidebar/SideBar";
 
 export default function AvatarPage() {
+  const [activeItem, setActiveItem] = useState("Personal Details");
+
   return (
     <div className="mt-24 px-6 py-8 bg-blue-50 min-h-screen">
       {/* Breadcrumb */}
-      <p className="text-gray-500 mb-4">Dashboard &gt; Update Profile</p>
+      <BreadCrumb current={activeItem} />
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Left Sidebar */}
-        <div className="w-full md:w-1/4 space-y-3">
-          {[
-            "Personal Details",
-            "Contact Details",
-            "Next of kin Details",
-            "Education Qualifications",
-            "Guarantor Details",
-            "Family Details",
-            "Job Details",
-            "Financial Details",
-          ].map((item, index) => (
-            <button
-              key={index}
-              className={`w-full text-left px-4 py-2 rounded-md font-medium ${
-                index === 0
-                  ? "bg-yellow-400 text-black"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+        {/* Sidebar */}
+        <SideBar activeItem={activeItem} setActiveItem={setActiveItem} />
 
-        {/* Right Profile Content */}
+        {/* Content Area */}
         <div className="flex-1 bg-white rounded-lg shadow-md p-6 relative">
           <div className="absolute top-4 right-4 text-sm text-gray-600 cursor-pointer hover:underline">
             🖉 Edit
