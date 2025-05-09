@@ -6,7 +6,7 @@ export default function AvatarPage() {
   const [activeItem, setActiveItem] = useState("Personal Details");
 
   return (
-    <div className="bg-blue-50 min-h-screen px-6 pt-24 pb-8 overflow-y-scroll">
+    <div className="bg-blue-50 min-h-screen px-6 pt-24 pb-8">
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto mb-4">
         <BreadCrumb current={activeItem} />
