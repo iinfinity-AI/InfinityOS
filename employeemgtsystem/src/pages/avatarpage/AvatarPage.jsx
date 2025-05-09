@@ -5,7 +5,8 @@ import PersonalDetails from "../../components/sidebar/PersonalDetails";
 import ContactDetails from "../../components/sidebar/ContactDetails";
 import EducationQualifications from "../../components/sidebar/EducationQualifications";
 import GuarantorDetails from "../../components/sidebar/GuarantorDetails";
-import FamilyDetails from "../../components/sidebar/FamilyDetails"; // ✅ Added
+import FamilyDetails from "../../components/sidebar/FamilyDetails"; 
+import JobDetails from "../../components/sidebar/JobDetails";
 
 export default function AvatarPage() {
   const [activeItem, setActiveItem] = useState("Personal Details");
@@ -44,7 +45,10 @@ export default function AvatarPage() {
 
           {activeItem === "Guarantor Details" && <GuarantorDetails />}
 
-          {activeItem === "Family Details" && <FamilyDetails />} {/* ✅ New Line */}
+          {activeItem === "Family Details" && <FamilyDetails />} 
+
+          {activeItem === "Job Details" && <JobDetails />} 
+
         </div>
       </div>
     </div>
