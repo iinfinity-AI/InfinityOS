@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import BreadCrumb from "../../components/sidebar/BreadCrumb";
 import SideBar from "../../components/sidebar/SideBar";
 import PersonalDetails from "../../components/sidebar/PersonalDetails";
+import ContactDetails from "../../components/sidebar/ContactDetails"; 
 
 export default function AvatarPage() {
   const [activeItem, setActiveItem] = useState("Personal Details");
@@ -27,6 +28,15 @@ export default function AvatarPage() {
               avatarUrl="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
             />
           )}
+        
+          {activeItem === "Contact Details" && (
+            <ContactDetails
+              
+            />
+          )}
+        </div>
+        <div>
+          
         </div>
       </div>
     </div>
