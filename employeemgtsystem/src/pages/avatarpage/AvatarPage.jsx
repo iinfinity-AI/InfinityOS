@@ -17,7 +17,7 @@ export default function AvatarPage() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
         <SideBar activeItem={activeItem} setActiveItem={setActiveItem} />
 
-        <div className="flex-1">
+        <div className="flex-1 ">
           {activeItem === "Personal Details" && (
             <PersonalDetails
               name="Biruk Dawit"
