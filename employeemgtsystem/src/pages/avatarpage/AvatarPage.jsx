@@ -6,11 +6,14 @@ export default function AvatarPage() {
   const [activeItem, setActiveItem] = useState("Personal Details");
 
   return (
-    <div className="mt-24 px-6 py-8 bg-blue-50 min-h-screen">
-      {/* Breadcrumb */}
-      <BreadCrumb current={activeItem} />
+    <div className="bg-blue-50 min-h-screen px-6 py-8 mt-24">
+      {/* Breadcrumb aligned with content */}
+      <div className="max-w-7xl mx-auto mb-4">
+        <BreadCrumb current={activeItem} />
+      </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      {/* Main content layout */}
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
         {/* Sidebar */}
         <SideBar activeItem={activeItem} setActiveItem={setActiveItem} />
 
