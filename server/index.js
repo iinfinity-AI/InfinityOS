@@ -3,14 +3,10 @@ const connectDB = require('./config/db');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-
-const auth = require('./routes/authRoutes');
-const task = require('./routes/taskRoutes');
-
-
-
+const routes = require('./routes/authRoutes');
+const taskRoutes = require("./routes/taskRoutes");
 dotenv.config();
-
+const moodRoutes = require("./routes/moodRoutes");
 
 const app = express();
 
@@ -24,9 +20,11 @@ connectDB();
 
 
 
+app.use("/api", routes);
+app.use("/api", taskRoutes);
+app.use("/api", moodRoutes);
 
-app.use("/api", auth);
-app.use("/api",task);
+
 
 
 
