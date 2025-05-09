@@ -1,8 +1,16 @@
+// src/App.js
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import DashboardPage from "./pages/Admin/DashboardPage";
+
 function App() {
   return (
-    <div className="bg-blue-500 text-white p-6 text-center rounded-lg">
-      <h1 className="text-2xl font-bold">Hello Tailwind!</h1>
-    </div>
+    <Router>
+      <Routes>
+        {/* Admin Dashboard Page */}
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 }
 
