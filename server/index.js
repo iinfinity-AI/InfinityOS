@@ -26,7 +26,7 @@ connectDB();
 
 
 app.use("/api", auth);
-app.use("/api/task",task);
+app.use("/api",task);
 
 
 
