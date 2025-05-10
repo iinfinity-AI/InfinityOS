@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RegisterImage from "../../assets/Admin/RegisterImage.jpg";
 import API from "../../services/api.js";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 export default function SignupPage() {
   const [form, setForm] = useState({

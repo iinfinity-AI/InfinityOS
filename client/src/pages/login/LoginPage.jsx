@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "../../assets/Admin/LoginImage.jpg";
-import API from "../../services/api.js"; // Your Axios instance
-
-
-
+import API from "../../services/api.js";
+import { toast, ToastContainer } from "react-toastify";
 
 
 export default function LoginPage() {
@@ -18,11 +16,11 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for saved credentials if "remember me" was checked
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
       setForm(prev => ({ ...prev, email: savedEmail, remember: true }));
     }
+    
   }, []);
 
   const handleLogin = async (e) => {
@@ -37,33 +35,34 @@ export default function LoginPage() {
       });
 
       const { token, user } = response.data;
-      
-      // Store token and user data
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      
-      // Remember email if checkbox is checked
+
       if (form.remember) {
         localStorage.setItem("rememberedEmail", form.email);
       } else {
         localStorage.removeItem("rememberedEmail");
       }
-      
-      // Redirect based on role
-      switch(user.role) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "team-lead":
-          navigate("/team-lead/dashboard");
-          break;
-        default:
-          navigate("/employee/dashboard");
-      }
-      
+
+      toast.success("Login successful!");
+
+      setTimeout(() => {
+        switch(user.role) {
+          case "admin":
+            navigate("/admin/dashboard");
+            break;
+          case "team-lead":
+            navigate("/team-lead/dashboard");
+            break;
+          default:
+            navigate("/");
+        }
+      }, 1000);
+
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.error || "Login failed. Please try again.");
+      toast.error(err.response?.data?.error || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +70,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
+      <ToastContainer position="top-center" />
       {/* Left side - Form */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
         <form onSubmit={handleLogin} className="w-full max-w-md space-y-6">
