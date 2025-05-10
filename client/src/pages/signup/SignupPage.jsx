@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterImage from "../../assets/Admin/RegisterImage.jpg";
-import authService from "../../services/authService";
+import API from "../../services/api.js";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -17,6 +17,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  // Validation logic
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,10 +27,8 @@ export default function SignupPage() {
     if (!form.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!form.email.trim()) newErrors.email = "Email is required";
     else if (!emailRegex.test(form.email)) newErrors.email = "Invalid email";
-
     if (!form.phone.trim()) newErrors.phone = "Phone is required";
     else if (!phoneRegex.test(form.phone)) newErrors.phone = "Invalid phone";
-
     if (!form.password || form.password.length < 6)
       newErrors.password = "Min 6 characters";
     if (form.password !== form.confirmPassword)
@@ -40,29 +39,35 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle signup submission
   const handleSignup = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     try {
-      const payload = {
-        firstName: form.firstName,
-        lastName: form.lastName,
+      const finalData = {
+        name: `${form.firstName} ${form.lastName}`, // Combine first + last name
         email: form.email,
         phone: form.phone,
         password: form.password,
       };
-      const response = await authService.signup(payload);
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      navigate("/");
+console.log("Final Data:", finalData);
+      const res = await API.post("/auth/register", finalData); // Send to backend
+      const { token } = res.data;
+      console.log("Token:", token);
+
+      localStorage.setItem("token", token); // Store token
+      navigate("/"); // Redirect to home/dashboard
     } catch (error) {
-      setErrors({ general: error.response?.data?.message || "Signup failed" });
+      setErrors({
+        general: error.response?.data?.message || "Signup failed. Please try again.",
+      });
     }
   };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
+  
       <div
         className="w-1/2 h-full relative bg-cover bg-center text-white"
         style={{ backgroundImage: `url(${RegisterImage})` }}
@@ -75,6 +80,7 @@ export default function SignupPage() {
         </div>
       </div>
 
+    
       <div className="w-1/2 flex items-center justify-center bg-white p-8">
         <form onSubmit={handleSignup} className="w-full max-w-xl space-y-6">
           <h2 className="text-3xl font-bold text-blue-900">Welcome to INFINITY OS</h2>
@@ -85,6 +91,7 @@ export default function SignupPage() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           
             <div>
               <input
                 type="text"
@@ -95,6 +102,8 @@ export default function SignupPage() {
               />
               {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
             </div>
+
+           
             <div>
               <input
                 type="text"
@@ -105,6 +114,8 @@ export default function SignupPage() {
               />
               {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
             </div>
+
+          
             <div>
               <input
                 type="email"
@@ -115,6 +126,7 @@ export default function SignupPage() {
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
+
             <div>
               <input
                 type="tel"
@@ -125,6 +137,7 @@ export default function SignupPage() {
               />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
+
             <div>
               <input
                 type="password"
@@ -135,6 +148,7 @@ export default function SignupPage() {
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
+
             <div>
               <input
                 type="password"
@@ -161,9 +175,9 @@ export default function SignupPage() {
               I agree to the Terms and Conditions
             </label>
           </div>
-
           {errors.terms && <p className="text-red-500 text-sm">{errors.terms}</p>}
 
+          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-blue-900 text-white py-3 rounded hover:bg-blue-800 transition"
@@ -171,6 +185,7 @@ export default function SignupPage() {
             Create Account
           </button>
 
+          {/* Login link */}
           <div className="text-center text-sm mt-4">
             Already have an account?{" "}
             <button
