@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginImage from "../../assets/Admin/LoginImage.jpg";
-import authService from "../../services/authService";
 import { Link } from 'react-router-dom';
 
 export default function LoginPage() {

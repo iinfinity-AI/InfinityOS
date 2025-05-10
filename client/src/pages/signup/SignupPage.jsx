@@ -17,7 +17,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Validation logic
+
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,13 +51,12 @@ export default function SignupPage() {
         phone: form.phone,
         password: form.password,
       };
-console.log("Final Data:", finalData);
-      const res = await API.post("/register", finalData); // Send to backend
-      const { token } = res.data;
-      console.log("Token:", token);
-
-      localStorage.setItem("token", token); // Store token
-      navigate("/"); // Redirect to home/dashboard
+        console.log("Final Data:", finalData);
+      const res = await API.post("/register", finalData); 
+      if (res.status === 201) {
+        alert("Signup successful!");
+        navigate("/login");
+      }
     } catch (error) {
       setErrors({
         general: error.response?.data?.message || "Signup failed. Please try again.",
