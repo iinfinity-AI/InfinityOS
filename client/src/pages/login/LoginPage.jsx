@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link  } from "react-router-dom";
 import LoginImage from "../../assets/Admin/LoginImage.jpg";
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
+=======
+
+>>>>>>> 01b593ae1d9ffb47e9daa1419c9d1633fd462de5
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "", remember: false });
