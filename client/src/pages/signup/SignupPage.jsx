@@ -52,7 +52,7 @@ export default function SignupPage() {
         password: form.password,
       };
 console.log("Final Data:", finalData);
-      const res = await API.post("/auth/register", finalData); // Send to backend
+      const res = await API.post("/register", finalData); // Send to backend
       const { token } = res.data;
       console.log("Token:", token);
 
