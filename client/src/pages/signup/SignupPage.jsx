@@ -57,7 +57,7 @@ console.log("Final Data:", finalData);
       console.log("Token:", token);
 
       localStorage.setItem("token", token); // Store token
-      navigate("/"); // Redirect to home/dashboard
+      
     } catch (error) {
       setErrors({
         general: error.response?.data?.message || "Signup failed. Please try again.",
