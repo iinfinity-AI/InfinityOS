@@ -1,8 +1,21 @@
+// src/App.js
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignupPage from "./pages/signup/SignupPage";
+import LoginPage from "./pages/login/LoginPage";
+import ResetPassword from "./pages/login/ResetPassword";
+
+
+
 function App() {
   return (
-    <div className="bg-blue-500 text-white p-6 text-center rounded-lg">
-      <h1 className="text-2xl font-bold">Hello Tailwind!</h1>
-    </div>
+    <Router>
+      <Routes>
+       
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element ={<LoginPage/>}/>
+        <Route path="/reset-password" element={<ResetPassword/>}/>
+      </Routes>
+    </Router>
   );
 }
 
