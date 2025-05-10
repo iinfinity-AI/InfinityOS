@@ -53,15 +53,16 @@ export default function SignupPage() {
       };
 console.log("Final Data:", finalData);
       const res = await API.post("/register", finalData); // Send to backend
-      const { token } = res.data;
-      console.log("Token:", token);
-
-      localStorage.setItem("token", token); // Store token
+     
+console.log("Response:", res);
+     
       
     } catch (error) {
       setErrors({
         general: error.response?.data?.message || "Signup failed. Please try again.",
       });
+      console.log(error)
+      
     }
   };
 
