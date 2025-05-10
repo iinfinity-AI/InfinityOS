@@ -16,13 +16,13 @@ const taskSchema = new mongoose.Schema(
     },
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // assuming you have a User model
+      ref: "User", 
       required: true,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+  
     },
     dueDate: {
       type: Date,
