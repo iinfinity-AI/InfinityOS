@@ -9,11 +9,9 @@ function App() {
   return (
     <div>
       <TopNav /> 
-      {/* this navbar is not go with the login part just call it */}
       <Router>
-        
       <Routes>
-       
+
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element ={<LoginPage/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
