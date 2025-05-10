@@ -3,10 +3,15 @@ const Mood = require("../models/Mood");
 
 const saveMood = async (req, res) => {
   try {
+    if (!req.user || !req.user.userId) {
+      return res.status(400).json({ error: "User is not authenticated or missing user ID." });
+    }
+
     const { mood, note } = req.body;
+    const user = req.user.userId;
 
     const newMood = new Mood({
-      user: req.user.id,
+      user,
       mood,
       note,
     });
@@ -18,9 +23,11 @@ const saveMood = async (req, res) => {
   }
 };
 
+
+
 const getMoods = async (req, res) => {
   try {
-    const moods = await Mood.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const moods = await Mood.find({ user: req.user.userId }).sort({ createdAt: -1 });
     res.status(200).json(moods);
   } catch (err) {
     res.status(500).json({ error: err.message });
