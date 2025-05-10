@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterImage from "../../assets/Admin/RegisterImage.jpg";
 import API from "../../services/api.js";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -16,7 +18,6 @@ export default function SignupPage() {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
 
   const validate = () => {
     const newErrors = {};
@@ -39,34 +40,30 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle signup submission
   const handleSignup = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     try {
       const finalData = {
-        name: `${form.firstName} ${form.lastName}`, // Combine first + last name
+        name: `${form.firstName} ${form.lastName}`,
         email: form.email,
         phone: form.phone,
         password: form.password,
       };
-        console.log("Final Data:", finalData);
-      const res = await API.post("/register", finalData); 
+      const res = await API.post("/register", finalData);
       if (res.status === 201) {
-        alert("Signup successful!");
-        navigate("/login");
+        toast.success("Signup successful!");
+        setTimeout(() => navigate("/login"), 1500);
       }
     } catch (error) {
-      setErrors({
-        general: error.response?.data?.message || "Signup failed. Please try again.",
-      });
+      toast.error(error.response?.data?.message || "Signup failed. Please try again.");
     }
   };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-  
+      <ToastContainer position="top-center" />
       <div
         className="w-1/2 h-full relative bg-cover bg-center text-white"
         style={{ backgroundImage: `url(${RegisterImage})` }}
@@ -79,7 +76,6 @@ export default function SignupPage() {
         </div>
       </div>
 
-    
       <div className="w-1/2 flex items-center justify-center bg-white p-8">
         <form onSubmit={handleSignup} className="w-full max-w-xl space-y-6">
           <h2 className="text-3xl font-bold text-blue-900">Welcome to INFINITY OS</h2>
@@ -90,7 +86,6 @@ export default function SignupPage() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           
             <div>
               <input
                 type="text"
@@ -101,8 +96,6 @@ export default function SignupPage() {
               />
               {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
             </div>
-
-           
             <div>
               <input
                 type="text"
@@ -113,8 +106,6 @@ export default function SignupPage() {
               />
               {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
             </div>
-
-          
             <div>
               <input
                 type="email"
@@ -125,7 +116,6 @@ export default function SignupPage() {
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
-
             <div>
               <input
                 type="tel"
@@ -136,7 +126,6 @@ export default function SignupPage() {
               />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
-
             <div>
               <input
                 type="password"
@@ -147,7 +136,6 @@ export default function SignupPage() {
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
-
             <div>
               <input
                 type="password"
@@ -176,7 +164,6 @@ export default function SignupPage() {
           </div>
           {errors.terms && <p className="text-red-500 text-sm">{errors.terms}</p>}
 
-          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-blue-900 text-white py-3 rounded hover:bg-blue-800 transition"
@@ -184,7 +171,6 @@ export default function SignupPage() {
             Create Account
           </button>
 
-          {/* Login link */}
           <div className="text-center text-sm mt-4">
             Already have an account?{" "}
             <button
