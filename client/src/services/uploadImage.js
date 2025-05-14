@@ -1,3 +1,4 @@
+// services/Cloudinary.js
 export async function UploadImage(image) {
     const data = new FormData();
     data.append("file", image);
@@ -11,11 +12,10 @@ export async function UploadImage(image) {
   
       const json = await res.json();
       return json.url;
-      console.log("Image uploaded successfully", json.secure_url);
     } catch (err) {
       console.error("Upload failed", err);
       throw err;
     }
-  }
-  export default UploadImage;
+}
   
+export default UploadImage;
