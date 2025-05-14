@@ -79,7 +79,7 @@ const HomeNav = () => {
             </div>
 
             {/* Right-side Buttons (Sign Up & Login) */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 ml-auto"> {/* Added ml-auto to push to the right */}
               <a
                 href="/signup"
                 className="px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500"
