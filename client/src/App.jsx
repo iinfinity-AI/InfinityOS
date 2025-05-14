@@ -8,7 +8,7 @@ import UserProfile from './pages/userProfile/profile';
 
 function App() {
   return (
-    <Router> {/* ✅ Move Router to wrap everything */}
+    <Router>
       <TopNav />
       <Routes>
         <Route path="/" element={<HomePage />} />
