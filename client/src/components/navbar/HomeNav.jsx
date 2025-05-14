@@ -29,18 +29,17 @@ const HomeNav = () => {
 
           <div className="flex-1 flex items-center justify-between sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
-              {/* Replace InfinityOS Text with Image */}
               <img src={Infinitylogo} alt="InfinityOS Logo" className="h-10" />
             </div>
 
             {/* Desktop Menu */}
             <div className="hidden sm:block sm:ml-6">
-              <div className="flex space-x-4">
+              <div className="flex space-x-8"> {/* Increased space between links */}
                 <a
                   href="/"
                   className={`${
                     isActive('/')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
+                      ? 'border-b-4 border-yellow-400 text-yellow-400'
                       : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
@@ -50,7 +49,7 @@ const HomeNav = () => {
                   href="/about"
                   className={`${
                     isActive('/about')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
+                      ? 'border-b-4 border-yellow-400 text-yellow-400'
                       : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
@@ -60,7 +59,7 @@ const HomeNav = () => {
                   href="/services"
                   className={`${
                     isActive('/services')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
+                      ? 'border-b-4 border-yellow-400 text-yellow-400'
                       : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
@@ -70,33 +69,29 @@ const HomeNav = () => {
                   href="/contact"
                   className={`${
                     isActive('/contact')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
+                      ? 'border-b-4 border-yellow-400 text-yellow-400'
                       : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Contact
                 </a>
-                <a
-                  href="/signup"
-                  className={`${
-                    isActive('/signup')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  Sign Up
-                </a>
-                <a
-                  href="/login"
-                  className={`${
-                    isActive('/login')
-                      ? 'border-b-2 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  Login
-                </a>
               </div>
+            </div>
+
+            {/* Right-side Buttons (Sign Up & Login) */}
+            <div className="flex space-x-4">
+              <a
+                href="/signup"
+                className="px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500"
+              >
+                Sign Up
+              </a>
+              <a
+                href="/login"
+                className="px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500"
+              >
+                Login
+              </a>
             </div>
           </div>
         </div>
