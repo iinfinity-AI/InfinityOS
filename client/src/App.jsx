@@ -8,21 +8,16 @@ import UserProfile from './pages/userProfile/profile';
 
 function App() {
   return (
-    <div>
-      <TopNav /> 
-      <Router>
+    <Router> {/* ✅ Move Router to wrap everything */}
+      <TopNav />
       <Routes>
-        <Route path="/" element={<HomePage/>} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element ={<LoginPage/>}/>
-        <Route path="/reset-password" element={<ResetPassword/>}/>
-        <Route path="/profile" element={<UserProfile/>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
-
-   </div>
-      
-    
   );
 }
 

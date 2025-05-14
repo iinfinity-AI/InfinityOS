@@ -73,12 +73,14 @@ export default function TopNav() {
           )}
         </div>
         <Link to="/profile">
-          <img
+       <div> <img
             src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
             alt="profile"
             className="w-8 h-8 rounded-full border"
-          />
-        </Link>
+          /></div>
+           </Link>
+         
+       
       </div>
 
       {/* Mobile Nav Links Dropdown */}
