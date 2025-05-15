@@ -10,7 +10,6 @@ import HomeNav from './components/navbar/HomeNav';
 function App() {
   return (
     <div>
-      {/* <TopNav />  */}
       <Router>
       <Routes>
         <Route path="/" element={<HomePage/>} />
