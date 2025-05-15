@@ -48,14 +48,14 @@ export default function LoginPage() {
 
       setTimeout(() => {
         switch(user.role) {
-          case "admin":
+          case "Admin":
             navigate("/admin/dashboard");
             break;
           case "team-lead":
             navigate("/team-lead/dashboard");
             break;
           default:
-            navigate("/dashboard");
+            navigate("/user/dashboard");
         }
       }, 1000);
 
