@@ -1,145 +1,104 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom'; 
-import Infinitylogo from '../../assets/navbar/Infinitylogo.png';
+import { useLocation } from 'react-router-dom';
+import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
 
 const HomeNav = () => {
-  const location = useLocation(); // Get current location (current URL path)
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // A helper function to check if the link is active
+  // Check if the given path is active
   const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="bg-black text-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
-          {/* Mobile Menu Button */}
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <img src={InfinityLogo} alt="InfinityOS" className="h-8 w-auto" />
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-6 items-center">
+            <a
+              href="/"
+              className={`px-3 py-2 font-semibold ${
+                isActive('/') ? 'text-yellow-400' : 'text-white'
+              } hover:text-yellow-300`}
             >
-              <span className="sr-only">Open main menu</span>
-              {/* Icon for mobile menu */}
-              <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
+              Home
+            </a>
+            <a
+              href="/about"
+              className={`px-3 py-2 font-semibold ${
+                isActive('/about') ? 'text-yellow-400' : 'text-white'
+              } hover:text-yellow-300`}
+            >
+              About Us
+            </a>
+            <a
+              href="/services"
+              className={`px-3 py-2 font-semibold ${
+                isActive('/services') ? 'text-yellow-400' : 'text-white'
+              } hover:text-yellow-300`}
+            >
+              Services
+            </a>
+            <a
+              href="/contact"
+              className={`px-3 py-2 font-semibold ${
+                isActive('/contact') ? 'text-yellow-400' : 'text-white'
+              } hover:text-yellow-300`}
+            >
+              Contact
+            </a>
+          </div>
+
+          {/* Auth Buttons */}
+          <div className="hidden md:flex space-x-2">
+            <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded">
+              Sign Up
+            </button>
+            <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded">
+              Login
             </button>
           </div>
 
-          <div className="flex-1 flex items-center justify-between sm:items-stretch sm:justify-start">
-            <div className="flex-shrink-0">
-              <img src={Infinitylogo} alt="InfinityOS Logo" className="h-10" />
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden sm:block sm:ml-6">
-              <div className="flex space-x-8"> {/* Increased space between links */}
-                <a
-                  href="/"
-                  className={`${
-                    isActive('/')
-                      ? 'border-b-4 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  Home
-                </a>
-                <a
-                  href="/about"
-                  className={`${
-                    isActive('/about')
-                      ? 'border-b-4 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  About Us
-                </a>
-                <a
-                  href="/services"
-                  className={`${
-                    isActive('/services')
-                      ? 'border-b-4 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  Services
-                </a>
-                <a
-                  href="/contact"
-                  className={`${
-                    isActive('/contact')
-                      ? 'border-b-4 border-yellow-400 text-yellow-400'
-                      : 'text-yellow-400 hover:bg-blue-700 hover:text-white'
-                  } px-3 py-2 rounded-md text-sm font-medium`}
-                >
-                  Contact
-                </a>
-              </div>
-            </div>
-
-            {/* Right-side Buttons (Sign Up & Login) */}
-            <div className="flex space-x-4 ml-auto"> {/* Added ml-auto to push to the right */}
-              <a
-                href="/signup"
-                className="px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500"
-              >
-                Sign Up
-              </a>
-              <a
-                href="/login"
-                className="px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500"
-              >
-                Login
-              </a>
-            </div>
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-300 hover:text-white focus:outline-none"
+            >
+              ☰
+            </button>
           </div>
         </div>
-
-        {/* Mobile Menu (Dropdown) */}
-        {isMobileMenuOpen && (
-          <div className="sm:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <a
-                href="/"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Home
-              </a>
-              <a
-                href="/about"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                About Us
-              </a>
-              <a
-                href="/services"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Services
-              </a>
-              <a
-                href="/contact"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Contact
-              </a>
-              <a
-                href="/signup"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Sign Up
-              </a>
-              <a
-                href="/login"
-                className="text-yellow-400 hover:bg-blue-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-              >
-                Login
-              </a>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
+          <a href="/" className="block px-3 py-2 text-yellow-400 font-semibold">
+            Home
+          </a>
+          <a href="/about" className="block px-3 py-2 text-white hover:text-yellow-300">
+            About Us
+          </a>
+          <a href="/services" className="block px-3 py-2 text-white hover:text-yellow-300">
+            Services
+          </a>
+          <a href="/contact" className="block px-3 py-2 text-white hover:text-yellow-300">
+            Contact
+          </a>
+          <button className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300">
+            Sign Up
+          </button>
+          <button className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300">
+            Login
+          </button>
+        </div>
+      )}
     </nav>
   );
 };
