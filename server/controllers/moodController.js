@@ -1,4 +1,5 @@
 const Mood = require("../models/Mood");
+const User = require("../models/User");
 
 const saveMood = async (req, res) => {
   try {
@@ -35,13 +36,19 @@ const getMoods = async (req, res) => {
   }
 };
 
+
 const getAllMoods = async (req, res) => {
   try {
-    const moods = await Mood.find({}).sort({ createdAt: -1 });
+    const moods = await Mood.find({})
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'user',
+        select: 'name' // Only include the 'name' field from the User model
+      });
+    
     res.status(200).json(moods);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-
 module.exports = { saveMood, getMoods, getAllMoods };
