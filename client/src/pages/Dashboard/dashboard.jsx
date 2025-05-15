@@ -232,7 +232,7 @@ const TaskDashboard = () => {
           </div>
         </div>
       )}
-      {/* Filters */}
+    
       <div className="flex flex-wrap gap-4 mb-6 mt-4">
         <select
           className="border rounded px-3 py-1"
@@ -277,7 +277,7 @@ const TaskDashboard = () => {
           <option value="createdAt">Sort by Created Date</option>
         </select>
       </div>
-      {/* Task Table */}
+     
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white rounded">
           <thead>
