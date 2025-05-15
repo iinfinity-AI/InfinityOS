@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
 
 const HomeNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Check if the given path is active
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -56,10 +56,16 @@ const HomeNav = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex space-x-2">
-            <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded">
+            <button
+              onClick={() => navigate('/signup')}
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
+            >
               Sign Up
             </button>
-            <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
+            >
               Login
             </button>
           </div>
@@ -91,10 +97,22 @@ const HomeNav = () => {
           <a href="/contact" className="block px-3 py-2 text-white hover:text-yellow-300">
             Contact
           </a>
-          <button className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300">
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              navigate('/signup');
+            }}
+            className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
+          >
             Sign Up
           </button>
-          <button className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300">
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              navigate('/login');
+            }}
+            className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
+          >
             Login
           </button>
         </div>
