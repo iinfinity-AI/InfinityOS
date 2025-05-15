@@ -7,6 +7,7 @@ import HomePage from './pages/homepage/HomePage';
 import UserProfile from './pages/userProfile/profile';
 import TaskDashboard from './pages/Dashboard/dashboard';
 import MoodHistory from './pages/userProfile/moodHistory';
+import GetallMoods from './pages/userProfile/getallMoods';
 function App() {
   return (
     <Router>
@@ -18,7 +19,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/profile" element={<UserProfile />} />
+        
         <Route path="/mood" element={<MoodHistory />} />
+        <Route path="/moods" element={<GetallMoods />} />
+
       </Routes>
     </Router>
   );
