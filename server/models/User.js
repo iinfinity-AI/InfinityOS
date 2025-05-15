@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -25,6 +26,10 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "employee", "team-lead"],
     default: "employee",
   },
+  profilePicture: {
+    type: String,
+    required: false
+  }
 }, {
   timestamps: true 
 });

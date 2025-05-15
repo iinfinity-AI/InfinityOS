@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "../../assets/Admin/LoginImage.jpg";
-import API from "../../services/api.js";
 import { toast, ToastContainer } from "react-toastify";
 
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaBars, FaBell, FaEnvelope } from "react-icons/fa";
 import axios from "axios";
-
+import { Link } from 'react-router-dom';
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bellCount, setBellCount] = useState(0);
@@ -72,11 +72,15 @@ export default function TopNav() {
             </span>
           )}
         </div>
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
-          alt="profile"
-          className="w-8 h-8 rounded-full border"
-        />
+        <Link to="/profile">
+       <div> <img
+            src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
+            alt="profile"
+            className="w-8 h-8 rounded-full border"
+          /></div>
+           </Link>
+         
+       
       </div>
 
       {/* Mobile Nav Links Dropdown */}
