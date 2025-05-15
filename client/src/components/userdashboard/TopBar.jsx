@@ -1,9 +1,8 @@
 import React from "react";
 import { FiMenu, FiSearch } from "react-icons/fi";
 import { BsBell, BsEnvelope } from "react-icons/bs";
-import { FiSettings } from "react-icons/fi";
 
-const TopBar = () => {
+const TopBar = ({ notificationsCount = 0, messagesCount = 0 }) => {
   return (
     <header className="bg-[#E1EAFE] px-6 py-3 flex items-center justify-between">
       {/* Left: Hamburger and Filter */}
@@ -29,9 +28,16 @@ const TopBar = () => {
 
       {/* Right: Icons */}
       <div className="flex items-center space-x-4">
-        <IconWithBadge icon={<BsBell />} badgeCount={13} bgColor="bg-[#29469B]" />
-        <IconWithBadge icon={<FiSettings />} badgeCount={0} bgColor="bg-yellow-400" />
-        <IconWithBadge icon={<BsEnvelope />} badgeCount={13} bgColor="bg-green-600" />
+        <IconWithBadge
+          icon={<BsBell />}
+          badgeCount={notificationsCount}
+          bgColor="bg-[#29469B]"
+        />
+        <IconWithBadge
+          icon={<BsEnvelope />}
+          badgeCount={messagesCount}
+          bgColor="bg-green-600"
+        />
       </div>
     </header>
   );
@@ -39,7 +45,9 @@ const TopBar = () => {
 
 const IconWithBadge = ({ icon, badgeCount, bgColor }) => {
   return (
-    <div className={`relative p-3 rounded-full cursor-pointer ${bgColor} text-white`}>
+    <div
+      className={`relative p-3 rounded-full cursor-pointer ${bgColor} text-white`}
+    >
       {icon}
       {badgeCount > 0 && (
         <span className="absolute top-0 right-0 bg-red-600 rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold">
