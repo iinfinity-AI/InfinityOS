@@ -11,6 +11,7 @@ const GetAllMoods = () => {
       try {
         const response = await API.get("/allmood");
         setMoods(response.data);
+        console.log(response.data);
       } catch (err) {
         setError(
           err.response?.data?.error || err.message || "Failed to fetch moods"
@@ -22,6 +23,17 @@ const GetAllMoods = () => {
 
     fetchMoods();
   }, []);
+
+  // Helper function to display the user's name
+  const getUserName = (user) => {
+    if (typeof user === 'object' && user !== null) {
+      // If user is populated (an object with name property)
+      return user.name || 'Unknown';
+    } else {
+      // If user is just an ID (not populated)
+      return 'Loading name...';
+    }
+  };
 
   if (loading)
     return (
@@ -39,7 +51,7 @@ const GetAllMoods = () => {
     );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 mt-9">
       <h1 className="text-3xl font-bold mb-2 text-center text-gray-800">
         Admin: User Moods
       </h1>
@@ -56,6 +68,12 @@ const GetAllMoods = () => {
               className="bg-white shadow-md rounded-lg p-6 border border-gray-100 hover:shadow-lg transition"
             >
               <div className="mb-2">
+                <span className="font-semibold text-gray-700">User:</span>
+                <span className="ml-2 text-green-700">
+                  {getUserName(mood.user)}
+                </span>
+              </div>
+              <div className="mb-2">
                 <span className="font-semibold text-gray-700">Mood:</span>
                 <span className="ml-2 text-blue-600 font-medium">
                   {mood.mood}
@@ -68,10 +86,6 @@ const GetAllMoods = () => {
                     <span className="italic text-gray-400">No note</span>
                   )}
                 </span>
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold text-gray-700">User:</span>
-                <span className="ml-2 text-green-700">{mood.user}</span>
               </div>
               <div>
                 <span className="font-semibold text-gray-700">Date:</span>
