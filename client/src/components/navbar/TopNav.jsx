@@ -1,23 +1,42 @@
-import { useState, useEffect } from "react";
-import { FaBars, FaBell, FaEnvelope } from "react-icons/fa";
-import axios from "axios";
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { FaBars } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [bellCount, setBellCount] = useState(0);
-  const [mailCount, setMailCount] = useState(0);
   const [activeLink, setActiveLink] = useState("Dashboard");
+  const [avatarMenu, setAvatarMenu] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const avatarRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // Sync isLoggedIn with route changes
   useEffect(() => {
-    axios.get("http://localhost:5000/api/notifications")
-      .then((res) => {
-        setBellCount(res.data.bell || 0);
-        setMailCount(res.data.message || 0);
-      })
-      .catch((err) => {
-        console.error("Error fetching notifications:", err);
-      });
-  }, []);
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [location]);
+
+  // Close avatar menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
+        setAvatarMenu(false);
+      }
+    }
+    if (avatarMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [avatarMenu]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+    setAvatarMenu(false);
+    navigate("/login");
+  };
 
   const navItems = ["Dashboard", "Requests", "Payroll", "Company", "Extras"];
 
@@ -31,7 +50,6 @@ export default function TopNav() {
         >
           <FaBars />
         </button>
-        
       </div>
 
       {/* Center - Navigation Links (Desktop Only) */}
@@ -50,37 +68,35 @@ export default function TopNav() {
         ))}
       </div>
 
-      {/* Right - Notification Icons + Avatar */}
+      {/* Right - Avatar Only (No Notifications) */}
       <div className="flex items-center gap-4">
-        <div className="relative">
-          <div className="bg-indigo-900 text-white p-2 rounded-full">
-            <FaBell className="text-xl" />
+        {isLoggedIn && (
+          <div className="relative" ref={avatarRef}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
+              alt="profile"
+              className="w-8 h-8 rounded-full border cursor-pointer"
+              onClick={() => setAvatarMenu((v) => !v)}
+            />
+            {avatarMenu && (
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg border z-50">
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 hover:bg-gray-100 text-gray-800"
+                  onClick={() => setAvatarMenu(false)}
+                >
+                  View Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-800"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
-          {bellCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
-              {bellCount}
-            </span>
-          )}
-        </div>
-        <div className="relative">
-          <div className="bg-green-700 text-white p-2 rounded-full">
-            <FaEnvelope className="text-xl" />
-          </div>
-          {mailCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full shadow">
-              {mailCount}
-            </span>
-          )}
-        </div>
-        <Link to="/profile">
-       <div> <img
-            src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png"
-            alt="profile"
-            className="w-8 h-8 rounded-full border"
-          /></div>
-           </Link>
-         
-       
+        )}
       </div>
 
       {/* Mobile Nav Links Dropdown */}
