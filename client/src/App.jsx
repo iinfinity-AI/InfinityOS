@@ -4,7 +4,6 @@ import SignupPage from "./pages/signup/SignupPage";
 import LoginPage from "./pages/login/LoginPage";
 import ResetPassword from "./pages/login/ResetPassword";
 import HomePage from './pages/homepage/HomePage';
-import HomeNav from './components/navbar/HomeNav';
 
 
 function App() {
