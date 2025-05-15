@@ -4,7 +4,6 @@ import SignupPage from "./pages/signup/SignupPage";
 import LoginPage from "./pages/login/LoginPage";
 import ResetPassword from "./pages/login/ResetPassword";
 import HomePage from './pages/homepage/HomePage';
-import HomeNav from './components/navbar/HomeNav';
 
 
 function App() {
@@ -16,7 +15,6 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element ={<LoginPage/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
-        <Route path="/homenav" element={<HomeNav/>}/>
       </Routes>
     </Router>
 
