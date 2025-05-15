@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import API from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const TaskDashboard = () => {
+ 
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
     status: "",
@@ -22,7 +24,7 @@ const TaskDashboard = () => {
     project: "",
   });
   const [loading, setLoading] = useState(false);
-
+ const Navigate = useNavigate();
   useEffect(() => {
     fetchTasks();
     // Optionally fetch users for assignment dropdown
@@ -93,10 +95,11 @@ const TaskDashboard = () => {
         </button>
          <button
           className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-          onClick={() => setShowAdd(true)}
+          onClick={() => Navigate("/mood")}
         >
-          Mood
+         mood
         </button>
+      
       </h2>
       {/* Add Task Modal */}
       {showAdd && (
