@@ -203,6 +203,15 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ error: "Server error during profile update" });
   }
 };
+const getUserData = async (req, res) => {
+  try {
+    // You can add role-based access control here if needed
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Server error while fetching users data" });
+  }
+};;
 
 module.exports = {
   registerUser,
@@ -210,5 +219,6 @@ module.exports = {
   sendOtp,
   verifyOtp,
   resetPassword,
-  updateProfile
+  updateProfile,
+  getUserData
 };

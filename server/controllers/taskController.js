@@ -20,17 +20,7 @@ const createTask = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized: Only Admin or Team Lead can create tasks." });
     }
 
-    const {
-      title,
-      description,
-      status,
-      assignedTo,
-      dueDate,
-      startDate,
-      priority,
-      tags,
-      project
-    } = req.body;
+    const {title,description,status,assignedTo,dueDate,startDate,priority,tags,project} = req.body;
 
     // Validation: All fields required except tags
     if (
@@ -63,17 +53,7 @@ const createTask = async (req, res) => {
       return res.status(400).json({ error: "One or more assigned users do not exist." });
     }
 
-    const task = new Task({
-      title,
-      description,
-      status: status || "pending",
-      assignedTo,
-      dueDate,
-      startDate,
-      priority,
-      tags,
-      project,
-      createdBy: req.user.userId,
+    const task = new Task({title,description,status: status || "pending",assignedTo,dueDate,startDate,priority,tags,project,createdBy: req.user.userId,
     });
 
     await task.save();
