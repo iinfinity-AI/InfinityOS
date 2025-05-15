@@ -1,5 +1,7 @@
 import React from "react";
+
 import { FaTasks, FaSmile, FaUser } from "react-icons/fa";
+import TopNav from "../../components/navbar/TopNav";
 
 const stats = [
   { icon: <FaTasks size={32} className="text-blue-500" />, label: "Tasks", value: 12 },
@@ -9,7 +11,11 @@ const stats = [
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 pt-24">
+      {/* Top Navigation */}
+      <TopNav/>
+
+      {/* Main Content */}
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-10 mt-12">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2 tracking-wide">
           Welcome to InfinityOS Dashboard

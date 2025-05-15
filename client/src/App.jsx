@@ -9,9 +9,9 @@ import UserProfile from './pages/userProfile/profile';
 function App() {
   return (
     <Router>
-      <TopNav />
+      
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
