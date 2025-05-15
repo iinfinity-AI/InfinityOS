@@ -55,7 +55,7 @@ export default function LoginPage() {
             navigate("/team-lead/dashboard");
             break;
           default:
-            navigate("/");
+            navigate("/dashboard");
         }
       }, 1000);
 
