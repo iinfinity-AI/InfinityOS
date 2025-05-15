@@ -1,12 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";  // For navigation on logout
 import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
-import Customer1 from '../../assets/userdashboard/Customer1.png';  // default profile image import (adjust path as needed)
+import Customer1 from '../../assets/userdashboard/Customer1.png';
 
 import {
   FaTachometerAlt,
   FaBalanceScale,
   FaUsers,
-  FaBriefcase,
   FaSmile,
   FaEnvelope,
   FaClock,
@@ -14,9 +14,18 @@ import {
 } from "react-icons/fa";
 
 const Sidebar = ({ userName, userAvatar }) => {
-  // Use provided avatar or fallback to default Customer1 image
+  const navigate = useNavigate();
+
   const avatarToShow =
     userAvatar && userAvatar.trim() !== "" ? userAvatar : Customer1;
+
+  const handleLogout = () => {
+    // Clear any auth tokens or user data here
+    localStorage.removeItem("token"); // Adjust if your token key differs
+
+    // Redirect to homepage
+    navigate("/");
+  };
 
   return (
     <aside className="bg-[#0F1946] w-60 min-h-screen flex flex-col justify-between p-6">
@@ -33,7 +42,7 @@ const Sidebar = ({ userName, userAvatar }) => {
             alt={userName || "User"}
             className="w-14 h-14 rounded-full border-4 border-yellow-400 object-cover"
             onError={(e) => {
-              e.target.onerror = null; // prevent infinite loop
+              e.target.onerror = null;
               e.target.src = Customer1;
             }}
           />
@@ -58,7 +67,10 @@ const Sidebar = ({ userName, userAvatar }) => {
       </div>
 
       {/* Logout */}
-      <button className="bg-red-600 text-white flex items-center justify-center space-x-2 py-2 rounded-md mt-6 w-full hover:bg-red-700 transition">
+      <button
+        onClick={handleLogout}
+        className="bg-red-600 text-white flex items-center justify-center space-x-2 py-2 rounded-md mt-6 w-full hover:bg-red-700 transition"
+      >
         <FaPowerOff /> <span>Log Out</span>
       </button>
     </aside>
