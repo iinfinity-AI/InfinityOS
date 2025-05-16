@@ -1,6 +1,6 @@
 import React from "react";
 import { FiMoreVertical } from "react-icons/fi";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEye, AiOutlineClose } from "react-icons/ai";
 
 const AssignedCommentsCard = () => {
   const comments = [
@@ -12,7 +12,8 @@ const AssignedCommentsCard = () => {
     {
       name: "Gelila",
       avatar: "/path/to/Customer2.png",
-      comment: "Can you align the button spacing on the homepage hero section? It feels a bit off-center.",
+      comment:
+        "Can you align the button spacing on the homepage hero section? It feels a bit off-center.",
     },
     {
       name: "Shaneli",
@@ -22,7 +23,7 @@ const AssignedCommentsCard = () => {
   ];
 
   return (
-    <div className="bg-white rounded-md p-4 shadow-sm">
+    <div className="bg-white rounded-md p-4 shadow-sm w-full">
       <div className="flex justify-between items-center mb-3">
         <p className="font-semibold">Assigned Comments</p>
         <FiMoreVertical className="cursor-pointer" />
@@ -43,11 +44,11 @@ const AssignedCommentsCard = () => {
             <p className="text-xs text-gray-600">{comment}</p>
           </div>
           <div className="flex space-x-2 items-center">
-            <button className="bg-green-600 p-1 rounded text-white">
+            <button className="bg-green-600 p-1 rounded text-white text-base">
               <AiOutlineEye />
             </button>
-            <button className="bg-red-600 p-1 rounded text-white">
-              ✖
+            <button className="bg-red-600 p-1 rounded text-white text-base">
+              <AiOutlineClose />
             </button>
           </div>
         </div>

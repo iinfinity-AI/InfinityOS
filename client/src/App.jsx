@@ -9,30 +9,29 @@ import ResetPassword from "./pages/login/ResetPassword";
 import HomePage from './pages/homepage/HomePage';
 import UserDashboardPage from './pages/dashboard/UserDashboardPage';
 
-// Wrap Routes and conditional layout in a separate component so we can use useLocation
+
 const AppContent = () => {
   const location = useLocation();
 
-  // Define routes where navbar/footer should NOT be shown
-  const noNavFooterRoutes = ['/dashboard'];
+  // Add any routes here where you want to hide nav and footer
+  const noNavFooterRoutes = ['/dashboard', '/taskboard'];
 
   const hideNavFooter = noNavFooterRoutes.includes(location.pathname);
 
   return (
     <>
-      {/* Show navbar only if NOT on excluded routes */}
       {!hideNavFooter && <HomeNav />}
-
-      {/* Routes */}
+      
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* Dashboard routes */}
         <Route path="/dashboard" element={<UserDashboardPage />} />
       </Routes>
 
-      {/* Show footer only if NOT on excluded routes */}
       {!hideNavFooter && <Footer />}
     </>
   );

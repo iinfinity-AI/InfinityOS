@@ -1,30 +1,66 @@
+import React, { useState } from "react";
+
 import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
 import GreetingSection from "../../components/userdashboard/GreetingSection";
+
 import HelpfullCard from "../../components/userdashboard/HelpfullCard";
 import RecentsCard from "../../components/userdashboard/RecentsCard";
 import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 
+import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 
 const UserDashboardPage = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [selectedTab, setSelectedTab] = useState("dashboard");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
-    <div className="flex bg-[#D7E5FF] min-h-screen">
-      <SideBar />
+    <div className="flex min-h-screen bg-[#E1EAFE]">
+      {/* Sidebar */}
+      <SideBar
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        isCollapsed={isSidebarCollapsed}
+      />
 
-      <main className="flex-1 flex flex-col">
-        <TopBar />
-        <GreetingSection />
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col overflow-x-hidden">
+        {/* TopBar */}
+        <TopBar toggleSidebar={toggleSidebar} />
 
-        <section className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-          <HelpfullCard />
-          <RecentsCard />
-          <AssignedToMeCard />
-          <AssignedCommentsCard />
+        {/* Greeting Section */}
+        <div className="ml-4 mr-4 mt-4">
+          <GreetingSection user={user} />
+        </div>
 
-         
-        </section>
-      </main>
+        {/* Main Content */}
+        <div className="p-6 mt-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
+          {selectedTab === "dashboard" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <HelpfullCard />
+                <AssignedToMeCard />
+              </div>
+              <div className="space-y-6">
+                <RecentsCard />
+                <AssignedCommentsCard />
+              </div>
+            </div>
+          )}
+
+          {selectedTab === "taskboard" && (
+            <div className="space-y-6 mt-4">
+              <TaskFilterBar />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

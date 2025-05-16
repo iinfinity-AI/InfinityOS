@@ -1,100 +1,112 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";  // For navigation on logout
-import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
-import Customer1 from '../../assets/userdashboard/Customer1.png';
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaBalanceScale,
-  FaUsers,
   FaSmile,
-  FaEnvelope,
-  FaClock,
   FaPowerOff,
 } from "react-icons/fa";
+import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
+import Customer1 from "../../assets/userdashboard/Customer1.png"; // Default avatar
 
-const Sidebar = ({ userName, userAvatar }) => {
+const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
   const navigate = useNavigate();
+
+  const [userName, setUserName] = useState("User");
+  const [userAvatar, setUserAvatar] = useState("");
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setUserName(userData.name || "User");
+      setUserAvatar(userData.avatar || "");
+    }
+  }, []);
 
   const avatarToShow =
     userAvatar && userAvatar.trim() !== "" ? userAvatar : Customer1;
 
   const handleLogout = () => {
-    // Clear any auth tokens or user data here
-    localStorage.removeItem("token"); // Adjust if your token key differs
-
-    // Redirect to homepage
+    localStorage.removeItem("user");
     navigate("/");
   };
 
+  const tabItem = (icon, label, tabKey) => (
+    <div
+      key={tabKey}
+      onClick={() => setSelectedTab(tabKey)}
+      className={`flex items-center ${
+        isCollapsed ? "justify-center" : "gap-3"
+      } px-4 py-3 rounded-md cursor-pointer transition-all duration-200 ${
+        selectedTab === tabKey
+          ? "bg-yellow-400 text-black font-semibold"
+          : "hover:bg-yellow-400 hover:text-black text-white"
+      }`}
+    >
+      {icon}
+      {!isCollapsed && <span>{label}</span>}
+    </div>
+  );
+
   return (
-    <aside className="bg-[#0F1946] w-60 min-h-screen flex flex-col justify-between p-6">
+    <aside
+      className={`bg-[#0F1946] ${
+        isCollapsed ? "w-20" : "w-64"
+      } min-h-screen flex flex-col justify-between p-4 text-white transition-all duration-300`}
+    >
+      {/* Top Section */}
       <div>
         {/* Logo */}
-        <div className="flex items-center mb-8 space-x-2">
-          <img src={InfinityLogo} alt="InfinityOS" className="w-auto h-10" />
-        </div>
+        {!isCollapsed && (
+          <div className="flex items-center mb-6">
+            <img src={InfinityLogo} alt="InfinityOS" className="h-10" />
+          </div>
+        )}
 
         {/* User Info */}
-        <div className="flex items-center space-x-4 mb-8">
+        <div className="flex flex-col items-center text-center mb-6">
           <img
             src={avatarToShow}
-            alt={userName || "User"}
-            className="w-14 h-14 rounded-full border-4 border-yellow-400 object-cover"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = Customer1;
-            }}
+            alt="User Avatar"
+            className={`rounded-full border-4 border-yellow-400 shadow-md ${
+              isCollapsed ? "w-12 h-12" : "w-20 h-20"
+            }`}
           />
-          <div>
-            <p className="text-white font-semibold text-lg">{userName || "User"}</p>
-            <p className="text-gray-400 text-xs">User</p>
-          </div>
+          {!isCollapsed && (
+            <>
+              <h3 className="mt-2 text-lg font-semibold">{userName}</h3>
+              <p className="text-sm text-gray-300">User</p>
+            </>
+          )}
         </div>
 
-        {/* Features label */}
-        <p className="text-gray-400 mb-3 text-xs">Features</p>
+        {/* Features title */}
+        {!isCollapsed && (
+          <p className="text-sm uppercase tracking-wide text-gray-400 mb-3">
+            Features
+          </p>
+        )}
 
         {/* Navigation */}
-        <nav className="flex flex-col space-y-3 text-white">
-          <NavItem icon={<FaTachometerAlt />} label="Dashboard" active />
-          <NavItem icon={<FaBalanceScale />} label="Task Board" badgeCount={13} />
-          <NavItem icon={<FaUsers />} label="Performance" />
-          <NavItem icon={<FaSmile />} label="Mood & Wellness" />
-          <NavItem icon={<FaEnvelope />} label="Communication" />
-          <NavItem icon={<FaClock />} label="Time & Attendance" />
-        </nav>
+        <div className="space-y-2">
+          {tabItem(<FaTachometerAlt />, "Dashboard", "dashboard")}
+          {tabItem(<FaBalanceScale />, "Task Board", "taskboard")}
+          {tabItem(<FaSmile />, "Mood & Wellness", "mood")}
+        </div>
       </div>
 
-      {/* Logout */}
-      <button
-        onClick={handleLogout}
-        className="bg-red-600 text-white flex items-center justify-center space-x-2 py-2 rounded-md mt-6 w-full hover:bg-red-700 transition"
-      >
-        <FaPowerOff /> <span>Log Out</span>
-      </button>
+      {/* Log Out Button at bottom */}
+      <div className="mt-auto">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 transition text-white font-semibold py-3 px-4 rounded-md"
+        >
+          <FaPowerOff />
+          {!isCollapsed && <span>Log Out</span>}
+        </button>
+      </div>
     </aside>
   );
 };
 
-const NavItem = ({ icon, label, badgeCount, active }) => {
-  return (
-    <div
-      className={`flex items-center space-x-3 px-4 py-3 rounded-md cursor-pointer ${
-        active
-          ? "bg-yellow-400 text-black font-semibold"
-          : "hover:bg-yellow-400 hover:text-black"
-      }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span className="flex-1 whitespace-nowrap">{label}</span>
-      {badgeCount && (
-        <span className="text-xs bg-red-600 rounded-full px-2 py-0.5 font-bold text-white">
-          {badgeCount}
-        </span>
-      )}
-    </div>
-  );
-};
-
-export default Sidebar;
+export default SideBar;
