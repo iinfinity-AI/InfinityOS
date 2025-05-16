@@ -7,14 +7,19 @@ import HomePage from './pages/homepage/HomePage';
 import UserProfile from './pages/userProfile/profile';
 import TaskDashboard from './pages/Dashboard/dashboard';
 import MoodHistory from './pages/userProfile/moodHistory';
+
+import UserDashboard from './components/userDashboard';
+
 import GetallMoods from './pages/userProfile/getallMoods';
+
 function App() {
   return (
     <Router>
       <TopNav />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<TaskDashboard />} />
+        <Route path="/admin/dashboard" element={<TaskDashboard />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />

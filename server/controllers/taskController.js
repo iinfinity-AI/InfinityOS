@@ -71,13 +71,12 @@ const updateTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    // Only assigned employees or Admin/Team Lead can update
+ 
     const isAssigned = task.assignedTo.some(
       userId => userId.toString() === req.user.userId
     );
     const isManager = ["Admin", "Team Lead"].includes(req.user.role);
 
-    // If updating status, only assigned employees can do it
     if (
       req.body.status &&
       !isManager &&
@@ -86,22 +85,21 @@ const updateTask = async (req, res) => {
       return res.status(403).json({ error: "Only assigned employees can update the status of their own tasks." });
     }
 
-    // If status is being set to "completed", require confirmation
+    
     if (req.body.status === "completed" && !req.body.statusConfirmed) {
       return res.status(400).json({ error: "Status confirmation required to mark as completed." });
     }
 
-    // Optional: Add statusNote field if provided
+
     if (req.body.statusNote !== undefined) {
       task.statusNote = req.body.statusNote;
     }
 
-    // Only allow status update for assigned employee, or allow full update for Admin/Team Lead
     if (req.body.status && (isAssigned || isManager)) {
       task.status = req.body.status;
     }
 
-    // Allow Admin/Team Lead to update other fields
+
     if (isManager) {
       const allowedFields = [
         "title", "description", "assignedTo", "dueDate", "startDate", "priority", "tags", "project"
@@ -154,4 +152,64 @@ const getTasks = async (req, res) => {
   }
 };
 
-module.exports = { createTask, updateTask, getTasks };
+
+const getEmployeeTasks = async (req, res) => {
+  try {
+    // Only allow employees to access their assigned tasks
+    if (req.user.role !== "employee") {
+      return res.status(403).json({ error: "Access denied: Only employees can view their assigned tasks." });
+    }
+
+    // Find tasks where the logged-in employee is assigned
+    const tasks = await Task.find({ assignedTo: req.user.userId })
+      .populate("createdBy", "name email")
+      .sort({ dueDate: 1 });
+
+    res.status(200).json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const changeEmployeeTaskStatus = async (req, res) => {
+  try {
+    const { id } = req.params; // Task ID from URL
+    const { status } = req.body; // New status from request body
+
+    // Only allow employees to change their own assigned task status
+    if (req.user.role !== "employee") {
+      return res.status(403).json({ error: "Access denied: Only employees can change their task status." });
+    }
+
+    const task = await Task.findById(id);
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found." });
+    }
+
+    // Check if the logged-in employee is assigned to this task
+    const isAssigned = task.assignedTo.some(
+      userId => userId.toString() === req.user.userId
+    );
+    if (!isAssigned) {
+      return res.status(403).json({ error: "You are not assigned to this task." });
+    }
+
+    // Only allow certain statuses (optional, adjust as needed)
+    const allowedStatuses = ["pending", "in-progress", "completed", "blocked"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ error: "Invalid status value." });
+    }
+
+    task.status = status;
+    await task.save();
+
+    res.status(200).json({ message: "Task status updated successfully.", task });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Add to exports:
+module.exports = { createTask, updateTask, getTasks, getEmployeeTasks, changeEmployeeTaskStatus };
+
