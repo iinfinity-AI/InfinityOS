@@ -48,7 +48,6 @@ const TaskDashboard = () => {
         else setUsers([]);
       })
       .catch(() => setUsers([]));
-    // eslint-disable-next-line
   }, [filters, sortBy]);
 
   const fetchTasks = async () => {
@@ -123,13 +122,13 @@ const TaskDashboard = () => {
           </button>
           <button
             className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-            onClick={() => Navigate("/mood")}
+            onClick={() => Navigate("/moods")}
           >
             Mood
           </button>
         </div>
       </h2>
-      {/* Add Task Modal */}
+
       {showAdd && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg relative">

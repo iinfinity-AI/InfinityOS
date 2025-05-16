@@ -10,6 +10,7 @@ import MoodHistory from "../pages/userProfile/moodHistory";
 import UserDashboard from "../components/userDashboard";
 import GetallMoods from "../pages/userProfile/getallMoods";
 import ProtectedRoute from "../components/ProtectedRoute";
+import TeamLeadDashboard from "../components/teamLead";
 
 function AppRoutes() {
   return (
@@ -24,7 +25,7 @@ function AppRoutes() {
         <Route
           path="/user/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["user", "employee"]}>
+            <ProtectedRoute allowedRoles={["employee"]}>
               <UserDashboard />
             </ProtectedRoute>
           }
@@ -32,7 +33,7 @@ function AppRoutes() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute allowedRoles={["Admin", "user", "employee"]}>
+            <ProtectedRoute allowedRoles={["Admin", "employee"]}>
               <UserProfile />
             </ProtectedRoute>
           }
@@ -40,7 +41,7 @@ function AppRoutes() {
         <Route
           path="/mood"
           element={
-            <ProtectedRoute allowedRoles={["user", "employee"]}>
+            <ProtectedRoute allowedRoles={[ "employee"]}>
               <MoodHistory />
             </ProtectedRoute>
           }
@@ -62,6 +63,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+          <Route
+          path="/team-lead/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["team-lead"]}>
+              <TeamLeadDashboard />
+            </ProtectedRoute>
+          }/>
       </Routes>
     </Router>
   );
