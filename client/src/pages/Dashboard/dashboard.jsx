@@ -39,6 +39,10 @@ const TaskDashboard = () => {
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
 
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role?.toLowerCase();
+
   useEffect(() => {
     fetchTasks();
     API.get("/users")
@@ -112,7 +116,7 @@ const TaskDashboard = () => {
               d="M9 17v-2a4 4 0 014-4h4m0 0V7m0 4l-4-4m0 0l-4 4"
             ></path>
           </svg>
-          Admin Dashboard
+          {role === "team-lead" || role === "team lead" ? "Team Tasks" : "Admin Dashboard"}
         </span>
         <div className="flex gap-3">
           <button
@@ -170,7 +174,7 @@ const TaskDashboard = () => {
                 </option>
                 {Array.isArray(users) &&
                   users
-                    .filter((u) => u.role === "employee")
+                    .filter((u) => u.role === "employee" || u.role === "team-lead")
                     .map((u) => (
                       <option key={u._id} value={u._id}>
                         {u.name} ({u.role})
@@ -232,7 +236,7 @@ const TaskDashboard = () => {
           </div>
         </div>
       )}
-    
+
       <div className="flex flex-wrap gap-4 mb-6 mt-4">
         <select
           className="border rounded px-3 py-1"
@@ -277,7 +281,7 @@ const TaskDashboard = () => {
           <option value="createdAt">Sort by Created Date</option>
         </select>
       </div>
-     
+
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white rounded">
           <thead>
@@ -329,14 +333,14 @@ const TaskDashboard = () => {
                     {task.priority}
                   </span>
                 </td>
-       
+
                 <td className="py-2 px-4">
                   {Array.isArray(task.assignedTo) && task.assignedTo.length > 0
                     ? task.assignedTo
                         .map((user) =>
                           typeof user === "object"
                             ? user.name
-                            : users.find((u) => u._id === user)?.name || user 
+                            : users.find((u) => u._id === user)?.name || user
                         )
                         .join(", ")
                     : "N/A"}

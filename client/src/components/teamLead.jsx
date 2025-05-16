@@ -4,60 +4,33 @@ import AdminDashboard from '../pages/Dashboard/dashboard';
 
 const TeamLeadDashboard = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 py-16 px-4">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Team Lead Dashboard</h1>
-          <p className="text-gray-600 mt-2">Overview of tasks and team management</p>
+        <header className="mb-10">
+          <h1 className="text-4xl font-extrabold text-blue-900 flex items-center gap-3">
+            <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m0 0V7m0 4l-4-4m0 0l-4 4"></path>
+            </svg>
+            Team Lead Dashboard
+          </h1>
+          <p className="text-gray-600 mt-4 flex items-center gap-2">
+            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z" />
+            </svg>
+            <span>
+              Get a quick overview of your tasks, manage your team, and track progress at a glance.
+            </span>
+          </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* My Tasks Section */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-blue-600">My Assigned Tasks</h2>
-              <span className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
-                {/** Task count could be dynamic */}
-                {5} Tasks
-              </span>
-            </div>
+        <div className="flex flex-row gap-10">
+          <div className="flex-1 bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-xl font-bold mb-4 text-blue-700">My Assigned Tasks</h2>
             <UserDashboard />
           </div>
-
-          {/* Team Management Section */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-purple-600">Team Management</h2>
-              <div className="flex space-x-2">
-                <button className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full hover:bg-purple-200 transition">
-                  Filter
-                </button>
-                <button className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full hover:bg-purple-200 transition">
-                  Sort
-                </button>
-              </div>
-            </div>
+          <div className="flex-1 bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-xl font-bold mb-4 text-blue-700">Team Tasks Overview</h2>
             <AdminDashboard />
-          </div>
-        </div>
-
-        {/* Quick Stats Section */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-            <h3 className="text-sm font-medium text-gray-500">Pending Tasks</h3>
-            <p className="text-2xl font-bold mt-1">12</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-yellow-500">
-            <h3 className="text-sm font-medium text-gray-500">In Progress</h3>
-            <p className="text-2xl font-bold mt-1">8</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-            <h3 className="text-sm font-medium text-gray-500">Completed</h3>
-            <p className="text-2xl font-bold mt-1">24</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-red-500">
-            <h3 className="text-sm font-medium text-gray-500">Overdue</h3>
-            <p className="text-2xl font-bold mt-1">3</p>
           </div>
         </div>
       </div>
