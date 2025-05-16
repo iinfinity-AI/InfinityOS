@@ -1,7 +1,7 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
 
-// Helper: Check for duplicate title for same user in date range
+
 async function isDuplicateTitle({ title, assignedTo, startDate, dueDate }) {
   return await Task.findOne({
     title,
@@ -15,14 +15,14 @@ async function isDuplicateTitle({ title, assignedTo, startDate, dueDate }) {
 
 const createTask = async (req, res) => {
   try {
-    // Only Admin or Team Lead can create tasks
-    if (!["Admin", "Team Lead"].includes(req.user.role)) {
+
+    if (!["Admin", "team-lead"].includes(req.user.role)) {
       return res.status(403).json({ error: "Unauthorized: Only Admin or Team Lead can create tasks." });
     }
 
     const {title,description,status,assignedTo,dueDate,startDate,priority,tags,project} = req.body;
 
-    // Validation: All fields required except tags
+    
     if (
       !title ||
       !description ||
@@ -36,18 +36,18 @@ const createTask = async (req, res) => {
       return res.status(400).json({ error: "All fields except tags are required." });
     }
 
-    // Due date must be >= start date
+
     if (new Date(dueDate) < new Date(startDate)) {
       return res.status(400).json({ error: "Due date must be after or equal to start date." });
     }
 
-    // No duplicate title for same user within same date range
+    
     const duplicate = await isDuplicateTitle({ title, assignedTo, startDate, dueDate });
     if (duplicate) {
       return res.status(400).json({ error: "Duplicate task title for assigned user(s) in this date range." });
     }
 
-    // Optional: Check if assigned users exist
+   
     const users = await User.find({ _id: { $in: assignedTo } });
     if (users.length !== assignedTo.length) {
       return res.status(400).json({ error: "One or more assigned users do not exist." });
@@ -122,14 +122,20 @@ const updateTask = async (req, res) => {
 const getTasks = async (req, res) => {
   try {
     let filter = {};
-    if (["Admin", "Team Lead"].includes(req.user.role)) {
-      // Optionally, Team Lead can filter by team here
+
+    // Role-based filtering
+    if (req.user.role === "Admin") {
+      // Admin: No filter – see all tasks
       filter = {};
+    } else if (req.user.role === "team-lead") {
+      // Team Lead: Only tasks they created
+      filter = { createdBy: req.user.userId };
     } else {
+      // Employee: Only tasks assigned to them
       filter = { assignedTo: req.user.userId };
     }
 
-    // Filtering
+    // Optional filters from query params
     if (req.query.status) filter.status = req.query.status;
     if (req.query.priority) filter.priority = req.query.priority;
     if (req.query.dueDate) filter.dueDate = { $lte: new Date(req.query.dueDate) };
@@ -137,11 +143,12 @@ const getTasks = async (req, res) => {
       filter.title = { $regex: req.query.search, $options: "i" };
     }
 
-
+    // Sorting logic
     let sort = {};
     if (req.query.sortBy === "dueDate") sort.dueDate = 1;
     else sort.createdAt = -1;
 
+    // Fetch tasks
     const tasks = await Task.find(filter)
       .populate("createdBy", "name email")
       .sort(sort);
@@ -155,12 +162,11 @@ const getTasks = async (req, res) => {
 
 const getEmployeeTasks = async (req, res) => {
   try {
-    // Only allow employees to access their assigned tasks
-    if (req.user.role !== "employee") {
-      return res.status(403).json({ error: "Access denied: Only employees can view their assigned tasks." });
+
+    if (!["employee", "team-lead"].includes(req.user.role)) {
+      return res.status(403).json({ error: "Access denied: Only employees or team leads can view their assigned tasks." });
     }
 
-    // Find tasks where the logged-in employee is assigned
     const tasks = await Task.find({ assignedTo: req.user.userId })
       .populate("createdBy", "name email")
       .sort({ dueDate: 1 });
@@ -173,10 +179,9 @@ const getEmployeeTasks = async (req, res) => {
 
 const changeEmployeeTaskStatus = async (req, res) => {
   try {
-    const { id } = req.params; // Task ID from URL
-    const { status } = req.body; // New status from request body
-
-    // Only allow employees to change their own assigned task status
+    const { id } = req.params;
+    const { status } = req.body;
+   
     if (req.user.role !== "employee") {
       return res.status(403).json({ error: "Access denied: Only employees can change their task status." });
     }
@@ -187,7 +192,7 @@ const changeEmployeeTaskStatus = async (req, res) => {
       return res.status(404).json({ error: "Task not found." });
     }
 
-    // Check if the logged-in employee is assigned to this task
+   
     const isAssigned = task.assignedTo.some(
       userId => userId.toString() === req.user.userId
     );
@@ -195,7 +200,7 @@ const changeEmployeeTaskStatus = async (req, res) => {
       return res.status(403).json({ error: "You are not assigned to this task." });
     }
 
-    // Only allow certain statuses (optional, adjust as needed)
+   
     const allowedStatuses = ["pending", "in-progress", "completed", "blocked"];
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ error: "Invalid status value." });
@@ -210,6 +215,6 @@ const changeEmployeeTaskStatus = async (req, res) => {
   }
 };
 
-// Add to exports:
+
 module.exports = { createTask, updateTask, getTasks, getEmployeeTasks, changeEmployeeTaskStatus };
 
