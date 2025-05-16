@@ -23,16 +23,16 @@ const TeamLeadDashboard = () => {
           </p>
         </header>
 
-        <div className="flex flex-row gap-10">
-          <div className="flex-1 bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-xl font-bold mb-4 text-blue-700">My Assigned Tasks</h2>
-            <UserDashboard />
-          </div>
-          <div className="flex-1 bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-xl font-bold mb-4 text-blue-700">Team Tasks Overview</h2>
-            <AdminDashboard />
-          </div>
-        </div>
+<div className="flex flex-row gap-10">
+  <div className="flex-1">
+    <div className=" p-10 mb-10">
+      <UserDashboard />
+    </div>
+    <div className=" mb-10 p-10">
+      <AdminDashboard />
+    </div>
+  </div>
+</div>
       </div>
     </div>
   );
