@@ -11,12 +11,11 @@ export default function TopNav() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Sync isLoggedIn with route changes
+
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, [location]);
 
-  // Close avatar menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (avatarRef.current && !avatarRef.current.contains(event.target)) {
@@ -42,7 +41,7 @@ export default function TopNav() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md px-4 py-3 flex justify-between items-center">
-      {/* Left - Logo & Menu Toggle */}
+ 
       <div className="flex items-center gap-4">
         <button
           className="md:hidden text-2xl"
@@ -52,7 +51,7 @@ export default function TopNav() {
         </button>
       </div>
 
-      {/* Center - Navigation Links (Desktop Only) */}
+ 
       <div className="hidden md:flex gap-6 text-gray-800 font-medium">
         {navItems.map((item) => (
           <a
@@ -68,7 +67,6 @@ export default function TopNav() {
         ))}
       </div>
 
-      {/* Right - Avatar Only (No Notifications) */}
       <div className="flex items-center gap-4">
         {isLoggedIn && (
           <div className="relative" ref={avatarRef}>
@@ -99,7 +97,7 @@ export default function TopNav() {
         )}
       </div>
 
-      {/* Mobile Nav Links Dropdown */}
+
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-white flex flex-col p-4 gap-3 shadow-md md:hidden z-10">
           {navItems.map((item) => (
