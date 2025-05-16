@@ -33,7 +33,7 @@ function AppRoutes() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute allowedRoles={["Admin", "employee"]}>
+            <ProtectedRoute allowedRoles={["Admin", "employee","team-lead"]}>
               <UserProfile />
             </ProtectedRoute>
           }
@@ -41,7 +41,7 @@ function AppRoutes() {
         <Route
           path="/mood"
           element={
-            <ProtectedRoute allowedRoles={[ "employee"]}>
+            <ProtectedRoute allowedRoles={[ "employee","team-lead"]}>
               <MoodHistory />
             </ProtectedRoute>
           }
@@ -50,7 +50,7 @@ function AppRoutes() {
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["Admin","team-lead"]}>
+            <ProtectedRoute allowedRoles={["Admin","team-lead","team-lead"]}>
               <TaskDashboard />
             </ProtectedRoute>
           }
@@ -58,7 +58,7 @@ function AppRoutes() {
         <Route
           path="/moods"
           element={
-            <ProtectedRoute allowedRoles={["Admin"]}>
+            <ProtectedRoute allowedRoles={["Admin","team-lead"]}>
               <GetallMoods />
             </ProtectedRoute>
           }

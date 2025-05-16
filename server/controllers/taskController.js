@@ -16,7 +16,7 @@ async function isDuplicateTitle({ title, assignedTo, startDate, dueDate }) {
 const createTask = async (req, res) => {
   try {
 
-    if (!["Admin", "Team Lead"].includes(req.user.role)) {
+    if (!["Admin", "team-lead"].includes(req.user.role)) {
       return res.status(403).json({ error: "Unauthorized: Only Admin or Team Lead can create tasks." });
     }
 
@@ -122,14 +122,20 @@ const updateTask = async (req, res) => {
 const getTasks = async (req, res) => {
   try {
     let filter = {};
-    if (["Admin", "Team Lead"].includes(req.user.role)) {
-     
+
+    // Role-based filtering
+    if (req.user.role === "Admin") {
+      // Admin: No filter – see all tasks
       filter = {};
+    } else if (req.user.role === "team-lead") {
+      // Team Lead: Only tasks they created
+      filter = { createdBy: req.user.userId };
     } else {
+      // Employee: Only tasks assigned to them
       filter = { assignedTo: req.user.userId };
     }
 
-   
+    // Optional filters from query params
     if (req.query.status) filter.status = req.query.status;
     if (req.query.priority) filter.priority = req.query.priority;
     if (req.query.dueDate) filter.dueDate = { $lte: new Date(req.query.dueDate) };
@@ -137,11 +143,12 @@ const getTasks = async (req, res) => {
       filter.title = { $regex: req.query.search, $options: "i" };
     }
 
-
+    // Sorting logic
     let sort = {};
     if (req.query.sortBy === "dueDate") sort.dueDate = 1;
     else sort.createdAt = -1;
 
+    // Fetch tasks
     const tasks = await Task.find(filter)
       .populate("createdBy", "name email")
       .sort(sort);
