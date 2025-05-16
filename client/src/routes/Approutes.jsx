@@ -11,6 +11,7 @@ import UserDashboard from "../components/userDashboard";
 import GetallMoods from "../pages/userProfile/getallMoods";
 import ProtectedRoute from "../components/ProtectedRoute";
 import TeamLeadDashboard from "../components/teamLead";
+import RoleChangeDashboard from "../pages/Dashboard/rolechangedash";
 
 function AppRoutes() {
   return (
@@ -69,6 +70,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={["team-lead"]}>
               <TeamLeadDashboard />
+            </ProtectedRoute>
+          }/>
+
+          <Route
+          path="/admin/dashboard/changeRole"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <RoleChangeDashboard />
             </ProtectedRoute>
           }/>
       </Routes>
