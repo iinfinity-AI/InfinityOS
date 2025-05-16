@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import API from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import API from "../../services/api";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -17,6 +17,7 @@ const priorityColors = {
 };
 
 const TaskDashboard = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook for navigation
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
     status: "",
@@ -37,7 +38,9 @@ const TaskDashboard = () => {
     project: "",
   });
   const [loading, setLoading] = useState(false);
-  const Navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role?.toLowerCase(); // Get the logged-in user's role
 
   useEffect(() => {
     fetchTasks();
@@ -95,6 +98,10 @@ const TaskDashboard = () => {
     setLoading(false);
   };
 
+  const goToChangeRolePage = () => {
+    navigate("/admin/dashboard/changeRole"); // Navigate to the changeRole page
+  };
+
   return (
     <div className="max-w-6xl mx-auto py-20">
       <h2 className="text-3xl font-extrabold mb-8 flex items-center justify-between text-blue-900">
@@ -112,9 +119,19 @@ const TaskDashboard = () => {
               d="M9 17v-2a4 4 0 014-4h4m0 0V7m0 4l-4-4m0 0l-4 4"
             ></path>
           </svg>
-          Admin Dashboard
+          {role === "team-lead" || role === "team lead"
+            ? "Team Tasks"
+            : "Admin Dashboard"}
         </span>
         <div className="flex gap-3">
+          {role === "admin" && ( // Only show the "Change Role" button for Admin role
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+              onClick={goToChangeRolePage}
+            >
+              Change Role
+            </button>
+          )}
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
             onClick={() => setShowAdd(true)}
@@ -123,13 +140,14 @@ const TaskDashboard = () => {
           </button>
           <button
             className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-            onClick={() => Navigate("/mood")}
+            onClick={() => navigate("/mood")}
           >
             Mood
           </button>
         </div>
       </h2>
-      {/* Add Task Modal */}
+
+      {/* Add Task Form */}
       {showAdd && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg relative">
@@ -170,7 +188,7 @@ const TaskDashboard = () => {
                 </option>
                 {Array.isArray(users) &&
                   users
-                    .filter((u) => u.role === "employee")
+                    .filter((u) => u.role === "employee" || u.role === "team-lead")
                     .map((u) => (
                       <option key={u._id} value={u._id}>
                         {u.name} ({u.role})
@@ -232,7 +250,7 @@ const TaskDashboard = () => {
           </div>
         </div>
       )}
-    
+
       <div className="flex flex-wrap gap-4 mb-6 mt-4">
         <select
           className="border rounded px-3 py-1"
@@ -277,7 +295,7 @@ const TaskDashboard = () => {
           <option value="createdAt">Sort by Created Date</option>
         </select>
       </div>
-     
+
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white rounded">
           <thead>
@@ -295,17 +313,10 @@ const TaskDashboard = () => {
             {tasks.map((task, idx) => (
               <tr
                 key={task._id}
-                className={`border-b ${
-                  idx % 2 === 0 ? "bg-white" : "bg-blue-50"
-                } hover:bg-blue-100 transition`}
+                className={`border-b ${idx % 2 === 0 ? "bg-white" : "bg-blue-50"} hover:bg-blue-100 transition`}
               >
-                <td className="py-2 px-4 font-semibold text-blue-800">
-                  {task.title}
-                </td>
-                <td
-                  className="py-2 px-4 max-w-xs truncate"
-                  title={task.description}
-                >
+                <td className="py-2 px-4 font-semibold text-blue-800">{task.title}</td>
+                <td className="py-2 px-4 max-w-xs truncate" title={task.description}>
                   {task.description.length > 40
                     ? task.description.slice(0, 40) + "..."
                     : task.description}
@@ -322,34 +333,28 @@ const TaskDashboard = () => {
                 <td className="py-2 px-4">
                   <span
                     className={`px-2 py-1 rounded text-xs font-semibold ${
-                      priorityColors[task.priority] ||
-                      "bg-gray-100 text-gray-800"
+                      priorityColors[task.priority] || "bg-gray-100 text-gray-800"
                     }`}
                   >
                     {task.priority}
                   </span>
                 </td>
-       
                 <td className="py-2 px-4">
                   {Array.isArray(task.assignedTo) && task.assignedTo.length > 0
                     ? task.assignedTo
                         .map((user) =>
                           typeof user === "object"
                             ? user.name
-                            : users.find((u) => u._id === user)?.name || user 
+                            : users.find((u) => u._id === user)?.name || user
                         )
                         .join(", ")
                     : "N/A"}
                 </td>
                 <td className="py-2 px-4">
-                  {task.startDate
-                    ? new Date(task.startDate).toLocaleDateString()
-                    : "-"}
+                  {task.startDate ? new Date(task.startDate).toLocaleDateString() : "-"}
                 </td>
                 <td className="py-2 px-4">
-                  {task.dueDate
-                    ? new Date(task.dueDate).toLocaleDateString()
-                    : "-"}
+                  {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-"}
                 </td>
               </tr>
             ))}

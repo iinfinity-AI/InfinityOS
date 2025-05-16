@@ -43,7 +43,7 @@ const getAllMoods = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate({
         path: 'user',
-        select: 'name' // Only include the 'name' field from the User model
+        select: 'name' 
       });
     
     res.status(200).json(moods);
@@ -51,4 +51,5 @@ const getAllMoods = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 module.exports = { saveMood, getMoods, getAllMoods };
