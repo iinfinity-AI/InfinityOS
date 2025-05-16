@@ -9,26 +9,62 @@ import TaskDashboard from '../pages/Dashboard/dashboard';
 import MoodHistory from '../pages/userProfile/moodHistory';
 import UserDashboard from '../components/userDashboard';
 import GetallMoods from '../pages/userProfile/getallMoods';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 function AppRoutes() {
   return (
     <Router>
       <TopNav />
       <Routes>
-        {/* Public Routes */}
+      
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* User Routes */}
-        <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/mood" element={<MoodHistory />} />
+   
+        <Route
+          path="/user/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["user", "employee"]}>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={["user", "employee"]}>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mood"
+          element={
+            <ProtectedRoute allowedRoles={["user", "employee"]}>
+              <MoodHistory />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Admin Routes */}
-        <Route path="/admin/dashboard" element={<TaskDashboard />} />
-        <Route path="/moods" element={<GetallMoods />} />
+      
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <TaskDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/moods"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <GetallMoods />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
