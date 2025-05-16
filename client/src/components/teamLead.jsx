@@ -1,9 +1,10 @@
 import React from 'react'
-import Dashboard from "../pages/Dashboard/dashboard"
+
+import UserDashboard from './userDashboard'
 const TeamLeadDashboard = () => {
   return (
     <div>
-      <Dashboard />
+      <UserDashboard />
     </div>
   )
 }
