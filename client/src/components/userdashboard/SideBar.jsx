@@ -8,19 +8,33 @@ import {
 } from "react-icons/fa";
 import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
 import Customer1 from "../../assets/userdashboard/Customer1.png"; // Default avatar
+import axios from "axios"; // If you need to fetch data from an API
+import API from "../../services/api";
 
 const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
   const navigate = useNavigate();
-
   const [userName, setUserName] = useState("User");
   const [userAvatar, setUserAvatar] = useState("");
+  const [userRole, setUserRole] = useState("User");
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      setUserName(userData.name || "User");
-      setUserAvatar(userData.avatar || "");
-    }
+    const fetchUserData = async () => {
+      try {
+     
+        
+      
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser) {
+          setUserName(storedUser.name || "User");
+          setUserAvatar(storedUser.profilePicture || "");
+          setUserRole(storedUser.role || "User");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    
+    fetchUserData();
   }, []);
 
   const avatarToShow =
@@ -28,7 +42,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/");
+    navigate("/"); // Redirect to the login page or homepage
   };
 
   const tabItem = (icon, label, tabKey) => (
@@ -75,7 +89,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
           {!isCollapsed && (
             <>
               <h3 className="mt-2 text-lg font-semibold">{userName}</h3>
-              <p className="text-sm text-gray-300">User</p>
+              <p className="text-sm text-gray-300">{userRole}</p>
             </>
           )}
         </div>

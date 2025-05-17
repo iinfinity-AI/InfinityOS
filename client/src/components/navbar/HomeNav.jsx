@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
 
@@ -6,8 +6,23 @@ const HomeNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
 
   const isActive = (path) => location.pathname === path;
+
+  // Check if the user is logged in based on localStorage
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setIsLoggedIn(true); // User is logged in
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // Remove user data from localStorage
+    setIsLoggedIn(false); // Set login status to false
+    navigate("/"); // Redirect to home or login page
+  };
 
   return (
     <nav className="bg-black text-white shadow-md sticky top-0 z-50">
@@ -54,20 +69,31 @@ const HomeNav = () => {
             </a>
           </div>
 
-          {/* Auth Buttons */}
+          {/* Auth/Logout Buttons */}
           <div className="hidden md:flex space-x-2">
-            <button
-              onClick={() => navigate('/signup')}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
-            >
-              Sign Up
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
-            >
-              Login
-            </button>
+            {!isLoggedIn ? (
+              <>
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
+                >
+                  Sign Up
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
+                >
+                  Login
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded"
+              >
+                Logout
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -97,24 +123,38 @@ const HomeNav = () => {
           <a href="/contact" className="block px-3 py-2 text-white hover:text-yellow-300">
             Contact
           </a>
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              navigate('/signup');
-            }}
-            className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
-          >
-            Sign Up
-          </button>
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              navigate('/login');
-            }}
-            className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
-          >
-            Login
-          </button>
+          {!isLoggedIn ? (
+            <>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/signup');
+                }}
+                className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/login');
+                }}
+                className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
+              >
+                Login
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                handleLogout();
+              }}
+              className="block w-full text-left px-3 py-2 text-white hover:text-yellow-300"
+            >
+              Logout
+            </button>
+          )}
         </div>
       )}
     </nav>

@@ -11,7 +11,7 @@ import AppRoutes from '../src/routes/Approutes';
 
 const AppContent = () => {
   const location = useLocation();
-  const noNavFooterRoutes = ['/dashboard', '/taskboard'];
+  const noNavFooterRoutes = ['/user/dashboard', '/taskboard'];
 
   const hideNavFooter = noNavFooterRoutes.includes(location.pathname);
 
@@ -29,7 +29,6 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <TopNav />
       <AppContent />
     </Router>
   );

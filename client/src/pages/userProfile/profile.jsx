@@ -60,34 +60,39 @@ const Profile = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      const response = await API.put('/profile', {
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        profilePicture: userData.profilePicture
-      });
+  try {
+    const response = await API.put('/profile', {
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      profilePicture: userData.profilePicture
+    });
 
-      // Update local storage with new user data
-      const updatedUser = {
-        ...JSON.parse(localStorage.getItem('user')),
-        ...response.data.user
-      };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
 
-      toast.success('Profile updated successfully');
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Profile update error:', error);
-      toast.error(error.response?.data?.error || 'Failed to update profile');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const updatedUser = {
+      ...JSON.parse(localStorage.getItem('user')),
+      ...response.data.user
+    };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    toast.success('Profile updated successfully');
+    setIsEditing(false);
+
+    
+    navigate('/user/dashboard'); 
+
+  } catch (error) {
+    console.error('Profile update error:', error);
+    toast.error(error.response?.data?.error || 'Failed to update profile');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   // Go back to the previous page
   const goBack = () => {
