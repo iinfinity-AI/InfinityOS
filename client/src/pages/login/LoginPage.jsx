@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "../../assets/Admin/LoginImage.jpg";
+import API from "../../services/api.js";
 import { toast, ToastContainer } from "react-toastify";
 
 
@@ -47,14 +48,14 @@ export default function LoginPage() {
 
       setTimeout(() => {
         switch(user.role) {
-          case "admin":
+          case "Admin":
             navigate("/admin/dashboard");
             break;
           case "team-lead":
             navigate("/team-lead/dashboard");
             break;
           default:
-            navigate("/");
+            navigate("/user/dashboard");
         }
       }, 1000);
 

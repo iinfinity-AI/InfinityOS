@@ -1,19 +1,16 @@
 import React from "react";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
+
+// Components for navigation
 import HomeNav from './components/navbar/HomeNav';
+import TopNav from "./components/navbar/TopNav";
 import Footer from './components/footer/Footer';
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
-import SignupPage from "./pages/signup/SignupPage";
-import LoginPage from "./pages/login/LoginPage";
-import ResetPassword from "./pages/login/ResetPassword";
-import HomePage from './pages/homepage/HomePage';
-import UserDashboardPage from './pages/dashboard/UserDashboardPage';
-
+// Import AppRoutes
+import AppRoutes from '../src/routes/Approutes';
 
 const AppContent = () => {
   const location = useLocation();
-
-  // Add any routes here where you want to hide nav and footer
   const noNavFooterRoutes = ['/dashboard', '/taskboard'];
 
   const hideNavFooter = noNavFooterRoutes.includes(location.pathname);
@@ -22,16 +19,8 @@ const AppContent = () => {
     <>
       {!hideNavFooter && <HomeNav />}
       
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-
-        {/* Dashboard routes */}
-        <Route path="/dashboard" element={<UserDashboardPage />} />
-      </Routes>
-
+      <AppRoutes />
+      
       {!hideNavFooter && <Footer />}
     </>
   );
@@ -40,6 +29,7 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
+      <TopNav />
       <AppContent />
     </Router>
   );
