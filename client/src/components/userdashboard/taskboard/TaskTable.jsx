@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../../../services/api";
 
 const statusBadge = {
   Pending: "bg-gray-200 text-gray-800",
@@ -20,7 +21,7 @@ const TaskTable = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tasks"); // Replace with your backend URL
+        const response = await API.get("http://localhost:5000/api/tasks"); // Replace with your backend URL
         setTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);

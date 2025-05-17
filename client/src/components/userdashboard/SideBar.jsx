@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaTachometerAlt,
-  FaBalanceScale,
-  FaSmile,
-  FaPowerOff,
-} from "react-icons/fa";
+import { FaTachometerAlt, FaBalanceScale, FaSmile, FaPowerOff } from "react-icons/fa";
 import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
 import Customer1 from "../../assets/userdashboard/Customer1.png"; // Default avatar
-import axios from "axios"; // If you need to fetch data from an API
-import API from "../../services/api";
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
 const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
   const navigate = useNavigate();
@@ -20,23 +14,21 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-     
-        
-      
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser) {
           setUserName(storedUser.name || "User");
-          setUserAvatar(storedUser.profilePicture || "");
+          setUserAvatar(storedUser.profilePicture || ""); // Ensure profilePicture is properly initialized
           setUserRole(storedUser.role || "User");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-    
+
     fetchUserData();
   }, []);
 
+  // Conditional assignment for profilePicture
   const avatarToShow =
     userAvatar && userAvatar.trim() !== "" ? userAvatar : Customer1;
 
@@ -45,9 +37,10 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
     navigate("/"); // Redirect to the login page or homepage
   };
 
-  const tabItem = (icon, label, tabKey) => (
-    <div
+  const tabItem = (icon, label, tabKey, path) => (
+    <Link
       key={tabKey}
+      to={path} // Updated Link for navigation
       onClick={() => setSelectedTab(tabKey)}
       className={`flex items-center ${
         isCollapsed ? "justify-center" : "gap-3"
@@ -59,7 +52,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
     >
       {icon}
       {!isCollapsed && <span>{label}</span>}
-    </div>
+    </Link>
   );
 
   return (
@@ -80,7 +73,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
         {/* User Info */}
         <div className="flex flex-col items-center text-center mb-6">
           <img
-            src={avatarToShow}
+            src={avatarToShow} // Use avatarToShow for the correct image source
             alt="User Avatar"
             className={`rounded-full border-4 border-yellow-400 shadow-md ${
               isCollapsed ? "w-12 h-12" : "w-20 h-20"
@@ -103,9 +96,9 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
 
         {/* Navigation */}
         <div className="space-y-2">
-          {tabItem(<FaTachometerAlt />, "Dashboard", "dashboard")}
-          {tabItem(<FaBalanceScale />, "Task Board", "taskboard")}
-          {tabItem(<FaSmile />, "Mood & Wellness", "mood")}
+          {tabItem(<FaTachometerAlt />, "Dashboard", "dashboard", )}
+          {tabItem(<FaBalanceScale />, "Task Board", "taskboard", )}
+          {tabItem(<FaSmile />, "Mood & Wellness", "mood", )} {/* Updated Link for Mood Check-In */}
         </div>
       </div>
 

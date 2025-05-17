@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
+import DefaultAvatar from '../../assets/userdashboard/Customer1.png'; // Default Avatar Image
 
 const HomeNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+  const [userAvatar, setUserAvatar] = useState(DefaultAvatar); // Default avatar
+  const [userName, setUserName] = useState("User"); // Default name
 
   const isActive = (path) => location.pathname === path;
 
@@ -15,13 +18,19 @@ const HomeNav = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
       setIsLoggedIn(true); // User is logged in
+      setUserAvatar(userData.profilePicture || DefaultAvatar); // Get avatar from user data or use default
+      setUserName(userData.name || "User"); // Get user name from user data
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user"); // Remove user data from localStorage
     setIsLoggedIn(false); // Set login status to false
-    navigate("/"); // Redirect to home or login page
+    navigate("/"); 
+  };
+
+  const handleAvatarClick = () => {
+    navigate("/profile"); // Navigate to profile page
   };
 
   return (
@@ -69,7 +78,7 @@ const HomeNav = () => {
             </a>
           </div>
 
-          {/* Auth/Logout Buttons */}
+          {/* Auth/Logout or Avatar Buttons */}
           <div className="hidden md:flex space-x-2">
             {!isLoggedIn ? (
               <>
@@ -87,12 +96,23 @@ const HomeNav = () => {
                 </button>
               </>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded"
-              >
-                Logout
-              </button>
+              <>
+                <div className="flex items-center space-x-2">
+                  {/* Avatar */}
+                  <img
+                    src={userAvatar}
+                    alt="User Avatar"
+                    onClick={handleAvatarClick}
+                    className="w-8 h-8 rounded-full cursor-pointer border-2 border-yellow-400"
+                  />
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
             )}
           </div>
 

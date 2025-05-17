@@ -16,6 +16,7 @@ const MoodCheckIn = () => {
   const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
   const [hasCheckedIn, setHasCheckedIn] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for API request
 
   useEffect(() => {
     const checkMoodStatus = async () => {
@@ -42,6 +43,9 @@ const MoodCheckIn = () => {
       setMessage("Please select a mood.");
       return;
     }
+
+    setLoading(true); // Set loading state to true
+
     try {
       await axios.post(
         "/api/mood",
@@ -53,6 +57,8 @@ const MoodCheckIn = () => {
     } catch (error) {
       setMessage("Failed to submit mood.");
       console.error(error);
+    } finally {
+      setLoading(false); // Set loading state to false after the request is done
     }
   };
 
@@ -103,10 +109,10 @@ const MoodCheckIn = () => {
 
         <button
           type="submit"
-          disabled={!selectedMood}
+          disabled={!selectedMood || loading}
           className="bg-blue-600 text-white py-2 px-4 rounded disabled:opacity-50"
         >
-          Submit Mood
+          {loading ? "Submitting..." : "Submit Mood"}
         </button>
       </form>
     </div>
