@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -23,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "employee", "team-lead"],
+    enum: ["Admin", "employee", "team-lead"],
     default: "employee",
   },
   profilePicture: {
