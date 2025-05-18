@@ -4,7 +4,7 @@ import axios from "axios";
 const MoodHistory = () => {
   const [moods, setMoods] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [dateFilter, setDateFilter] = useState("7"); // last 7 days
+  const [dateFilter, setDateFilter] = useState("7"); 
 
   useEffect(() => {
     const fetchMoodHistory = async () => {
@@ -22,7 +22,7 @@ const MoodHistory = () => {
     fetchMoodHistory();
   }, []);
 
-  // Filter moods by date range
+
   const filteredMoods = moods.filter((mood) => {
     const daysAgo = (new Date() - new Date(mood.date)) / (1000 * 60 * 60 * 24);
     return daysAgo <= Number(dateFilter);

@@ -26,6 +26,7 @@ const DashboardTable = ({ title, tasks, loading, updatingId, handleStatusChange 
             <th className="py-3 px-4 text-left font-semibold">Status</th>
             <th className="py-3 px-4 text-left font-semibold">Priority</th>
             <th className="py-3 px-4 text-left font-semibold">Due Date</th>
+            <th className="py-3 px-4 text-left font-semibold">Assigned By</th> {/* New column */}
             <th className="py-3 px-4 text-left font-semibold">Change Status</th>
           </tr>
         </thead>
@@ -54,6 +55,9 @@ const DashboardTable = ({ title, tasks, loading, updatingId, handleStatusChange 
               <td className="py-2 px-4">
                 {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-"}
               </td>
+              <td className="py-2 px-4 text-blue-800"> 
+                {task.createdBy.name ? task.createdBy.name : "-"} {/* Displaying the "Assigned By" field */}
+              </td>
               <td className="py-2 px-4">
                 <select
                   value={task.status}
@@ -76,6 +80,7 @@ const DashboardTable = ({ title, tasks, loading, updatingId, handleStatusChange 
     </div>
   </div>
 );
+
 
 const UserDashboard = () => {
   const [tasks, setTasks] = useState([]);

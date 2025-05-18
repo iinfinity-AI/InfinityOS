@@ -62,6 +62,7 @@ export default function LoginPage() {
         }
       }, 1000);
 
+
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.error || "Login failed. Please try again.");
@@ -74,7 +75,7 @@ export default function LoginPage() {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <ToastContainer position="top-center" />
-      {/* Left side - Form */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
         <form onSubmit={handleLogin} className="w-full max-w-md space-y-6">
           <div>
