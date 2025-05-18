@@ -1,36 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import InfinityLogo from '../../assets/navbar/Infinitylogo.png';
-import DefaultAvatar from '../../assets/userdashboard/Customer1.png'; // Default Avatar Image
+import DefaultAvatar from '../../assets/userdashboard/Customer1.png';
 
 const HomeNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
-  const [userAvatar, setUserAvatar] = useState(DefaultAvatar); // Default avatar
-  const [userName, setUserName] = useState("User"); // Default name
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userAvatar, setUserAvatar] = useState(DefaultAvatar);
+  const [userName, setUserName] = useState("User");
+  const [dashboardPath, setDashboardPath] = useState("");
 
   const isActive = (path) => location.pathname === path;
 
-  // Check if the user is logged in based on localStorage
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      setIsLoggedIn(true); // User is logged in
-      setUserAvatar(userData.profilePicture || DefaultAvatar); // Get avatar from user data or use default
-      setUserName(userData.name || "User"); // Get user name from user data
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      if (userData) {
+        setIsLoggedIn(true);
+        setUserAvatar(userData.profilePicture || DefaultAvatar);
+        setUserName(userData.name || "User");
+
+        // Set role-based dashboard path
+        switch (userData.role) {
+          case "Admin":
+            setDashboardPath("/admin/dashboard");
+            break;
+          case "team-lead":
+            setDashboardPath("/team-lead/dashboard");
+            break;
+          case "employee":
+            setDashboardPath("/employee/dashboard");
+            break;
+          default:
+            setDashboardPath("");
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data from localStorage
-    setIsLoggedIn(false); // Set login status to false
-    navigate("/"); 
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/");
   };
 
   const handleAvatarClick = () => {
-    navigate("/profile"); // Navigate to profile page
+    navigate("/profile");
   };
 
   return (
@@ -44,38 +63,40 @@ const HomeNav = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 items-center">
-            <a
-              href="/"
-              className={`px-3 py-2 font-semibold ${
-                isActive('/') ? 'text-yellow-400' : 'text-white'
-              } hover:text-yellow-300`}
+            <Link
+              to="/"
+              className={`px-3 py-2 font-semibold ${isActive('/') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
             >
               Home
-            </a>
-            <a
-              href="/about"
-              className={`px-3 py-2 font-semibold ${
-                isActive('/about') ? 'text-yellow-400' : 'text-white'
-              } hover:text-yellow-300`}
+            </Link>
+            <Link
+              to="/about"
+              className={`px-3 py-2 font-semibold ${isActive('/about') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
             >
               About Us
-            </a>
-            <a
-              href="/services"
-              className={`px-3 py-2 font-semibold ${
-                isActive('/services') ? 'text-yellow-400' : 'text-white'
-              } hover:text-yellow-300`}
+            </Link>
+            <Link
+              to="/services"
+              className={`px-3 py-2 font-semibold ${isActive('/services') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
             >
               Services
-            </a>
-            <a
-              href="/contact"
-              className={`px-3 py-2 font-semibold ${
-                isActive('/contact') ? 'text-yellow-400' : 'text-white'
-              } hover:text-yellow-300`}
+            </Link>
+            <Link
+              to="/contact"
+              className={`px-3 py-2 font-semibold ${isActive('/contact') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
             >
               Contact
-            </a>
+            </Link>
+
+            {/* Dashboard Link (Role-based) */}
+            {isLoggedIn && dashboardPath && (
+              <Link
+                to={dashboardPath}
+                className={`px-3 py-2 font-semibold ${isActive(dashboardPath) ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+              >
+                Dashboard
+              </Link>
+            )}
           </div>
 
           {/* Auth/Logout or Avatar Buttons */}
@@ -96,29 +117,27 @@ const HomeNav = () => {
                 </button>
               </>
             ) : (
-              <>
-                <div className="flex items-center space-x-2">
-                  {/* Avatar */}
-                  <img
-                    src={userAvatar}
-                    alt="User Avatar"
-                    onClick={handleAvatarClick}
-                    className="w-8 h-8 rounded-full cursor-pointer border-2 border-yellow-400"
-                  />
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </>
+              <div className="flex items-center space-x-2">
+                <img
+                  src={userAvatar}
+                  alt="User Avatar"
+                  onClick={handleAvatarClick}
+                  className="w-8 h-8 rounded-full cursor-pointer border-2 border-yellow-400"
+                />
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1 rounded"
+                >
+                  Logout
+                </button>
+              </div>
             )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
+              aria-label="Toggle mobile menu"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-gray-300 hover:text-white focus:outline-none"
             >
@@ -131,18 +150,46 @@ const HomeNav = () => {
       {/* Mobile Dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
-          <a href="/" className="block px-3 py-2 text-yellow-400 font-semibold">
+          <Link
+            to="/"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block px-3 py-2 font-semibold ${isActive('/') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+          >
             Home
-          </a>
-          <a href="/about" className="block px-3 py-2 text-white hover:text-yellow-300">
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block px-3 py-2 ${isActive('/about') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+          >
             About Us
-          </a>
-          <a href="/services" className="block px-3 py-2 text-white hover:text-yellow-300">
+          </Link>
+          <Link
+            to="/services"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block px-3 py-2 ${isActive('/services') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+          >
             Services
-          </a>
-          <a href="/contact" className="block px-3 py-2 text-white hover:text-yellow-300">
+          </Link>
+          <Link
+            to="/contact"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block px-3 py-2 ${isActive('/contact') ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+          >
             Contact
-          </a>
+          </Link>
+
+          {/* Role-based Dashboard */}
+          {isLoggedIn && dashboardPath && (
+            <Link
+              to={dashboardPath}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`block px-3 py-2 ${isActive(dashboardPath) ? 'text-yellow-400' : 'text-white'} hover:text-yellow-300`}
+            >
+              Dashboard
+            </Link>
+          )}
+
           {!isLoggedIn ? (
             <>
               <button

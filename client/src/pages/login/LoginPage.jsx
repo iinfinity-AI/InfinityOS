@@ -50,12 +50,15 @@ export default function LoginPage() {
         switch(user.role) {
           case "Admin":
             navigate("/admin/dashboard");
+            window.location.reload();
             break;
           case "team-lead":
             navigate("/team-lead/dashboard");
+            window.location.reload();
             break;
           default:
             navigate("/user/dashboard");
+            window.location.reload();
         }
       }, 1000);
 
