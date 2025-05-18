@@ -14,16 +14,31 @@ import GetallMoods from "../pages/userProfile/getallMoods";
 import TeamLeadDashboard from "../components/teamLead";
 import RoleChangeDashboard from "../pages/Dashboard/rolechangedash";
 
-// Protected Route Component
+// Route Guards
 import ProtectedRoute from "../components/ProtectedRoute";
+import PublicRoute from "../components/PublicRoute"; // <-- Import new component
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+
+      {/* Public Routes - Restricted when logged in */}
+      <Route path="/signup" element={
+        <PublicRoute>
+          <SignupPage />
+        </PublicRoute>
+      } />
+      <Route path="/login" element={
+        <PublicRoute>
+          <LoginPage />
+        </PublicRoute>
+      } />
+      <Route path="/reset-password" element={
+        <PublicRoute>
+          <ResetPassword />
+        </PublicRoute>
+      } />
 
       {/* User Routes */}
       <Route path="/user/dashboard" element={
