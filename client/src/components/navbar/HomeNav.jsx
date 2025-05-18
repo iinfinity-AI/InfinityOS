@@ -17,20 +17,20 @@ const HomeNav = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
-      setIsLoggedIn(true); // User is logged in
-      setUserAvatar(userData.profilePicture || DefaultAvatar); // Get avatar from user data or use default
-      setUserName(userData.name || "User"); // Get user name from user data
+      setIsLoggedIn(true); 
+      setUserAvatar(userData.profilePicture || DefaultAvatar); 
+      setUserName(userData.name || "User"); 
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data from localStorage
-    setIsLoggedIn(false); // Set login status to false
+    localStorage.removeItem("user");
+    setIsLoggedIn(false); 
     navigate("/"); 
   };
 
   const handleAvatarClick = () => {
-    navigate("/profile"); // Navigate to profile page
+    navigate("/profile"); 
   };
 
   return (
