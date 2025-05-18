@@ -22,7 +22,7 @@ const HomeNav = () => {
         setUserAvatar(userData.profilePicture || DefaultAvatar);
         setUserName(userData.name || "User");
 
-        // Set role-based dashboard path
+
         switch (userData.role) {
           case "Admin":
             setDashboardPath("/admin/dashboard");
@@ -31,7 +31,7 @@ const HomeNav = () => {
             setDashboardPath("/team-lead/dashboard");
             break;
           case "employee":
-            setDashboardPath("/employee/dashboard");
+            setDashboardPath("/user/dashboard");
             break;
           default:
             setDashboardPath("");
@@ -99,7 +99,7 @@ const HomeNav = () => {
             )}
           </div>
 
-          {/* Auth/Logout or Avatar Buttons */}
+
           <div className="hidden md:flex space-x-2">
             {!isLoggedIn ? (
               <>
