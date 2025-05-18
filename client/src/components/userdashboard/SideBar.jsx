@@ -17,7 +17,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser) {
           setUserName(storedUser.name || "User");
-          setUserAvatar(storedUser.profilePicture || ""); // Ensure profilePicture is properly initialized
+          setUserAvatar(storedUser.profilePicture || ""); 
           setUserRole(storedUser.role || "User");
         }
       } catch (error) {
@@ -28,19 +28,19 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
     fetchUserData();
   }, []);
 
-  // Conditional assignment for profilePicture
+  
   const avatarToShow =
     userAvatar && userAvatar.trim() !== "" ? userAvatar : Customer1;
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/"); // Redirect to the login page or homepage
+    navigate("/"); 
   };
 
   const tabItem = (icon, label, tabKey, path) => (
     <Link
       key={tabKey}
-      to={path} // Updated Link for navigation
+      to={path} 
       onClick={() => setSelectedTab(tabKey)}
       className={`flex items-center ${
         isCollapsed ? "justify-center" : "gap-3"
@@ -73,7 +73,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
         {/* User Info */}
         <div className="flex flex-col items-center text-center mb-6">
           <img
-            src={avatarToShow} // Use avatarToShow for the correct image source
+            src={avatarToShow} 
             alt="User Avatar"
             className={`rounded-full border-4 border-yellow-400 shadow-md ${
               isCollapsed ? "w-12 h-12" : "w-20 h-20"
@@ -102,7 +102,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
         </div>
       </div>
 
-      {/* Log Out Button at bottom */}
+      
       <div className="mt-auto">
         <button
           onClick={handleLogout}
