@@ -3,11 +3,10 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const PublicRoute = ({ children }) => {
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  // If token exists, redirect to user dashboard or home
-  if (user) {
-    return <Navigate to="/profile" replace />;
+  if (user?.role) {
+    return <Navigate to={`/${user.role}/dashboard`} replace />;
   }
 
   return children;
