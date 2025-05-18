@@ -10,7 +10,7 @@ import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
-
+import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -57,6 +57,12 @@ const UserDashboardPage = () => {
           {selectedTab === "taskboard" && (
             <div className="space-y-6 mt-4">
               <TaskFilterBar />
+            </div>
+          )}
+
+          {selectedTab === "mood" && (
+            <div className="space-y-6 mt-4">
+              <MoodcheckIN />
             </div>
           )}
         </div>
