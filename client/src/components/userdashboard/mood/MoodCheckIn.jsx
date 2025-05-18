@@ -45,6 +45,7 @@ const MoodHistory = () => {
     const today = format(new Date(), 'yyyy-MM-dd');
     const hasSubmittedToday = moods.some(mood => 
       format(new Date(mood.createdAt), 'yyyy-MM-dd') === today
+      
     );
 
     if (hasSubmittedToday) {
