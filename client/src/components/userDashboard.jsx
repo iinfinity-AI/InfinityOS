@@ -103,7 +103,7 @@ const UserDashboard = () => {
       await API.patch(`/tasks/change/${taskId}`, { status: newStatus });
       fetchTasks();
     } catch (err) {
-      alert("Failed to update status",err);
+      alert("Failed to update status", err.message);
     }
     setUpdatingId(null);
   };
