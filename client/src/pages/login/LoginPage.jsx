@@ -57,7 +57,7 @@ export default function LoginPage() {
             window.location.reload();
             break;
           default:
-            navigate("/user/dashboard");
+            navigate("/employee/dashboard");
             window.location.reload();
         }
       }, 1000);

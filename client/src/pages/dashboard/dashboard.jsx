@@ -17,7 +17,7 @@ const priorityColors = {
 };
 
 const TaskDashboard = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook for navigation
+  const navigate = useNavigate(); 
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
     status: "",
@@ -40,7 +40,7 @@ const TaskDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const role = user?.role?.toLowerCase(); // Get the logged-in user's role
+  const role = user?.role?.toLowerCase(); 
 
   useEffect(() => {
     fetchTasks();
@@ -51,7 +51,7 @@ const TaskDashboard = () => {
         else setUsers([]);
       })
       .catch(() => setUsers([]));
-    // eslint-disable-next-line
+
   }, [filters, sortBy]);
 
   const fetchTasks = async () => {
