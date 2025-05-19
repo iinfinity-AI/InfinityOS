@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+import Adminsidebar from "../../components/Admindashboard/Adminsidebar";
+
+import Topbar from "../../components/Admindashboard/Topbar";
+
+// Import the new components
+import DashboardStats from "../../components/Admindashboard/DashboardStats";
+import EmployeeCard from "../../components/Admindashboard/EmployeeCard";
+import CandidateCard from "../../components/Admindashboard/CandidateCard";
+import PayrollCard from "../../components/Admindashboard/PayrollCard";
+import RecentCard from "../../components/Admindashboard/RecentCard";
+import TaskBoard from "../../components/Admindashboard/TaskBoard";
+
+const DashboardPage = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("dashboard");
+
+  const toggleSidebar = () => {
+    setCollapsed((prev) => !prev);
+  };
+
+  return (
+    <div className="flex min-h-screen bg-blue-50">
+      {/* Sidebar */}
+      <Adminsidebar
+        collapsed={collapsed}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+      />
+
+      {/* Right content */}
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          collapsed ? "ml-20" : "ml-64"
+        }`}
+      >
+        {/* Topbar */}
+        <Topbar toggleSidebar={toggleSidebar} />
+
+        {/* Main content */}
+        <div className="p-6 flex-1 bg-blue-50 overflow-y-auto">
+          {selectedTab === "dashboard" && (
+            <>
+              <h1 className="text-3xl font-bold mb-6 text-gray-800">
+                Welcome to Dashboard
+              </h1>
+
+              {/* Dashboard Statistics Section */}
+              <DashboardStats />
+
+              {/* Grid Sections */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+                <div>
+                  <RecentCard />
+                  <CandidateCard />
+                </div>
+                <div>
+                  <EmployeeCard />
+                  <PayrollCard />
+                </div>
+              </div>
+            </>
+          )}
+
+          {selectedTab === "taskboard" && <TaskBoard />}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardPage;
