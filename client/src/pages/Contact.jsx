@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import emailjs from "emailjs-com";
+const serviceID = "service_x5ydxfr";
+const templateID = "template_i6bi3w4";
+const userID = "ovLpuGbawHqA6cPwh";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -14,9 +17,6 @@ const Contact = () => {
     e.preventDefault();
     setSending(true);
 
-    const serviceID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-    const templateID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-    const userID = process.env.REACT_APP_EMAILJS_USER_ID;
 
     const templateParams = {
       from_name: formData.name,
