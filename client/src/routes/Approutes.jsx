@@ -16,6 +16,7 @@ import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
 import Services from "../pages/services";
 import Contact from "../pages/Contact";
+import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
 
 const AppRoutes = () => {
   return (
@@ -116,7 +117,16 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+
+
+{/* // new Admin Dashboard */}
+
+      <Route path="/admindash" element={<DashboardPage/>}/>
     </Routes>
+
+
+
   );
 };
 
