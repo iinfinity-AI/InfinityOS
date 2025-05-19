@@ -8,13 +8,16 @@ import LoginPage from "./pages/login/LoginPage";
 import ResetPassword from "./pages/login/ResetPassword";
 import HomePage from './pages/homepage/HomePage';
 import UserDashboardPage from './pages/dashboard/UserDashboardPage';
+import DashboardPage from "./pages/Admindash/DashboardPage";
 
 
 const AppContent = () => {
   const location = useLocation();
 
   // Add any routes here where you want to hide nav and footer
-  const noNavFooterRoutes = ['/dashboard', '/taskboard'];
+  const noNavFooterRoutes = ['/dashboard', '/taskboard','/admindash'];
+  
+  
 
   const hideNavFooter = noNavFooterRoutes.includes(location.pathname);
 
@@ -30,6 +33,7 @@ const AppContent = () => {
 
         {/* Dashboard routes */}
         <Route path="/dashboard" element={<UserDashboardPage />} />
+        <Route path="/admindash" element={<DashboardPage/>}/>
       </Routes>
 
       {!hideNavFooter && <Footer />}
