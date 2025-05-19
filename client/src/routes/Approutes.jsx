@@ -16,7 +16,7 @@ import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
 import Services from "../pages/services";
 import Contact from "../pages/Contact";
-import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
+// import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
 import DashboardPage from "../pages/dashboard/AdminDashboardPage";
 const AppRoutes = () => {
   return (
