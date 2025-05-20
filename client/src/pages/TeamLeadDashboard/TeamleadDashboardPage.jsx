@@ -3,12 +3,12 @@ import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
 import GreetingSection from "../../components/userdashboard/GreetingSection";
 import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
-import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
+
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 import NewTask from "../../components/task/dashboard";
 import RecentCard from "../../components/Admindashboard/RecentCard";
-import DashboardStats from "../../components/Admindashboard/DashboardStats";
+
 import GetAllMoods from "../../components/moods/getallMoods";
 
 
@@ -45,8 +45,7 @@ const TeamLeadDashboardPage = () => {
                 <AssignedToMeCard />
               </div>
               <div className="space-y-6">
-                <AssignedCommentsCard />
-                 <DashboardStats />
+              
             
                   <RecentCard />
               </div>
