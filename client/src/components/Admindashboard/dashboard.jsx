@@ -124,26 +124,14 @@ const TaskDashboard = () => {
             : "Admin Dashboard"}
         </span>
         <div className="flex gap-3">
-          {role === "admin" && ( // Only show the "Change Role" button for Admin role
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-              onClick={goToChangeRolePage}
-            >
-              Change Role
-            </button>
-          )}
+    
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
             onClick={() => setShowAdd(true)}
           >
             + Add Task
           </button>
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-            onClick={() => navigate("/moods")}
-          >
-            Mood
-          </button>
+    
         </div>
       </h2>
 
