@@ -44,7 +44,22 @@ const DashboardPage = () => {
             </>
           )}
 
-          {selectedTab === "taskboard" && <TaskBoard />}
+            {selectedTab === "taskboard" && (
+            <div className="space-y-6 mt-4">
+              <TaskFilterBar />
+            </div>
+          )}
+
+          {selectedTab === "mood" && (
+            <div className="space-y-6 mt-4">
+              <MoodcheckIN />
+            </div>
+          )}
+           {selectedTab === "users" && (
+            <div className="space-y-6 mt-4">
+              <MoodcheckIN />
+            </div>
+          )}
         </div>
       </div>
     </div>
