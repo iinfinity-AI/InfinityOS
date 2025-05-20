@@ -1,6 +1,6 @@
 import React from 'react';
 import UserDashboard from './userDashboard';
-import AdminDashboard from '../pages/Dashboard/dashboard';
+import AdminDashboard from '../components/task/dashboard';
 
 const TeamLeadDashboard = () => {
   return (

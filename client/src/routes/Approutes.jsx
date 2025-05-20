@@ -10,7 +10,7 @@ import TaskDashboard from "..//components/task/dashboard";
 import MoodHistory from "../components/userdashboard/mood/MoodHistory";
 import GetallMoods from "../components/moods/getallMoods";
 import TeamLeadDashboard from "../components/teamLead";
-import RoleChangeDashboard from "../pages/Admindashboard/rolechangedash";
+import RoleChangeDashboard from "../components/Admindashboard/rolechangedash";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
