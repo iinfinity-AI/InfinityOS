@@ -6,6 +6,7 @@ import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
+import GetAllMoods from "../../components/moods/getallMoods";
 
 const TeamLeadDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -54,6 +55,11 @@ const TeamLeadDashboardPage = () => {
           {selectedTab === "mood" && (
             <div className="space-y-6 mt-4">
               <MoodcheckIN />
+            </div>
+          )}
+        {selectedTab === "allmood" && (
+            <div className="space-y-6 mt-4">
+              <GetAllMoods />
             </div>
           )}
         </div>

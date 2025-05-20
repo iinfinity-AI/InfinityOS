@@ -6,14 +6,12 @@ import ResetPassword from "../pages/login/ResetPassword";
 import HomePage from "../pages/homepage/HomePage";
 import UserDashboardPage from "../pages/Admindashboard/UserDashboardPage";
 import UserProfile from "../pages/userProfile/profile";
-import MoodHistory from "../components/userdashboard/mood/MoodHistory";
 import GetallMoods from "../components/moods/getallMoods";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
 import Services from "../pages/services";
 import Contact from "../pages/Contact";
-
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
 import TeamLeadDashboardPage from "../pages/TeamLeadDashboard/TeamleadDashboardPage";
 const AppRoutes = () => {
@@ -70,14 +68,6 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="/mood"
-        element={
-          <ProtectedRoute allowedRoles={["employee", "team-lead"]}>
-            <MoodHistory />
-          </ProtectedRoute>
-        }
-      />
 
 
       <Route

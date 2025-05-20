@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { AiOutlineEye } from "react-icons/ai";
+import API from "../../services/api";
 
 const AssignedToMeCard = () => {
-  const tasks = [
-    {
-      title: "Design and implement the backend",
-      role: "backend Engineer",
-    },
-    {
-      title: "Develop a simple and intelligent chatbot",
-      role: "Sales",
-    },
-    {
-      title: "Build UI designs",
-      role: "Product Manager",
-    },
-  ];
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const fetchAssignedTasks = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user?._id) return;
+        const res = await API.get(`/tasks`);
+        const allTasks = res.data || [];
+        const assignedTasks = allTasks.filter(
+          (task) =>
+            task.assignedTo === user._id ||
+            (Array.isArray(task.assignedTo) && task.assignedTo.includes(user._id))
+        );
+        setTasks(assignedTasks);
+      } catch {
+        setTasks([]);
+      }
+    };
+    fetchAssignedTasks();
+  }, []);
 
   return (
     <div className="bg-white rounded-md p-4 shadow-sm">
@@ -24,6 +32,10 @@ const AssignedToMeCard = () => {
         <p className="font-semibold">Assigned to me</p>
         <FiMoreVertical className="cursor-pointer" />
       </div>
+
+      {tasks.length === 0 && (
+        <div className="text-gray-400 text-sm">No tasks assigned.</div>
+      )}
 
       {tasks.map(({ title, role }, i) => (
         <div

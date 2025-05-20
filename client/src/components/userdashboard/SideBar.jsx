@@ -70,7 +70,8 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
       getNavItem(<FaBalanceScale />, "Team Tasks", "taskboard"),
       getNavItem(<FaTasks />, "Assign Tasks", "assign"),
-      getNavItem(<FaSmile />, "Team Mood", "mood"),
+      getNavItem(<FaSmile />, "Add Mood", "mood"),
+      getNavItem(<FaSmile />, "All Mood", "allmood"),
     ],
   };
 
@@ -88,7 +89,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
           />
         </div>
 
-        {/* User Info */}
+
         <div className="flex flex-col items-center text-center mb-6">
           <img
             src={avatarToShow}
