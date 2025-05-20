@@ -6,17 +6,14 @@ import ResetPassword from "../pages/login/ResetPassword";
 import HomePage from "../pages/homepage/HomePage";
 import UserDashboardPage from "../pages/Admindashboard/UserDashboardPage";
 import UserProfile from "../pages/userProfile/profile";
-import TaskDashboard from "..//components/task/dashboard";
 import MoodHistory from "../components/userdashboard/mood/MoodHistory";
 import GetallMoods from "../components/moods/getallMoods";
-import TeamLeadDashboard from "../components/teamLead";
-import RoleChangeDashboard from "../components/Admindashboard/rolechangedash";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
 import Services from "../pages/services";
 import Contact from "../pages/Contact";
-// import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
+
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
 import TeamLeadDashboardPage from "../pages/TeamLeadDashboard/TeamleadDashboardPage";
 const AppRoutes = () => {
@@ -112,11 +109,6 @@ const AppRoutes = () => {
 
     
 
-
-
-
-
-      {/* <Route path="/admindash" element={<DashboardPage/>}/> */}
     </Routes>
 
 
