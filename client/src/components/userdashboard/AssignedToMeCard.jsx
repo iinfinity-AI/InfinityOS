@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FiMoreVertical } from "react-icons/fi";
 import { AiOutlineEye } from "react-icons/ai";
 import API from "../../services/api";
 
@@ -13,7 +12,6 @@ const AssignedToMeCard = () => {
         if (!user?._id) return;
         const res = await API.get(`/tasks`);
         const allTasks = res.data || [];
-        // Robust filter for all possible assignedTo formats
         const assignedTasks = allTasks.filter((task) => {
           if (Array.isArray(task.assignedTo)) {
             return task.assignedTo.some(
@@ -39,7 +37,6 @@ const AssignedToMeCard = () => {
     <div className="bg-white rounded-md p-4 shadow-sm">
       <div className="flex justify-between items-center mb-3">
         <p className="font-semibold">Assigned to me</p>
-        <FiMoreVertical className="cursor-pointer" />
       </div>
       {tasks.length === 0 && (
         <div className="text-gray-400 text-sm">No tasks assigned.</div>

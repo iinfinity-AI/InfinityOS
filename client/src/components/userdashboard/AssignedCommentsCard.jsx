@@ -4,22 +4,7 @@ import { AiOutlineEye, AiOutlineClose } from "react-icons/ai";
 
 const AssignedCommentsCard = () => {
   const comments = [
-    {
-      name: "Aman",
-      avatar: "/path/to/Customer1.png",
-      comment: "Good work",
-    },
-    {
-      name: "Gelila",
-      avatar: "/path/to/Customer2.png",
-      comment:
-        "Can you align the button spacing on the homepage hero section? It feels a bit off-center.",
-    },
-    {
-      name: "Shaneli",
-      avatar: "/path/to/Customer3.png",
-      comment: "Can you integrate the leave management API by Friday?",
-    },
+    
   ];
 
   return (
