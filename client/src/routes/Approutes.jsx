@@ -120,7 +120,7 @@ const AppRoutes = () => {
 
 
 
-{/* // new Admin Dashboard */}
+
 
       <Route path="/admindash" element={<DashboardPage/>}/>
     </Routes>

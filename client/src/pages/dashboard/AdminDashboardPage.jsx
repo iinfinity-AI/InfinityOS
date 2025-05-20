@@ -3,11 +3,8 @@ import Adminsidebar from "../../components/Admindashboard/Adminsidebar";
 
 import Topbar from "../../components/Admindashboard/Topbar";
 
-// Import the new components
 import DashboardStats from "../../components/Admindashboard/DashboardStats";
 import EmployeeCard from "../../components/Admindashboard/EmployeeCard";
-import CandidateCard from "../../components/Admindashboard/CandidateCard";
-import PayrollCard from "../../components/Admindashboard/PayrollCard";
 import RecentCard from "../../components/Admindashboard/RecentCard";
 import TaskBoard from "../../components/Admindashboard/TaskBoard";
 
@@ -28,16 +25,15 @@ const DashboardPage = () => {
         setSelectedTab={setSelectedTab}
       />
 
-      {/* Right content */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
           collapsed ? "ml-20" : "ml-64"
         }`}
       >
-        {/* Topbar */}
+
         <Topbar toggleSidebar={toggleSidebar} />
 
-        {/* Main content */}
+      
         <div className="p-6 flex-1 bg-blue-50 overflow-y-auto">
           {selectedTab === "dashboard" && (
             <>
@@ -45,18 +41,14 @@ const DashboardPage = () => {
                 Welcome to Dashboard
               </h1>
 
-              {/* Dashboard Statistics Section */}
               <DashboardStats />
-
-              {/* Grid Sections */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
                 <div>
                   <RecentCard />
-                  <CandidateCard />
+  
                 </div>
                 <div>
                   <EmployeeCard />
-                  <PayrollCard />
                 </div>
               </div>
             </>

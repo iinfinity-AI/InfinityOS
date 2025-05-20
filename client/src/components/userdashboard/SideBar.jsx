@@ -98,7 +98,7 @@ const SideBar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
         <div className="space-y-2">
           {tabItem(<FaTachometerAlt />, "Dashboard", "dashboard", )}
           {tabItem(<FaBalanceScale />, "Task Board", "taskboard", )}
-          {tabItem(<FaSmile />, "Mood & Wellness", "mood", )} {/* Updated Link for Mood Check-In */}
+          {tabItem(<FaSmile />, "Mood & Wellness", "mood", )}
         </div>
       </div>
 

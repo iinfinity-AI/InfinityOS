@@ -23,13 +23,6 @@ const Topbar = ({ toggleSidebar }) => {
           </button>
         </div>
       </div>
-
-      {/* Icons */}
-      {/* <div className="flex items-center gap-4">
-        <IconButton icon={<FaBell />} count={13} color="bg-[#1E3A8A]" />
-        <IconButton icon={<FaWrench />} count={0} color="bg-yellow-400" />
-        <IconButton icon={<FaEnvelope />} count={13} color="bg-green-600" />
-      </div> */}
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React from 'react';
-import HomeNav from '../../components/navbar/HomeNav';
 import HomeBack from '../../assets/homepage/HomeBack.jpg';
 
 const HomePage = () => {

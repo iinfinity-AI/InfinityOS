@@ -3,14 +3,12 @@ import React, { useState } from "react";
 import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
 import GreetingSection from "../../components/userdashboard/GreetingSection";
-
-
-
 import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
-
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
+
+
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -44,11 +42,9 @@ const UserDashboardPage = () => {
           {selectedTab === "dashboard" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
-        
                 <AssignedToMeCard />
               </div>
               <div className="space-y-6">
-
                 <AssignedCommentsCard />
               </div>
             </div>
