@@ -1,21 +1,79 @@
-import React from "react";
-import { FaEnvelope, FaBriefcase, FaUsers, FaFileAlt, FaUserTie, FaCalendarAlt, FaMoneyBill } from "react-icons/fa";
-
-const stats = [
-  { icon: <FaEnvelope />, label: "Messages", value: 4, color: "bg-orange-400" },
-  { icon: <FaBriefcase />, label: "Jobs", value: 1, color: "bg-blue-600" },
-  { icon: <FaUsers />, label: "Candidates", value: 30, color: "bg-green-600" },
-  { icon: <FaFileAlt />, label: "Resumes", value: 2, color: "bg-black" },
-  { icon: <FaUserTie />, label: "Employees", value: 20, color: "bg-orange-600" },
-  { icon: <FaCalendarAlt />, label: "Leaves", value: 8, color: "bg-blue-800" },
-  { icon: <FaMoneyBill />, label: "Payrolls", value: 7, color: "bg-green-700" },
-];
+import React, { useEffect, useState } from "react";
+import {
+  FaEnvelope,
+  FaBriefcase,
+  FaUsers,
+  FaFileAlt,
+  FaUserTie,
+  FaCalendarAlt,
+  FaMoneyBill,
+} from "react-icons/fa";
+import API from "../../services/api";
 
 const DashboardStats = () => {
+  const [counts, setCounts] = useState({
+    employees: 0,
+    teamLeads: 0,
+    tasks: 0,
+    messages: 0,
+    jobs: 0,
+    candidates: 0,
+    resumes: 0,
+    leaves: 0,
+    payrolls: 0,
+  });
+
+  useEffect(() => {
+    API.get("/users")
+      .then((res) => {
+        const users = res.data.users || res.data;
+        setCounts((prev) => ({
+          ...prev,
+          employees: users.filter((u) => u.role === "employee").length,
+          teamLeads: users.filter((u) => u.role === "team-lead").length,
+        }));
+      })
+      .catch(() => {});
+
+
+    API.get("/tasks")
+      .then((res) => {
+        setCounts((prev) => ({
+          ...prev,
+          tasks: Array.isArray(res.data) ? res.data.length : 0,
+        }));
+      })
+      .catch(() => {});
+  }, []);
+
+  const stats = [
+    {
+      icon: <FaUserTie />,
+      label: "Employees",
+      value: counts.employees,
+      color: "bg-orange-600",
+    },
+    {
+      icon: <FaUsers />,
+      label: "Team Leads",
+      value: counts.teamLeads,
+      color: "bg-blue-600",
+    },
+    {
+      icon: <FaBriefcase />,
+      label: "Tasks",
+      value: counts.tasks,
+      color: "bg-green-600",
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
+    <div className="grid grid-cols-4 sm:grid-cols-3  gap-3">
       {stats.map((stat, index) => (
-        <div key={index} className={`p-4 rounded-lg text-white shadow-md ${stat.color}`}>
+        <div
+          key={index}
+          className={`p-4 rounded-lg text-white shadow-md ${stat.color}`}
+        >
           <div className="text-xl mb-2">{stat.icon}</div>
           <div className="text-sm">{stat.label}</div>
           <div className="text-lg font-bold">{stat.value}</div>
