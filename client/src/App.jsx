@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import AppRoutes from './routes/Approutes';
-
-function App() {
-  return(
-  <AppRoutes />
-);
-=======
 import React from "react";
 import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import HomeNav from "./components/navbar/HomeNav";
@@ -37,7 +29,7 @@ function App() {
       <AppContent />
     </Router>
   );
->>>>>>> newFrontend
+
 }
 
 export default App;

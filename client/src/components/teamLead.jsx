@@ -1,11 +1,9 @@
 import React from 'react';
-<<<<<<< HEAD
-import UserDashboard from './userDashboard';
-import AdminDashboard from '../pages/Dashboard/dashboard';
-=======
+
+
 import UserDashboard from './/userdashboard/taskboard/TaskTable';
 import AdminDashboard from '../pages/Admindashboard/AdminDashboardPage';
->>>>>>> newFrontend
+
 
 const TeamLeadDashboard = () => {
   return (

@@ -1,11 +1,9 @@
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-<<<<<<< HEAD
-  const user = JSON.parse(localStorage.getItem("user")); // or get from context/store
-=======
+
   const user = JSON.parse(localStorage.getItem("user")); 
->>>>>>> newFrontend
+
 
   if (!user) {
     return <Navigate to="/login" replace />;

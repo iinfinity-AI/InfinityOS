@@ -99,10 +99,7 @@ const handleSubmit = async (e) => {
     navigate(-1);  // Use navigate with -1 to go back to the previous page
   };
 
-  // Go back to the previous page
-  const goBack = () => {
-    navigate(-1);  // Use navigate with -1 to go back to the previous page
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">

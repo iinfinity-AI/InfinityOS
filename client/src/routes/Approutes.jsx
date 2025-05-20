@@ -1,109 +1,14 @@
-<<<<<<< HEAD
-import TopNav from "../components/navbar/TopNav";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-=======
-import React from "react";
-import { Routes, Route } from "react-router-dom";
->>>>>>> newFrontend
-import SignupPage from "../pages/signup/SignupPage";
-import LoginPage from "../pages/login/LoginPage";
-import ResetPassword from "../pages/login/ResetPassword";
-import HomePage from "../pages/homepage/HomePage";
-<<<<<<< HEAD
-import UserProfile from "../pages/userProfile/profile";
-import TaskDashboard from "../pages/Dashboard/dashboard";
-import MoodHistory from "../pages/userProfile/moodHistory";
-import UserDashboard from "../components/userDashboard";
-import GetallMoods from "../pages/userProfile/getallMoods";
-import ProtectedRoute from "../components/ProtectedRoute";
-import TeamLeadDashboard from "../components/teamLead";
-import RoleChangeDashboard from "../pages/Dashboard/rolechangedash";
 
-function AppRoutes() {
-  return (
-    <Router>
-      <TopNav />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-
-        <Route
-          path="/user/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["employee"]}>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute allowedRoles={["Admin", "employee","team-lead"]}>
-              <UserProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/mood"
-          element={
-            <ProtectedRoute allowedRoles={[ "employee","team-lead"]}>
-              <MoodHistory />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["Admin","team-lead","team-lead"]}>
-              <TaskDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/moods"
-          element={
-            <ProtectedRoute allowedRoles={["Admin","team-lead"]}>
-              <GetallMoods />
-            </ProtectedRoute>
-          }
-        />
-
-          <Route
-          path="/team-lead/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["team-lead"]}>
-              <TeamLeadDashboard />
-            </ProtectedRoute>
-          }/>
-
-          <Route
-          path="/admin/dashboard/changeRole"
-          element={
-            <ProtectedRoute allowedRoles={["Admin"]}>
-              <RoleChangeDashboard />
-            </ProtectedRoute>
-          }/>
-      </Routes>
-    </Router>
-  );
-}
-=======
 import UserDashboardPage from "../pages/Admindashboard/UserDashboardPage";
 import UserProfile from "../pages/userProfile/profile";
-import TaskDashboard from "..//components/task/dashboard";
 import MoodHistory from "../components/userdashboard/mood/MoodHistory";
 import GetallMoods from "../components/moods/getallMoods";
 import TeamLeadDashboard from "../components/teamLead";
-import RoleChangeDashboard from "../components/Admindashboard/rolechangedash";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute";
 import About from "../pages/about";
 import Services from "../pages/services";
 import Contact from "../pages/Contact";
-// import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
 const AppRoutes = () => {
   return (
@@ -202,13 +107,13 @@ const AppRoutes = () => {
 
 
 
-      {/* <Route path="/admindash" element={<DashboardPage/>}/> */}
+
     </Routes>
 
 
 
   );
 };
->>>>>>> newFrontend
+
 
 export default AppRoutes;
