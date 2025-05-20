@@ -109,14 +109,7 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="/admin/dashboard/changeRole"
-        element={
-          <ProtectedRoute allowedRoles={["Admin"]}>
-            <RoleChangeDashboard />
-          </ProtectedRoute>
-        }
-      />
+    
 
 
 
