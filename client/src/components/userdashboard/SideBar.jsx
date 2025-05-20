@@ -70,8 +70,10 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
       getNavItem(<FaBalanceScale />, "Team Tasks", "taskboard"),
       getNavItem(<FaTasks />, "Assign Tasks", "assign"),
-      getNavItem(<FaSmile />, "Team Mood", "mood"),
+      getNavItem(<FaSmile />, "add Mood", "mood"),
+       getNavItem(<FaSmile />, "Team Mood", "moods"),
     ],
+    
   };
 
   return (
