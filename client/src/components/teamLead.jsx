@@ -29,7 +29,7 @@ const TeamLeadDashboard = () => {
       <UserDashboard />
     </div>
     <div className=" mb-10 p-10">
-      <AdminDashboard />
+
     </div>
   </div>
 </div>
