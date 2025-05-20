@@ -4,10 +4,9 @@ import Topbar from "../../components/userdashboard/TopBar";
 import DashboardStats from "../../components/Admindashboard/DashboardStats";
 import EmployeeCard from "../../components/Admindashboard/EmployeeCard";
 import RecentCard from "../../components/Admindashboard/RecentCard";
-import TaskBoard from "../../components/Admindashboard/TaskBoard";
 import Allusers from "../../components/Admindashboard/rolechangedash";
-import Moods from "../../components/Admindashboard/getallMoods";
-import TaskFilterBar from "../../components/Admindashboard/dashboard";
+import Moods from "../../components/moods/getallMoods";
+import TaskFilterBar from "../../components/task/dashboard";
 const DashboardPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -46,7 +45,7 @@ const DashboardPage = () => {
             </>
           )}
 
-            {selectedTab === "taskboard" && (
+          {selectedTab === "taskboard" && (
             <div className="space-y-6 mt-4">
               <TaskFilterBar />
             </div>
@@ -57,7 +56,7 @@ const DashboardPage = () => {
               <Moods />
             </div>
           )}
-           {selectedTab === "users" && (
+          {selectedTab === "users" && (
             <div className="space-y-6 mt-4">
               <Allusers />
             </div>
