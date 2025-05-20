@@ -4,7 +4,7 @@ import HomeNav from "./components/navbar/HomeNav";
 import Footer from "./components/footer/Footer";
 import AppRoutes from "./routes/Approutes";
 
-const noNavFooterRoutes = ["/employee/dashboard", "/taskboard"];
+const noNavFooterRoutes = ["/employee/dashboard", "/taskboard","/admin/dashboard"];
 
 const AppContent = () => {
   const location = useLocation();
