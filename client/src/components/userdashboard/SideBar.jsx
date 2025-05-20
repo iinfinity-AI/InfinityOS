@@ -73,6 +73,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaSmile />, "Add Mood", "mood"),
       getNavItem(<FaSmile />, "All Mood", "allmood"),
     ],
+    
   };
 
   return (

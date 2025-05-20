@@ -6,7 +6,12 @@ import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
-import GetAllMoods from "../../components/moods/getallMoods";
+import NewTask from "../../components/task/dashboard"
+import Allmods from  "../../components/moods/getallMoods"
+import EmployeeCard from "../../components/Admindashboard/EmployeeCard";
+import RecentCard from "../../components/Admindashboard/RecentCard";
+import DashboardStats from "../../components/Admindashboard/DashboardStats";
+
 
 const TeamLeadDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -42,6 +47,9 @@ const TeamLeadDashboardPage = () => {
               </div>
               <div className="space-y-6">
                 <AssignedCommentsCard />
+                 <DashboardStats />
+                 <EmployeeCard />
+                  <RecentCard />
               </div>
             </div>
           )}
@@ -57,9 +65,15 @@ const TeamLeadDashboardPage = () => {
               <MoodcheckIN />
             </div>
           )}
-        {selectedTab === "allmood" && (
+           {selectedTab === "assign" && (
             <div className="space-y-6 mt-4">
-              <GetAllMoods />
+              <NewTask/>
+            </div>
+          )}
+
+            {selectedTab === "moods" && (
+            <div className="space-y-6 mt-4">
+              <Allmoods/>
             </div>
           )}
         </div>
