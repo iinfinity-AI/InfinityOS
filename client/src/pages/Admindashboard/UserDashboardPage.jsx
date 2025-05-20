@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
-import GreetingSection from "../../components/userdashboard/GreetingSection";
-import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
-import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 import API from "../../services/api";
@@ -94,7 +91,7 @@ const UserDashboardPage = () => {
         {/* TopBar */}
         <TopBar toggleSidebar={toggleSidebar} />
         {/* Main Content */}
-        <div className="p-6 mt-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
+        <div className="p-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
           {selectedTab === "dashboard" && (
             <div>
               {/* Dashboard Header */}
