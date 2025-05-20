@@ -7,7 +7,7 @@ import AssignedCommentsCard from "../../components/userdashboard/AssignedComment
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 
-const UserDashboardPage = () => {
+const TeamLeadDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -62,4 +62,4 @@ const UserDashboardPage = () => {
   );
 };
 
-export default UserDashboardPage;
+export default TeamLeadDashboardPage;

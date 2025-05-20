@@ -18,6 +18,7 @@ import Services from "../pages/services";
 import Contact from "../pages/Contact";
 // import { AdminPrivate } from './../../../server/node_modules/mongodb/src/admin';
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
+import TeamLeadDashboardPage from "../pages/TeamLeadDashboard/TeamleadDashboardPage";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -104,7 +105,7 @@ const AppRoutes = () => {
         path="/team-lead/dashboard"
         element={
           <ProtectedRoute allowedRoles={["team-lead"]}>
-            <TeamLeadDashboard />
+            <TeamLeadDashboardPage />
           </ProtectedRoute>
         }
       />
