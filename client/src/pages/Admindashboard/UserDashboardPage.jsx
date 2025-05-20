@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
 import GreetingSection from "../../components/userdashboard/GreetingSection";
@@ -7,16 +6,79 @@ import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
 import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
-
+import API from "../../services/api";
+import { FaTasks, FaSmile, FaCheckCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Add this import
 
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const navigate = useNavigate(); // Add this line
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+  // Dashboard stats
+  const [stats, setStats] = useState({
+    totalTasks: 0,
+    completedTasks: 0,
+    latestMood: "",
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch all tasks
+        const res = await API.get("/tasks");
+        const allTasks = res.data || [];
+        // Filter tasks assigned to this user
+        const myTasks = allTasks.filter((task) => {
+          if (Array.isArray(task.assignedTo)) {
+            return task.assignedTo.some(
+              (a) =>
+                (typeof a === "string" && a === user._id) ||
+                (a && a._id && String(a._id) === String(user._id))
+            );
+          }
+          return (
+            task.assignedTo === user._id ||
+            (task.assignedTo && task.assignedTo._id && String(task.assignedTo._id) === String(user._id))
+          );
+        });
+        const completedTasks = myTasks.filter((task) => task.status === "completed");
+
+        // Fetch moods
+        const moodsRes = await API.get("/allmood");
+        const moods = moodsRes.data || [];
+        const myMoods = moods.filter((m) => m.user && m.user._id === user._id);
+        let latestMood = "";
+        if (myMoods.length > 0) {
+          myMoods.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          latestMood = myMoods[0].mood;
+        }
+
+        setStats({
+          totalTasks: myTasks.length,
+          completedTasks: completedTasks.length,
+          latestMood,
+        });
+      } catch {
+        setStats({ totalTasks: 0, completedTasks: 0, latestMood: "" });
+      }
+    };
+    if (selectedTab === "dashboard") fetchStats();
+  }, [selectedTab, user._id]);
+
+  const getMoodEmoji = (mood) => {
+    if (!mood) return "🙂";
+    if (mood === "happy") return "😊";
+    if (mood === "neutral") return "😐";
+    if (mood === "sad") return "😢";
+    if (mood === "stressed") return "😠";
+    if (mood === "frustrated") return "😣";
+    if (mood === "satisfied") return "😌";
+    return "🙂";
   };
+
+  const toggleSidebar = () => setIsSidebarCollapsed((prev) => !prev);
 
   return (
     <div className="flex min-h-screen bg-[#E1EAFE]">
@@ -31,22 +93,53 @@ const UserDashboardPage = () => {
       <div className="flex-1 flex flex-col overflow-x-hidden">
         {/* TopBar */}
         <TopBar toggleSidebar={toggleSidebar} />
-
-        {/* Greeting Section */}
-        <div className="ml-4 mr-4 mt-4">
-          <GreetingSection user={user} />
-        </div>
-
         {/* Main Content */}
         <div className="p-6 mt-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
           {selectedTab === "dashboard" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-6">
-                <AssignedToMeCard />
+            <div>
+              {/* Dashboard Header */}
+              <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-blue-900 mb-2">
+                    Welcome back, {user?.name?.split(" ")[0] || "User"}!
+                  </h2>
+                  <p className="text-blue-700 text-sm">
+                    Here’s a quick overview of your tasks and activity.
+                  </p>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mt-4 md:mt-0">
+                  <span className="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold shadow mb-2 md:mb-0">
+                    Role: {user?.role}
+                  </span>
+                  <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-lg font-semibold shadow mb-2 md:mb-0">
+                    {new Date().toLocaleDateString()}
+                  </span>
+                  <button
+                    onClick={() => navigate("/profile")}
+                    className="inline-block bg-gradient-to-r from-blue-700 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-800 hover:to-blue-600 transition ml-0 md:ml-2"
+                  >
+                    Edit Profile
+                  </button>
+                </div>
               </div>
-              <div className="space-y-6">
-                <AssignedCommentsCard />
-              </div>
+              {/* Stats Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+                <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                  <FaTasks className="text-3xl mb-2" />
+                  <div className="text-3xl font-bold">{stats.totalTasks}</div>
+                  <div className="text-sm mt-1">Total Tasks</div>
+                </div>
+                <div className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                  <FaCheckCircle className="text-3xl mb-2" />
+                  <div className="text-3xl font-bold">{stats.completedTasks}</div>
+                  <div className="text-sm mt-1">Completed Tasks</div>
+                </div>
+                <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                  <FaSmile className="text-3xl mb-2" />
+                  <div className="text-3xl font-bold">{getMoodEmoji(stats.latestMood)}</div>
+                  <div className="text-sm mt-1">Latest Mood</div>
+                </div>
+              </div>  
             </div>
           )}
 
