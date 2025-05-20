@@ -5,46 +5,55 @@ import API from "../../services/api";
 const getMoodEmoji = (mood) => {
   if (!mood) return "🙂";
   if (mood === "happy") return "😊";
-  if (mood === "sad") return "😢";
   if (mood === "neutral") return "😐";
-  if (mood === "angry") return "😠";
-  if (mood === "excited") return "🤩";
+  if (mood === "sad") return "😢";
+  if (mood === "stressed") return "😠";
+  if (mood === "frustrated") return "😣";
+  if (mood === "satisfied") return "😌";
   return "🙂";
 };
 
 const EmployeeCard = () => {
   const [employees, setEmployees] = useState([]);
+  const [allMoods, setAllMoods] = useState([]);
 
   useEffect(() => {
-    // Fetch users, then fetch each employee's mood
-    const fetchEmployees = async () => {
+    const fetchEmployeesAndMoods = async () => {
       try {
+     
         const res = await API.get("/users");
         const users = res.data.users || res.data;
-        const employeeList = await Promise.all(
-          users
-            .filter((u) => u.role === "employee")
-            .map(async (u) => {
-              let mood = "";
-              try {
-                const moodRes = await API.get(`/moods/user/${u._id}`);
-                mood = moodRes.data?.mood || "";
-              } catch {
-                mood = "";
-              }
-              return {
-                name: u.name,
-                tags: u.tags || [],
-                mood,
-              };
-            })
-        );
+
+
+        const moodsRes = await API.get("/allmood");
+        const moods = moodsRes.data || [];
+
+    
+        const employeeList = users
+          .filter((u) => u.role === "employee")
+          .map((u) => {
+            // Find the latest mood for this user by userId
+            const userMoods = moods.filter((m) => m.userId === u._id);
+        
+            let latestMood = "";
+            if (userMoods.length > 0) {
+              userMoods.sort((a, b) => new Date(b.date) - new Date(a.date));
+              latestMood = userMoods[0].mood;
+            }
+            return {
+              name: u.name,
+              tags: u.tags || [],
+              mood: latestMood,
+            };
+          });
+
         setEmployees(employeeList);
+        setAllMoods(moods);
       } catch {
         setEmployees([]);
       }
     };
-    fetchEmployees();
+    fetchEmployeesAndMoods();
   }, []);
 
   return (
@@ -59,10 +68,7 @@ const EmployeeCard = () => {
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            {/* Mood Face */}
             <span title="Mood" className="text-2xl">{getMoodEmoji(emp.mood)}</span>
-            <button className="text-green-600"><FaEye /></button>
-            <button className="text-blue-600"><FaDownload /></button>
           </div>
         </div>
       ))}
