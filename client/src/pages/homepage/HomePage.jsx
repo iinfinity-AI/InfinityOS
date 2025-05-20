@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { FaTasks, FaSmile, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -7,11 +8,16 @@ const stats = [
   { icon: <FaSmile size={32} className="text-yellow-400" />, label: "Mood Entries", value: 7, color: "from-yellow-300 to-yellow-500" },
   { icon: <FaUser size={32} className="text-green-400" />, label: "Profile Views", value: 23, color: "from-green-300 to-green-500" },
 ];
+=======
+import React from 'react';
+import HomeBack from '../../assets/homepage/HomeBack.jpg';
+>>>>>>> newFrontend
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 py-10">
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-10 mt-12 border border-blue-100">
         {/* Header */}
@@ -75,9 +81,30 @@ const HomePage = () => {
         <div className="text-center text-gray-400 mt-8 text-sm">
           &copy; {new Date().getFullYear()} InfinityOS &mdash; Empowering your productivity.
         </div>
+=======
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat text-white"
+      style={{
+        backgroundImage: `url(${HomeBack})`,
+      }}
+    >
+
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center text-center px-4 py-24 max-w-3xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-semibold mb-6">
+          Powering Smarter Teams, Every Day
+        </h1>
+        <p className="text-lg leading-relaxed text-justify">
+          <span className="text-5xl font-serif float-left leading-none pr-2">I</span>
+          nfinityOS streamlines team management with smart dashboards, task tracking, and mood
+          check-ins—all in one platform. Enhance productivity, boost engagement, and build a
+          healthier workplace with InfinityOS.
+        </p>
+>>>>>>> newFrontend
       </div>
     </div>
   );
 };
 
 export default HomePage;
+

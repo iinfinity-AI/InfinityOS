@@ -50,14 +50,22 @@ export default function LoginPage() {
         switch(user.role) {
           case "Admin":
             navigate("/admin/dashboard");
+            window.location.reload();
             break;
           case "team-lead":
             navigate("/team-lead/dashboard");
+            window.location.reload();
             break;
           default:
+<<<<<<< HEAD
             navigate("/user/dashboard");
+=======
+            navigate("/employee/dashboard");
+            window.location.reload();
+>>>>>>> newFrontend
         }
       }, 1000);
+
 
     } catch (err) {
       console.error("Login error:", err);
@@ -71,7 +79,7 @@ export default function LoginPage() {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <ToastContainer position="top-center" />
-      {/* Left side - Form */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
         <form onSubmit={handleLogin} className="w-full max-w-md space-y-6">
           <div>
