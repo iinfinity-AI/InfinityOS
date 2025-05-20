@@ -5,6 +5,8 @@ import DashboardStats from "../../components/Admindashboard/DashboardStats";
 import EmployeeCard from "../../components/Admindashboard/EmployeeCard";
 import RecentCard from "../../components/Admindashboard/RecentCard";
 import TaskBoard from "../../components/Admindashboard/TaskBoard";
+import Moods from "../../components/Admindashboard/getallMoods";
+import Users from "../../components/Admindashboard/rolechangedash";
 
 const DashboardPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -44,7 +46,23 @@ const DashboardPage = () => {
             </>
           )}
 
-          {selectedTab === "taskboard" && <TaskBoard />}
+           {selectedTab === "taskboard" && (
+            <div className="space-y-6 mt-4">
+              <TaskBoard />
+            </div>
+          )}
+
+          {selectedTab === "mood" && (
+            <div className="space-y-6 mt-4">
+              <Moods/>
+            </div>
+          )}
+
+            {selectedTab === "users" && (
+            <div className="space-y-6 mt-4">
+              <Users/>
+            </div>
+          )}
         </div>
       </div>
     </div>
