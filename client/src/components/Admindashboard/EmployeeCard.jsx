@@ -15,29 +15,28 @@ const getMoodEmoji = (mood) => {
 
 const EmployeeCard = () => {
   const [employees, setEmployees] = useState([]);
-  const [allMoods, setAllMoods] = useState([]);
 
   useEffect(() => {
     const fetchEmployeesAndMoods = async () => {
       try {
-     
+        // Get all users
         const res = await API.get("/users");
         const users = res.data.users || res.data;
 
-
+        // Get all moods
         const moodsRes = await API.get("/allmood");
         const moods = moodsRes.data || [];
 
-    
+        // For each employee, find their latest mood by matching user._id
         const employeeList = users
           .filter((u) => u.role === "employee")
           .map((u) => {
-            // Find the latest mood for this user by userId
-            const userMoods = moods.filter((m) => m.userId === u._id);
-        
+            // Find all moods for this user
+            const userMoods = moods.filter((m) => m.user && m.user._id === u._id);
+            // Sort moods by createdAt (or updatedAt) descending
             let latestMood = "";
             if (userMoods.length > 0) {
-              userMoods.sort((a, b) => new Date(b.date) - new Date(a.date));
+              userMoods.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
               latestMood = userMoods[0].mood;
             }
             return {
@@ -48,7 +47,6 @@ const EmployeeCard = () => {
           });
 
         setEmployees(employeeList);
-        setAllMoods(moods);
       } catch {
         setEmployees([]);
       }
