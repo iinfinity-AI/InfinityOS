@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ServicesBg from '../../src/assets/homepage/HomeBack.jpg';
 
 const services = [
   {
@@ -6,9 +7,10 @@ const services = [
     title: "Attendance & Leave Management",
     description:
       "Track employee attendance, leave balances, and automate approvals with customizable workflows.",
+    extra: "This module enables managers to monitor working hours and ensures compliance with company policies.",
     icon: (
       <svg
-        className="w-14 h-14 text-[#0A4D88] mx-auto mb-4"
+        className="w-8 h-8 text-white"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
@@ -23,9 +25,10 @@ const services = [
     title: "Performance Reviews",
     description:
       "Set goals, evaluate employee performance, and provide feedback all within one platform.",
+    extra: "Helps in identifying top talent, skill gaps, and improvement areas with structured review cycles.",
     icon: (
       <svg
-        className="w-14 h-14 text-[#0A4D88] mx-auto mb-4"
+        className="w-8 h-8 text-white"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
@@ -41,9 +44,10 @@ const services = [
     title: "Payroll Integration",
     description:
       "Seamlessly manage payroll calculations and integrate with popular payroll services.",
+    extra: "Automates tax deductions, payment schedules, and compliance reports integrated with HR records.",
     icon: (
       <svg
-        className="w-14 h-14 text-[#0A4D88] mx-auto mb-4"
+        className="w-8 h-8 text-white"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
@@ -56,24 +60,52 @@ const services = [
 ];
 
 const Services = () => {
+  const [activeCard, setActiveCard] = useState(null);
+
+  const handleCardClick = (id) => {
+    setActiveCard(prev => prev === id ? null : id); // toggle
+  };
+
   return (
-    <main className="max-w-7xl mx-auto px-6 py-16 bg-gradient-to-b from-white to-gray-50">
-      <h1 className="text-5xl font-extrabold text-[#0A4D88] mb-12 text-center tracking-tight">
-        INFINITY OS EMS Services
-      </h1>
-      <div className="grid gap-12 md:grid-cols-3">
-        {services.map(({ id, title, description, icon }) => (
-          <div
-            key={id}
-            className="bg-white rounded-xl p-8 shadow-md hover:shadow-[#0A4D88]/40 transition-shadow duration-500 transform hover:-translate-y-2 cursor-pointer"
-          >
-            <div>{icon}</div>
-            <h3 className="text-2xl font-semibold mb-3 text-center text-gray-900">{title}</h3>
-            <p className="text-gray-600 leading-relaxed text-center">{description}</p>
-          </div>
-        ))}
-      </div>
-    </main>
+    <div className="relative w-full min-h-screen text-white">
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center filter blur-sm brightness-75 z-0"
+        style={{ backgroundImage: `url(${ServicesBg})` }}
+      ></div>
+
+      {/* Content */}
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-20">
+        <h1 className="text-4xl md:text-5xl font-bold mb-14 text-center drop-shadow">
+          INFINITY OS EMS Services
+        </h1>
+
+        <div className="grid gap-10 md:grid-cols-3">
+          {services.map(({ id, title, description, extra, icon }) => (
+            <div
+              key={id}
+              onClick={() => handleCardClick(id)}
+              className={`cursor-pointer bg-white/90 text-gray-900 rounded-xl border-t-[6px] 
+                p-8 shadow-md transition-all duration-500 
+                ${activeCard === id ? "ring-4 ring-[#0A4D88]/70 scale-105 bg-white" : "hover:ring-2 hover:ring-[#0A4D88]/60"}
+              `}
+            >
+              <div className="w-16 h-16 bg-[#0A4D88] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                {icon}
+              </div>
+              <h3 className="text-xl font-bold text-center mb-3">{title}</h3>
+              <p className="text-gray-700 text-center leading-relaxed">{description}</p>
+
+              {activeCard === id && (
+                <div className="mt-4 text-sm text-gray-600 border-t pt-4 text-left">
+                  <p>{extra}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
   );
 };
 

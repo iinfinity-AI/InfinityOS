@@ -4,7 +4,6 @@ import RegisterImage from "../../assets/Admin/RegisterImage.jpg";
 import API from "../../services/api.js";
 import { toast, ToastContainer } from "react-toastify";
 
-
 export default function SignupPage() {
   const [form, setForm] = useState({
     firstName: "",
@@ -59,13 +58,13 @@ export default function SignupPage() {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Signup failed. Please try again.");
-
     }
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden">
       <ToastContainer position="top-center" />
+      
       <div
         className="w-1/2 h-full relative bg-cover bg-center text-white"
         style={{ backgroundImage: `url(${RegisterImage})` }}
