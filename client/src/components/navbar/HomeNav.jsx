@@ -30,7 +30,7 @@ const HomeNav = () => {
             setDashboardPath("/team-lead/dashboard");
             break;
           case "employee":
-            setDashboardPath("/user/dashboard");
+            setDashboardPath("/employee/dashboard");
             break;
           default:
             setDashboardPath("");
