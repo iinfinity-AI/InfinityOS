@@ -81,7 +81,7 @@ const Profile = () => {
       toast.success('Profile updated successfully');
       setIsEditing(false);
 
-      navigate('/user/dashboard');
+      navigate('/employee/dashboard');
     } catch (error) {
       console.error('Profile update error:', error);
       toast.error(error.response?.data?.error || 'Failed to update profile');
