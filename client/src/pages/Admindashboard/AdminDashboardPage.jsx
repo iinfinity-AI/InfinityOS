@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Add this import
 import Adminsidebar from "../../components/userdashboard/SideBar";
 import Topbar from "../../components/userdashboard/TopBar";
 import DashboardStats from "../../components/Admindashboard/DashboardStats";
@@ -7,9 +8,11 @@ import RecentCard from "../../components/Admindashboard/RecentCard";
 import Allusers from "../../components/Admindashboard/rolechangedash";
 import Moods from "../../components/moods/getallMoods";
 import TaskFilterBar from "../../components/task/dashboard";
+
 const DashboardPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedTab, setSelectedTab] = useState("dashboard");
+  const navigate = useNavigate(); // Add this line
 
   const toggleSidebar = () => {
     setIsCollapsed((prev) => !prev);
@@ -27,7 +30,15 @@ const DashboardPage = () => {
       <div className="flex-1 flex flex-col transition-all duration-300">
         <Topbar toggleSidebar={toggleSidebar} />
 
-        <div className="p-6 flex-1 bg-blue-50 overflow-y-auto">
+        <div className="p-6 flex-1 bg-blue-50 overflow-y-auto relative">
+          {/* Edit Profile Button */}
+          <button
+            onClick={() => navigate("/profile")}
+            className="absolute top-6 right-6 bg-gradient-to-r from-blue-700 to-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:from-blue-800 hover:to-blue-600 transition"
+          >
+            Edit Profile
+          </button>
+
           {selectedTab === "dashboard" && (
             <>
               <h1 className="text-3xl font-bold mb-6 text-gray-800">
