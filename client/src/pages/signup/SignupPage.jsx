@@ -58,8 +58,24 @@ export default function SignupPage() {
         setTimeout(() => navigate("/login"), 1500);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Signup failed. Please try again.");
 
+      const apiMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "";
+
+      if (
+        apiMsg.toLowerCase().includes("email already exists") ||
+        apiMsg.toLowerCase().includes("duplicate")
+      ) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "This email is already registered.",
+        }));
+        toast.error("This email is already registered.");
+      } else {
+        toast.error(apiMsg || "Signup failed. Please try again.");
+      }
     }
   };
 
