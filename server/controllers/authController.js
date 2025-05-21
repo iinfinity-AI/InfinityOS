@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
       role,
       phone,
     });
-  console.log(user);
+
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
