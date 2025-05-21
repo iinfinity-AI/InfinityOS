@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import { UploadImage } from '../../services/uploadImage.js';
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaTimes } from "react-icons/fa";
 
 const Profile = () => {
-  const navigate = useNavigate();  // Initialize useNavigate hook for navigation
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -72,7 +72,6 @@ const Profile = () => {
         profilePicture: userData.profilePicture
       });
 
-      // Update local storage with new user data
       const updatedUser = {
         ...JSON.parse(localStorage.getItem('user')),
         ...response.data.user
@@ -81,6 +80,8 @@ const Profile = () => {
 
       toast.success('Profile updated successfully');
       setIsEditing(false);
+
+      navigate('/user/dashboard');
     } catch (error) {
       console.error('Profile update error:', error);
       toast.error(error.response?.data?.error || 'Failed to update profile');
@@ -91,14 +92,22 @@ const Profile = () => {
 
   // Go back to the previous page
   const goBack = () => {
-    navigate(-1);  // Use navigate with -1 to go back to the previous page
+    navigate(-1);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
       <ToastContainer position="top-center" />
       <div className="max-w-3xl mx-auto pt-10">
-        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-blue-100">
+        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-blue-100 relative">
+          {/* Close Button */}
+          <button
+            onClick={goBack}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl z-10"
+            aria-label="Close"
+          >
+            <FaTimes />
+          </button>
           {/* Profile Header */}
           <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-10 text-center relative">
             <div className="relative mx-auto w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-xl bg-white">
@@ -137,12 +146,6 @@ const Profile = () => {
 
           {/* Profile Content */}
           <div className="px-8 py-10">
-            <button
-              onClick={goBack} // Go back when the button is clicked
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mb-6"
-            >
-              Back
-            </button>
 
             {!isEditing ? (
               <div className="space-y-8">
