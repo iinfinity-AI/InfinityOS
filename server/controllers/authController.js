@@ -29,6 +29,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       role,
       phone,
+      profilePicture,
     });
 
     await user.save();
@@ -61,7 +62,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "5h" }
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({
@@ -72,7 +73,8 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        role: user.role
+        role: user.role,
+        profilePicture: user.profilePicture
       }
     });
   } catch (error) {
@@ -205,13 +207,35 @@ const updateProfile = async (req, res) => {
 };
 const getUserData = async (req, res) => {
   try {
-    // You can add role-based access control here if needed
     const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "Server error while fetching users data" });
   }
-};;
+};
+
+const changeUserRole = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const { role } = req.body;
+
+    if (!_id || !role) {
+      return res.status(400).json({ error: "User ID and new role are required" });
+    }
+
+    const user = await User.findById(_id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({ message: "User role updated successfully", user: { id: user._id, name: user.name, role: user.role, email: user.email } });
+  } catch (error) {
+    res.status(500).json({ error: "Server error while changing user role" });
+  }
+};
 
 module.exports = {
   registerUser,
@@ -220,5 +244,6 @@ module.exports = {
   verifyOtp,
   resetPassword,
   updateProfile,
-  getUserData
+  getUserData,
+  changeUserRole
 };

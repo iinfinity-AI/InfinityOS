@@ -1,8 +1,7 @@
-// services/Cloudinary.js
 export async function UploadImage(image) {
     const data = new FormData();
     data.append("file", image);
-    data.append("upload_preset", "mern-p"); // Set in your Cloudinary dashboard
+    data.append("upload_preset", "mern-p"); 
   
     try {
       const res = await fetch("https://api.cloudinary.com/v1_1/dbbkoa5ce/image/upload", {
