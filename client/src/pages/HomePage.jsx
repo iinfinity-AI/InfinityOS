@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeBack from '../../assets/homepage/HomeBack.jpg';
+import HomeBack from '../../src/assets/homepage/HomeBack.jpg';
 
 const HomePage = () => {
   return (

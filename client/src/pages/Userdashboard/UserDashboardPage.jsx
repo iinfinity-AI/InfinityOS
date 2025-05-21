@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../components/userdashboard/SideBar";
 import TopBar from "../../components/userdashboard/TopBar";
-import GreetingSection from "../../components/userdashboard/GreetingSection";
-import AssignedToMeCard from "../../components/userdashboard/AssignedToMeCard";
-import AssignedCommentsCard from "../../components/userdashboard/AssignedCommentsCard";
 import TaskFilterBar from "../../components/userdashboard/taskboard/TaskFilterBar";
 import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 import API from "../../services/api";
 import { FaTasks, FaSmile, FaCheckCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
+
 
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
-  // Dashboard stats
   const [stats, setStats] = useState({
     totalTasks: 0,
     completedTasks: 0,
@@ -26,10 +23,8 @@ const UserDashboardPage = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch all tasks
         const res = await API.get("/tasks");
         const allTasks = res.data || [];
-        // Filter tasks assigned to this user
         const myTasks = allTasks.filter((task) => {
           if (Array.isArray(task.assignedTo)) {
             return task.assignedTo.some(
@@ -40,12 +35,15 @@ const UserDashboardPage = () => {
           }
           return (
             task.assignedTo === user._id ||
-            (task.assignedTo && task.assignedTo._id && String(task.assignedTo._id) === String(user._id))
+            (task.assignedTo &&
+              task.assignedTo._id &&
+              String(task.assignedTo._id) === String(user._id))
           );
         });
-        const completedTasks = myTasks.filter((task) => task.status === "completed");
+        const completedTasks = myTasks.filter(
+          (task) => task.status === "completed"
+        );
 
-        // Fetch moods
         const moodsRes = await API.get("/allmood");
         const moods = moodsRes.data || [];
         const myMoods = moods.filter((m) => m.user && m.user._id === user._id);
@@ -77,27 +75,19 @@ const UserDashboardPage = () => {
     if (mood === "satisfied") return "😌";
     return "🙂";
   };
-
   const toggleSidebar = () => setIsSidebarCollapsed((prev) => !prev);
-
   return (
     <div className="flex min-h-screen bg-[#E1EAFE]">
-      {/* Sidebar */}
       <SideBar
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
         isCollapsed={isSidebarCollapsed}
       />
-
-      {/* Main Area */}
       <div className="flex-1 flex flex-col overflow-x-hidden">
-        {/* TopBar */}
         <TopBar toggleSidebar={toggleSidebar} />
-        {/* Main Content */}
         <div className="p-6 mt-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
           {selectedTab === "dashboard" && (
             <div>
-              {/* Dashboard Header */}
               <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-blue-900 mb-2">
@@ -122,7 +112,6 @@ const UserDashboardPage = () => {
                   </button>
                 </div>
               </div>
-              {/* Stats Section */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
                 <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
                   <FaTasks className="text-3xl mb-2" />
@@ -131,15 +120,19 @@ const UserDashboardPage = () => {
                 </div>
                 <div className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
                   <FaCheckCircle className="text-3xl mb-2" />
-                  <div className="text-3xl font-bold">{stats.completedTasks}</div>
+                  <div className="text-3xl font-bold">
+                    {stats.completedTasks}
+                  </div>
                   <div className="text-sm mt-1">Completed Tasks</div>
                 </div>
                 <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
                   <FaSmile className="text-3xl mb-2" />
-                  <div className="text-3xl font-bold">{getMoodEmoji(stats.latestMood)}</div>
+                  <div className="text-3xl font-bold">
+                    {getMoodEmoji(stats.latestMood)}
+                  </div>
                   <div className="text-sm mt-1">Latest Mood</div>
                 </div>
-              </div>  
+              </div>
             </div>
           )}
 
