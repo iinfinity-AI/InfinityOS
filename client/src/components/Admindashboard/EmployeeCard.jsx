@@ -1,6 +1,6 @@
 // EmployeeCard.js
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import API from "../../services/api";
 
 const getMoodEmoji = (mood) => {
@@ -15,7 +15,7 @@ const getMoodEmoji = (mood) => {
 };
 
 const EmployeeCard = () => {
-  const navigate = useNavigate();
+ 
   const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const EmployeeCard = () => {
 
   return (
     <div
-      onClick={() => navigate("/admin/users")}
+   
       className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer border border-gray-200 hover:border-yellow-400 h-full"
     >
       <h2 className="text-xl font-bold mb-4 text-yellow-600">Employees</h2>

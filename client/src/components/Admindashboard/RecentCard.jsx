@@ -1,11 +1,10 @@
 // RecentCard.js
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import API from "../../services/api";
 
 const RecentCard = () => {
-  const navigate = useNavigate();
-  const [recents, setRecents] = useState([]);
+   const [recents, setRecents] = useState([]);
 
   useEffect(() => {
     const fetchTeamLeadsAndTasks = async () => {
@@ -44,7 +43,7 @@ const RecentCard = () => {
 
   return (
     <div
-      onClick={() => navigate("/admin/dashboard/changeRole")}
+      
       className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer border border-gray-200 hover:border-indigo-400 h-full"
     >
       <h2 className="text-xl font-bold mb-4 text-indigo-600">Team Leads & Tasks</h2>
