@@ -4,6 +4,8 @@ import API from '../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import { UploadImage } from '../../services/uploadImage.js';
 import { FaCamera, FaTimes } from "react-icons/fa";
+import HomeBack from '../../assets/homepage/HomeBack.jpg';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -32,29 +34,27 @@ const Profile = () => {
     }
   }, []);
 
+  const goBack = () => navigate(-1);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setUserData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     setImageUploading(true);
     try {
       const imageUrl = await UploadImage(file);
-      setUserData(prev => ({
-        ...prev,
-        profilePicture: imageUrl
-      }));
-      toast.success('Profile picture uploaded successfully');
-    } catch (error) {
-      console.error('Image upload error:', error);
-      toast.error('Failed to upload profile picture');
+      setUserData(prev => ({ ...prev, profilePicture: imageUrl }));
+      toast.success('Profile picture updated', {
+        className: 'bg-[#0f172a] text-white font-medium rounded-md shadow-md'
+      });
+    } catch {
+      toast.error('Image upload failed', {
+        className: 'bg-red-600 text-white font-medium rounded-md shadow-md'
+      });
     } finally {
       setImageUploading(false);
     }
@@ -63,7 +63,6 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const response = await API.put('/profile', {
         name: userData.name,
@@ -71,46 +70,60 @@ const Profile = () => {
         phone: userData.phone,
         profilePicture: userData.profilePicture
       });
-
-      const updatedUser = {
+      localStorage.setItem('user', JSON.stringify({
         ...JSON.parse(localStorage.getItem('user')),
         ...response.data.user
-      };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
-      toast.success('Profile updated successfully');
+      }));
+      toast.success('Profile updated successfully', {
+        className: 'bg-[#0f172a] text-white font-medium rounded-md shadow-md'
+      });
       setIsEditing(false);
-
-      navigate('/employee/dashboard');
     } catch (error) {
-      console.error('Profile update error:', error);
-      toast.error(error.response?.data?.error || 'Failed to update profile');
+      toast.error(error.response?.data?.error || 'Update failed', {
+        className: 'bg-red-600 text-white font-medium rounded-md shadow-md'
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Go back to the previous page
-  const goBack = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
-      <ToastContainer position="top-center" />
-      <div className="max-w-3xl mx-auto pt-10">
-        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-blue-100 relative">
+    <div className="relative w-full min-h-screen overflow-hidden text-white">
+
+      {/* Background with blur and dark overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center filter blur-sm brightness-75 z-0"
+        style={{ backgroundImage: `url(${HomeBack})` }}
+      ></div>
+
+      {/* Toast container with high z-index */}
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        className="!z-[9999]"
+      />
+
+      {/* Profile Card */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-12">
+        <div className="bg-white bg-opacity-90 backdrop-blur-md text-gray-900 rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+
           {/* Close Button */}
           <button
             onClick={goBack}
-            className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl z-10"
-            aria-label="Close"
+            className="absolute top-6 right-6 text-gray-400 hover:text-red-500 text-2xl"
           >
             <FaTimes />
           </button>
-          {/* Profile Header */}
-          <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-10 text-center relative">
-            <div className="relative mx-auto w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-xl bg-white">
+
+          {/* Header */}
+          <div className="flex items-center space-x-6 mb-8">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md">
               {userData.profilePicture ? (
                 <img
                   src={userData.profilePicture}
@@ -118,136 +131,107 @@ const Profile = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-blue-200 flex items-center justify-center text-5xl text-blue-700 font-bold">
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-3xl text-gray-600 font-bold">
                   {userData.name.charAt(0).toUpperCase()}
                 </div>
               )}
               {isEditing && (
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-all">
-                  <label className="cursor-pointer flex flex-col items-center">
-                    <FaCamera className="text-white text-2xl mb-1" />
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={imageUploading}
-                    />
-                    <span className="text-white text-xs font-medium">
-                      {imageUploading ? 'Uploading...' : 'Change Photo'}
-                    </span>
-                  </label>
-                </div>
+                <label className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer">
+                  <FaCamera className="text-white text-xl" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={imageUploading}
+                  />
+                </label>
               )}
             </div>
-            <h1 className="mt-6 text-3xl font-extrabold text-white drop-shadow-lg">{userData.name}</h1>
-            <p className="text-blue-200 text-lg font-medium">{userData.role}</p>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">{userData.name}</h1>
+              <p className="text-gray-500 text-sm mt-1">{userData.email}</p>
+            </div>
           </div>
 
-          {/* Profile Content */}
-          <div className="px-8 py-10">
-
-            {!isEditing ? (
-              <div className="space-y-8">
-                <div>
-                  <h2 className="text-xl font-semibold text-blue-900 mb-4">Personal Information</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <p className="text-sm font-medium text-blue-700">Full Name</p>
-                      <p className="mt-1 text-gray-900 text-lg">{userData.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-blue-700">Email address</p>
-                      <p className="mt-1 text-gray-900 text-lg">{userData.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-blue-700">Phone</p>
-                      <p className="mt-1 text-gray-900 text-lg">{userData.phone || <span className="italic text-gray-400">Not provided</span>}</p>
-                    </div>
-                  </div>
+          {/* Form or Info */}
+          {isEditing ? (
+            <form onSubmit={handleSubmit} className="space-y-5 text-sm text-gray-700">
+              <div>
+                <label className="block font-medium mb-1">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={userData.name}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Mobile Number</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={userData.phone}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div className="flex space-x-4 pt-2">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="flex-1 border border-gray-300 text-gray-700 font-medium py-2 rounded-md hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <div className="space-y-4 text-sm text-gray-700">
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Full Name</span>
+                  <span>{userData.name}</span>
                 </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Email</span>
+                  <span>{userData.email}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-medium">Mobile</span>
+                  <span>{userData.phone || 'Add number'}</span>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-center">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full shadow-md transition"
                 >
                   Edit Profile
                 </button>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div>
-                  <h2 className="text-xl font-semibold text-blue-900 mb-4">Edit Profile</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-blue-700">
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={userData.name}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-blue-200 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-blue-700">
-                        Email address
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={userData.email}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-blue-200 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-blue-700">
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={userData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-blue-200 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition disabled:opacity-75"
-                  >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Saving...
-                      </>
-                    ) : 'Save Changes'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="inline-flex items-center px-6 py-3 border border-blue-200 text-base font-semibold rounded-lg shadow-sm text-blue-900 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
