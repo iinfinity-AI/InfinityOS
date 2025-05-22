@@ -4,28 +4,50 @@ import LoginImage from "../../assets/Admin/LoginImage.jpg";
 import API from "../../services/api.js";
 import { toast, ToastContainer } from "react-toastify";
 
-
 export default function LoginPage() {
-  const [form, setForm] = useState({ 
-    email: "", 
-    password: "", 
-    remember: false 
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
   });
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
-      setForm(prev => ({ ...prev, email: savedEmail, remember: true }));
+      setForm((prev) => ({ ...prev, email: savedEmail, remember: true }));
     }
-    
   }, []);
+
+  const validate = () => {
+    const errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!form.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(form.email)) {
+      errors.email = "Invalid email format";
+    }
+
+    if (!form.password.trim()) {
+      errors.password = "Password is required";
+    } else if (form.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!validate()) return;
+
     setIsLoading(true);
 
     try {
@@ -47,7 +69,7 @@ export default function LoginPage() {
       toast.success("Login successful!");
 
       setTimeout(() => {
-        switch(user.role) {
+        switch (user.role) {
           case "Admin":
             navigate("/admin/dashboard");
             window.location.reload();
@@ -61,8 +83,6 @@ export default function LoginPage() {
             window.location.reload();
         }
       }, 1000);
-
-
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.error || "Login failed. Please try again.");
@@ -73,7 +93,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden">
       <ToastContainer position="top-center" />
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
@@ -103,6 +123,9 @@ export default function LoginPage() {
               required
               autoComplete="email"
             />
+            {fieldErrors.email && (
+              <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+            )}
           </div>
 
           <div>
@@ -118,6 +141,9 @@ export default function LoginPage() {
               autoComplete="current-password"
               minLength="6"
             />
+            {fieldErrors.password && (
+              <p className="text-red-500 text-sm mt-1">{fieldErrors.password}</p>
+            )}
           </div>
 
           <div className="flex items-center justify-between">
@@ -152,13 +178,31 @@ export default function LoginPage() {
           >
             {isLoading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Signing in...
               </>
-            ) : "Sign in"}
+            ) : (
+              "Sign in"
+            )}
           </button>
 
           <div className="text-center text-sm text-gray-600">

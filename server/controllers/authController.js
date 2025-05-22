@@ -29,7 +29,6 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       role,
       phone,
-      profilePicture,
     });
 
     await user.save();
