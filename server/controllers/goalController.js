@@ -17,13 +17,13 @@ const createGoal = async (req, res) => {
       return res.status(400).json({ error: "Invalid date format for deadline" });
     }
 
-    // Use userId instead of _id
+
     const goal = await Goal.create({
       title,
       description,
       deadline: new Date(deadline),
       status: "pending",
-      createdBy: req.user.userId, // Changed from req.user._id
+      createdBy: req.user.userId,
     });
 
     res.status(201).json(goal);
@@ -36,20 +36,19 @@ const createGoal = async (req, res) => {
   }
 };
 
-// Get all goals with optional filtering
+
 const getGoals = async (req, res) => {
   try {
     const { status } = req.query;
-    const filter = { createdBy: req.user.userId }; // Changed from _id to userId
-    
-    // Add status filter if provided
+    const filter = { createdBy: req.user.userId };
+
     if (status && ['pending', 'completed'].includes(status)) {
       filter.status = status;
     }
     
     const goals = await Goal.find(filter)
-      .sort({ deadline: 1 })  // Sort by deadline (closest first)
-      .populate('createdBy', 'name email'); // Include user details
+      .sort({ deadline: 1 })
+      .populate('createdBy', 'name email'); 
 
     res.status(200).json(goals);
   } catch (error) {
