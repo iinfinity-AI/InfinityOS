@@ -7,6 +7,7 @@ const routes = require('./routes/authRoutes');
 const taskRoutes = require("./routes/taskRoutes");
 dotenv.config();
 const moodRoutes = require("./routes/moodRoutes");
+const goalRoutes = require('./routes/goalRoutes');
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(cookieParser());
 connectDB();
 
 
-
+app.use("/api/goal",goalRoutes);
 app.use("/api", routes);
 app.use("/api", taskRoutes);
 app.use("/api", moodRoutes);

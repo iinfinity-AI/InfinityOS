@@ -1,5 +1,5 @@
 const Mood = require("../models/Mood");
-const User = require("../models/User");
+
 
 const saveMood = async (req, res) => {
   try {
