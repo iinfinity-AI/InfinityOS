@@ -14,6 +14,7 @@ import Services from "../pages/services";
 import Contact from "../pages/Contact";
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
 import TeamLeadDashboardPage from "../pages/TeamLeadDashboard/TeamleadDashboardPage";
+import GoalsPage from "../pages/Goal/GoalsPage";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -53,9 +54,9 @@ const AppRoutes = () => {
       <Route
         path="/employee/dashboard"
         element={
-          // <ProtectedRoute allowedRoles={["employee"]}>
+           <ProtectedRoute allowedRoles={["employee"]}>
             <UserDashboardPage />
-          // </ProtectedRoute>
+          </ProtectedRoute>
         }
       />
 
@@ -73,9 +74,9 @@ const AppRoutes = () => {
       <Route
         path="/admin/dashboard"
         element={
-          // <ProtectedRoute allowedRoles={["Admin", "team-lead"]}>
+           <ProtectedRoute allowedRoles={["Admin", "team-lead"]}>
             <DashboardPage />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
 
@@ -97,6 +98,14 @@ const AppRoutes = () => {
         }
       />
 
+      <Route
+        path="/Goals"
+        element={
+          <ProtectedRoute allowedRoles={["team-lead","employee"]}>
+            <GoalsPage />
+          </ProtectedRoute>
+        }
+      />
     
 
     </Routes>

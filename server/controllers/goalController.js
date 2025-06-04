@@ -65,16 +65,13 @@ const getGoalById = async (req, res) => {
       return res.status(400).json({ error: "Invalid goal ID" });
     }
 
-    const goal = await Goal.findById(goalId);
+    const goal = await Goal.findOne({
+      _id: goalId,
+      createdBy: req.user.userId
+    });
 
     if (!goal) {
       return res.status(404).json({ error: "Goal not found" });
-    }
-
-    if (goal.createdBy.toString() !== req.user.userId.toString()) { // Changed from _id to userId
-      return res
-        .status(403)
-        .json({ error: "Not authorized to access this goal" });
     }
 
     res.status(200).json(goal);
@@ -84,14 +81,12 @@ const getGoalById = async (req, res) => {
   }
 };
 
-// Update goal with better validation
 const updateGoal = async (req, res) => {
   try {
     const goalId = req.params.id;
     const { title, description, deadline, status } = req.body;
     const updates = {};
 
-    // Only update fields that are provided
     if (title) updates.title = title;
     if (description) updates.description = description;
     if (deadline) {

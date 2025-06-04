@@ -10,6 +10,7 @@ import NewTask from "../../components/task/dashboard";
 import RecentCard from "../../components/Admindashboard/RecentCard";
 
 import GetAllMoods from "../../components/moods/getallMoods";
+import GoalsPage from "../Goal/GoalsPage";
 
 
 const TeamLeadDashboardPage = () => {
@@ -21,7 +22,7 @@ const TeamLeadDashboardPage = () => {
 
   return (
     <div className="flex min-h-screen bg-[#E1EAFE]">
-      {/* Sidebar */}
+
       <SideBar
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
@@ -72,6 +73,11 @@ const TeamLeadDashboardPage = () => {
             {selectedTab === "moods" && (
             <div className="space-y-6 mt-4">
               <GetAllMoods/>
+            </div>
+          )}
+          {selectedTab === "goals" && (
+            <div className="space-y-6 mt-4">
+              <GoalsPage/>
             </div>
           )}
         </div>

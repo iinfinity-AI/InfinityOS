@@ -6,6 +6,7 @@ import MoodcheckIN from "../../components/userdashboard/mood/MoodCheckIn";
 import API from "../../services/api";
 import { FaTasks, FaSmile, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import GoalsPage from "../Goal/GoalsPage";
 
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -151,6 +152,11 @@ const UserDashboardPage = () => {
           {selectedTab === "mood" && (
             <div className="space-y-6 mt-4">
               <MoodcheckIN />
+            </div>
+          )}
+            {selectedTab === "goals" && (
+            <div className="space-y-6 mt-4">
+              <GoalsPage/>
             </div>
           )}
         </div>

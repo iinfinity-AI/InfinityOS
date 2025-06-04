@@ -1,8 +1,16 @@
-// src/components/common/RoleBasedSidebar.jsx
+
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FaTachometerAlt, FaBalanceScale, FaSmile, FaUsers, FaTasks, FaPowerOff } from "react-icons/fa";
+import { 
+  FaTachometerAlt, 
+  FaBalanceScale, 
+  FaSmile, 
+  FaUsers, 
+  FaTasks, 
+  FaPowerOff,
+  FaBullseye  // Icon for Goals
+} from "react-icons/fa";
 
 import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
 import AdminLogo from "../../assets/admindashb/infinityLogo.png";
@@ -53,18 +61,19 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
     </Link>
   );
 
-  // Define tabs per role
   const tabs = {
     admin: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
       getNavItem(<FaUsers />, "Manage Users", "users"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
+      getNavItem(<FaBullseye />, "Goals", "goals", "/goals"),
     ],
     employee: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
+      getNavItem(<FaBullseye />, "My Goals", "goals"),
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -72,8 +81,8 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaTasks />, "Assign Tasks", "assign"),
       getNavItem(<FaSmile />, "Add Mood", "mood"),
       getNavItem(<FaSmile />, "All Mood", "moods"),
+      getNavItem(<FaBullseye />, "Goals", "goals",),
     ],
-    
   };
 
   return (
