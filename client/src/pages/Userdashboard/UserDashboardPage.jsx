@@ -7,7 +7,6 @@ import API from "../../services/api";
 import { FaTasks, FaSmile, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -79,10 +78,11 @@ const UserDashboardPage = () => {
     if (mood === "satisfied") return "😌";
     return "🙂";
   };
-  const toggleSidebar = () => setIsSidebarCollapsed((prev) => !prev);
-  return (
-    <div className="flex min-h-screen bg-[#E1EAFE]">
 
+  const toggleSidebar = () => setIsSidebarCollapsed((prev) => !prev);
+
+  return (
+    <div className="flex min-h-screen bg-[#f0f4fc]">
       <SideBar
 
         selectedTab={selectedTab}
@@ -92,16 +92,16 @@ const UserDashboardPage = () => {
 
       <div className="flex-1 flex flex-col overflow-x-hidden">
         <TopBar toggleSidebar={toggleSidebar} />
-        <div className="p-6 mt-4 mx-4 bg-[#E1EAFE] flex-1 overflow-y-auto rounded-lg">
+        <div className="p-6 mt-4 mx-4 bg-[#f0f4fc] flex-1 overflow-y-auto rounded-lg">
           {selectedTab === "dashboard" && (
             <div>
 
               <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-blue-900 mb-2">
+                  <h2 className="text-2xl font-bold text-[#1f2937] mb-2">
                     Welcome back, {user?.name?.split(" ")[0] || "User"}!
                   </h2>
-                  <p className="text-blue-700 text-sm">
+                  <p className="text-gray-600 text-sm">
                     Here’s a quick overview of your tasks and activity.
                   </p>
                 </div>
@@ -114,31 +114,28 @@ const UserDashboardPage = () => {
                   </span>
                   <button
                     onClick={() => navigate("/profile")}
-                    className="inline-block bg-gradient-to-r from-blue-700 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-800 hover:to-blue-600 transition ml-0 md:ml-2"
+                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-blue-500 transition ml-0 md:ml-2"
                   >
                     Edit Profile
                   </button>
                 </div>
               </div>
 
+              {/* Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-                <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-xl shadow-md p-6 flex flex-col items-center hover:shadow-xl transition-shadow duration-300">
                   <FaTasks className="text-3xl mb-2" />
                   <div className="text-3xl font-bold">{stats.totalTasks}</div>
                   <div className="text-sm mt-1">Total Tasks</div>
                 </div>
-                <div className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                <div className="bg-gradient-to-br from-green-400 to-green-600 text-white rounded-xl shadow-md p-6 flex flex-col items-center hover:shadow-xl transition-shadow duration-300">
                   <FaCheckCircle className="text-3xl mb-2" />
-                  <div className="text-3xl font-bold">
-                    {stats.completedTasks}
-                  </div>
+                  <div className="text-3xl font-bold">{stats.completedTasks}</div>
                   <div className="text-sm mt-1">Completed Tasks</div>
                 </div>
-                <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-xl shadow-lg p-6 flex flex-col items-center">
+                <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-white rounded-xl shadow-md p-6 flex flex-col items-center hover:shadow-xl transition-shadow duration-300">
                   <FaSmile className="text-3xl mb-2" />
-                  <div className="text-3xl font-bold">
-                    {getMoodEmoji(stats.latestMood)}
-                  </div>
+                  <div className="text-3xl font-bold">{getMoodEmoji(stats.latestMood)}</div>
                   <div className="text-sm mt-1">Latest Mood</div>
                 </div>
               </div>

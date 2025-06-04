@@ -1,25 +1,24 @@
+// RecentCard.js
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../../services/api";
 
 const RecentCard = () => {
+  const navigate = useNavigate();
   const [recents, setRecents] = useState([]);
 
   useEffect(() => {
     const fetchTeamLeadsAndTasks = async () => {
       try {
-   
         const usersRes = await API.get("/users");
         const users = usersRes.data.users || usersRes.data;
 
         const teamLeads = users.filter((u) => u.role === "team-lead");
 
-    
         const tasksRes = await API.get("/tasks");
         const tasks = tasksRes.data || [];
 
-     
         const recentList = teamLeads.flatMap((lead) => {
-      
           const leadTasks = tasks.filter(
             (t) =>
               t.assignedTo === lead._id ||
@@ -44,16 +43,22 @@ const RecentCard = () => {
   }, []);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-      <h2 className="text-lg font-bold mb-4">Team Leads & Tasks</h2>
+    <div
+      onClick={() => navigate("/admin/dashboard/changeRole")}
+      className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer border border-gray-200 hover:border-indigo-400 h-full"
+    >
+      <h2 className="text-xl font-bold mb-4 text-indigo-600">Team Leads & Tasks</h2>
       {recents.length === 0 && (
         <div className="text-gray-400 text-sm">No recent tasks found.</div>
       )}
       {recents.map((item, index) => (
-        <div key={index} className="border p-3 rounded-lg mb-3">
-          <p className="font-semibold">{item.team}</p>
-          <p className="text-sm text-gray-500">{item.project}</p>
-          <p className="text-xs text-gray-400">Due: {item.dueDate}</p>
+        <div
+          key={index}
+          className="bg-indigo-50 p-3 rounded mb-3 hover:bg-indigo-100 transition"
+        >
+          <p className="font-semibold text-gray-800">{item.team}</p>
+          <p className="text-sm text-gray-600">{item.project}</p>
+          <p className="text-xs text-gray-500">Due: {item.dueDate}</p>
         </div>
       ))}
     </div>
