@@ -15,6 +15,7 @@ import Contact from "../pages/Contact";
 import DashboardPage from "../pages/Admindashboard/AdminDashboardPage";
 import TeamLeadDashboardPage from "../pages/TeamLeadDashboard/TeamleadDashboardPage";
 import GoalsPage from "../pages/Goal/GoalsPage";
+import OrgChart from "../components/OrgChart/OrgChart";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -103,6 +104,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["team-lead","employee"]}>
             <GoalsPage />
+          </ProtectedRoute>
+        }
+      />
+            <Route
+        path="/OrgChart"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <OrgChart />
           </ProtectedRoute>
         }
       />

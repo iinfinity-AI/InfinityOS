@@ -9,7 +9,8 @@ import {
   FaUsers, 
   FaTasks, 
   FaPowerOff,
-  FaBullseye  // Icon for Goals
+  FaBullseye,  // Icon for Goals
+  FaSitemap
 } from "react-icons/fa";
 
 import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
@@ -67,13 +68,14 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaUsers />, "Manage Users", "users"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
-      getNavItem(<FaBullseye />, "Goals", "goals", "/goals"),
+
     ],
     employee: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
       getNavItem(<FaBullseye />, "My Goals", "goals"),
+      getNavItem(<FaSitemap />, "Org Chart", "orgchart"),
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),

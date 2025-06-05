@@ -8,7 +8,7 @@ const taskRoutes = require("./routes/taskRoutes");
 dotenv.config();
 const moodRoutes = require("./routes/moodRoutes");
 const goalRoutes = require('./routes/goalRoutes');
-
+const orgRoutes = require('./routes/orgRoute');
 const app = express();
 
 app.use(cors({
@@ -26,7 +26,7 @@ app.use("/api/goal",goalRoutes);
 app.use("/api", routes);
 app.use("/api", taskRoutes);
 app.use("/api", moodRoutes);
-
+app.use('/api', orgRoutes);
 
 
 

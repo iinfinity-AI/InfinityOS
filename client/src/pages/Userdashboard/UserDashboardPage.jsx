@@ -7,6 +7,7 @@ import API from "../../services/api";
 import { FaTasks, FaSmile, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import GoalsPage from "../Goal/GoalsPage";
+import OrgChart from "../../components/OrgChart/OrgChart";
 
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -157,6 +158,11 @@ const UserDashboardPage = () => {
             {selectedTab === "goals" && (
             <div className="space-y-6 mt-4">
               <GoalsPage/>
+            </div>
+          )}
+            {selectedTab === "orgchart" && (
+            <div className="space-y-6 mt-4">
+              <OrgChart/>
             </div>
           )}
         </div>
