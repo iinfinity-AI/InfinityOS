@@ -13,6 +13,5 @@ router.get('/org', protect, getOrgChart);
 router.get('/team', protect, getUserTeam);
 
 
-router.get('/static/getOrg', protect, getOrgChart);
 
 module.exports = router;

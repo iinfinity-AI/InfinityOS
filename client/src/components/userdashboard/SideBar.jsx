@@ -75,7 +75,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
       getNavItem(<FaBullseye />, "My Goals", "goals"),
-      getNavItem(<FaSitemap />, "Org Chart", "orgchart"),
+      getNavItem(<FaSitemap />, "Organization Chart", "orgchart"),
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),

@@ -35,9 +35,6 @@ const OrgChart = () => {
         case "users":
           endpoint = "/users"; // All users by role
           break;
-        case "fullOrg":
-          endpoint = "/static/getOrg"; // Full org chart (backward compatibility)
-          break;
         default:
           endpoint = "/org";
       }
