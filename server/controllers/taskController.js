@@ -172,9 +172,8 @@ const changeEmployeeTaskStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-   
-    if (req.user.role !== "employee") {
-      return res.status(403).json({ error: "Access denied: Only employees can change their task status." });
+if (req.user.role !== "employee" && req.user.role !== "team-lead") {
+      return res.status(403).json({ error: "Access denied: Only employees or team leads can change their task status." });
     }
 
     const task = await Task.findById(id);
@@ -190,7 +189,7 @@ const changeEmployeeTaskStatus = async (req, res) => {
       return res.status(403).json({ error: "You are not assigned to this task." });
     }
    
-    const allowedStatuses = ["pending", "in-progress", "completed", "blocked"];
+    const allowedStatuses = ["pending", "in-progress", "completed"];
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ error: "Invalid status value." });
     }

@@ -9,20 +9,20 @@ const AssignedToMeCard = () => {
     const fetchAssignedTasks = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        if (!user?._id) return;
+        if (!user?.id) return;
         const res = await API.get(`/tasks`);
         const allTasks = res.data || [];
         const assignedTasks = allTasks.filter((task) => {
           if (Array.isArray(task.assignedTo)) {
             return task.assignedTo.some(
               (a) =>
-                (typeof a === "string" && a === user._id) ||
-                (a && a._id && String(a._id) === String(user._id))
+                (typeof a === "string" && a === user.id) ||
+                (a && a._id && String(a._id) === String(user.id))
             );
           }
           return (
-            task.assignedTo === user._id ||
-            (task.assignedTo && task.assignedTo._id && String(task.assignedTo._id) === String(user._id))
+            task.assignedTo === user.id ||
+            (task.assignedTo && task.assignedTo._id && String(task.assignedTo._id) === String(user.id))
           );
         });
         setTasks(assignedTasks);
