@@ -30,7 +30,6 @@ const DashboardPage = () => {
 
         <div className="p-8 flex-1 bg-transparent overflow-y-auto">
           <div className="p-6 flex-1 bg-blue-50 overflow-y-auto relative">
-            {/* Edit Profile Button */}
             <button
               onClick={() => navigate("/profile")}
               className="absolute top-6 right-6 bg-gradient-to-r from-blue-700 to-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:from-blue-800 hover:to-blue-600 transition"

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../services/api";
 
-// Enhance the AlertPopup to handle both error and success messages
 const AlertPopup = ({ message, onClose, type = "error" }) => (
   <div className="fixed inset-0 flex items-center justify-center z-50">
     <div
@@ -69,6 +68,51 @@ const AlertPopup = ({ message, onClose, type = "error" }) => (
   </div>
 );
 
+const ConfirmDialog = ({ message, onConfirm, onCancel }) => (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div
+      className="absolute inset-0 bg-black bg-opacity-30"
+      onClick={onCancel}
+    ></div>
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-auto z-10 relative">
+      <div className="flex items-center mb-4">
+        <div className="mr-4 bg-yellow-100 p-2 rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-yellow-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <h3 className="text-lg font-medium text-gray-900">Confirm Deletion</h3>
+      </div>
+      <p className="mb-5 text-gray-600">{message}</p>
+      <div className="flex justify-end space-x-3">
+        <button
+          onClick={onCancel}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onConfirm}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const statusColors = {
   pending: "bg-yellow-200 text-yellow-900",
   "in-progress": "bg-blue-200 text-blue-900",
@@ -84,11 +128,15 @@ const priorityColors = {
 };
 
 const TaskDashboard = () => {
-  // Update alert state to include a type field
   const [alert, setAlert] = useState({
     show: false,
     message: "",
     type: "error",
+  });
+  const [confirmDialog, setConfirmDialog] = useState({
+    show: false,
+    taskId: null,
+    taskTitle: "",
   });
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
@@ -110,9 +158,16 @@ const TaskDashboard = () => {
     project: "",
   });
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.role?.toLowerCase();
+
+  // Only Admin and team-lead can delete tasks
+  const canDelete = role === "admin" || role === "team-lead";
+
+  // Only Admin and team-lead can add tasks
+  const canAddTask = role === "admin" || role === "team-lead";
 
   useEffect(() => {
     fetchTasks();
@@ -125,34 +180,38 @@ const TaskDashboard = () => {
   }, [filters, sortBy]);
 
   const fetchTasks = async () => {
-    const res = await API.get("/tasks", { params: { ...filters, sortBy } });
-    setTasks(res.data || []);
+    try {
+      const res = await API.get("/tasks", { params: { ...filters, sortBy } });
+      setTasks(res.data || []);
+    } catch (err) {
+      setAlert({
+        show: true,
+        message: "Failed to load tasks. Please try again.",
+        type: "error",
+      });
+    }
   };
 
-  // Update the handleFormChange function to validate dates
   const handleFormChange = (e) => {
     const { name, value } = e.target;
 
-    // For date fields, check if start date is before due date
     if (name === "startDate" || name === "dueDate") {
       const otherField = name === "startDate" ? "dueDate" : "startDate";
       const otherValue = form[otherField];
 
-      // If both dates are set, validate them
       if (value && otherValue) {
         const startDate =
           name === "startDate" ? new Date(value) : new Date(otherValue);
         const dueDate =
           name === "dueDate" ? new Date(value) : new Date(otherValue);
 
-        // If start date is after due date, show error
         if (startDate > dueDate) {
           setAlert({
             show: true,
             message: "Start date cannot be after due date",
             type: "error",
           });
-          return; // Don't update the form
+          return;
         }
       }
     }
@@ -166,7 +225,6 @@ const TaskDashboard = () => {
       role: o.getAttribute("data-role"),
     }));
 
-    // Check if there's already a team lead selected
     const teamLeads = selectedOptions.filter((opt) => opt.role === "team-lead");
 
     if (teamLeads.length > 1) {
@@ -184,11 +242,9 @@ const TaskDashboard = () => {
     }));
   };
 
-  // Update the handleAddTask function to validate dates before submission
   const handleAddTask = async (e) => {
     e.preventDefault();
 
-    // Validate dates before submission
     if (form.startDate && form.dueDate) {
       const startDate = new Date(form.startDate);
       const dueDate = new Date(form.dueDate);
@@ -199,7 +255,7 @@ const TaskDashboard = () => {
           message: "Start date cannot be after due date",
           type: "error",
         });
-        return; // Don't submit the form
+        return;
       }
     }
 
@@ -211,14 +267,12 @@ const TaskDashboard = () => {
         tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
       });
 
-      // Show success popup
       setAlert({
         show: true,
         message: "Task created successfully!",
         type: "success",
       });
 
-      // Reset form and close modal
       setForm({
         title: "",
         description: "",
@@ -230,13 +284,9 @@ const TaskDashboard = () => {
         project: "",
       });
 
-      // Fetch updated tasks
       fetchTasks();
-
-      // Close the add task form after a successful add
       setShowAdd(false);
     } catch (err) {
-      // Show error popup instead of basic alert
       setAlert({
         show: true,
         message:
@@ -246,6 +296,45 @@ const TaskDashboard = () => {
     }
 
     setLoading(false);
+  };
+
+  const handleDeleteClick = (taskId, taskTitle) => {
+    setConfirmDialog({
+      show: true,
+      taskId,
+      taskTitle,
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    setDeleteLoading(true);
+
+    try {
+      await API.delete(`/tasks/${confirmDialog.taskId}`);
+
+      setAlert({
+        show: true,
+        message: "Task deleted successfully!",
+        type: "success",
+      });
+
+      fetchTasks();
+    } catch (err) {
+      setAlert({
+        show: true,
+        message:
+          err.response?.data?.error ||
+          "Failed to delete task. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setDeleteLoading(false);
+      setConfirmDialog({ show: false, taskId: null, taskTitle: "" });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setConfirmDialog({ show: false, taskId: null, taskTitle: "" });
   };
 
   return (
@@ -266,30 +355,36 @@ const TaskDashboard = () => {
               d="M3.75 3.75h5.25v5.25H3.75V3.75zm0 11.25h5.25v5.25H3.75v-5.25zM15 3.75h5.25v5.25H15V3.75zm0 11.25h5.25v5.25H15v-5.25z"
             />
           </svg>
-          {role === "team-lead" ? "Team Tasks" : "Admin Task Dashboard"}
+          {role === "team-lead"
+            ? "Team Tasks"
+            : role === "admin"
+            ? "Admin Task Dashboard"
+            : "Task Dashboard"}
         </h2>
 
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center gap-2"
-          onClick={() => setShowAdd(true)}
-          aria-label="Add Task"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+        {canAddTask && (
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center gap-2"
+            onClick={() => setShowAdd(true)}
+            aria-label="Add Task"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Add Task
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Task
+          </button>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-4 mb-6 text-blue-900">
@@ -320,7 +415,7 @@ const TaskDashboard = () => {
           <option value="Critical">Critical</option>
         </select>
         <input
-          className="border rounded-lg px-3 py-2 shadow-sm "
+          className="border rounded-lg px-3 py-2 shadow-sm"
           placeholder="Search by title..."
           value={filters.search}
           onChange={(e) =>
@@ -348,6 +443,7 @@ const TaskDashboard = () => {
               <th className="py-3 px-4 text-center">Assigned To</th>
               <th className="py-3 px-4 text-center">Start Date</th>
               <th className="py-3 px-4 text-center">Due Date</th>
+              {canDelete && <th className="py-3 px-4 text-center">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -409,6 +505,30 @@ const TaskDashboard = () => {
                     ? new Date(task.dueDate).toLocaleDateString()
                     : "-"}
                 </td>
+                {canDelete && (
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => handleDeleteClick(task._id, task.title)}
+                      className="text-red-600 hover:text-red-800 focus:outline-none"
+                      title="Delete Task"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -421,7 +541,6 @@ const TaskDashboard = () => {
       {showAdd && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative max-h-[90vh] flex flex-col overflow-hidden">
-            {/* Header */}
             <div className="p-6 border-b sticky top-0 bg-white z-10 flex justify-between items-center">
               <h3 className="text-2xl font-semibold text-blue-900">
                 📝 Create a New Task
@@ -434,7 +553,6 @@ const TaskDashboard = () => {
               </button>
             </div>
 
-            {/* Form with scrollable content */}
             <div className="overflow-y-auto p-6 flex-grow">
               <form onSubmit={handleAddTask} className="space-y-4">
                 <div className="space-y-4">
@@ -576,7 +694,6 @@ const TaskDashboard = () => {
               </form>
             </div>
 
-            {/* Footer with submit button - sticky at bottom */}
             <div className="p-6 border-t sticky bottom-0 bg-white z-10">
               <button
                 onClick={handleAddTask}
@@ -590,12 +707,19 @@ const TaskDashboard = () => {
         </div>
       )}
 
-      {/* Add the alert popup */}
       {alert.show && (
         <AlertPopup
           message={alert.message}
           type={alert.type}
           onClose={() => setAlert({ show: false, message: "", type: "error" })}
+        />
+      )}
+
+      {confirmDialog.show && (
+        <ConfirmDialog
+          message={`Are you sure you want to delete the task "${confirmDialog.taskTitle}"? This action cannot be undone.`}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
         />
       )}
     </div>

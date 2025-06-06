@@ -68,6 +68,7 @@ const DashboardStats = () => {
   ];
 
   return (
+    <>
     <div className="grid grid-cols-4 sm:grid-cols-3  gap-3">
       {stats.map((stat, index) => (
         <div
@@ -80,6 +81,7 @@ const DashboardStats = () => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 
