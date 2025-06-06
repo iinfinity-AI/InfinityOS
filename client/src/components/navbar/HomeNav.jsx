@@ -42,7 +42,7 @@ const HomeNav = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+   localStorage.clear();
     setIsLoggedIn(false);
     navigate("/");
   };

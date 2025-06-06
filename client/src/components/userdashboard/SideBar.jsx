@@ -31,7 +31,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.clear();
     navigate("/");
   };
 
