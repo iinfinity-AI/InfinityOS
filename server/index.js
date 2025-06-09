@@ -9,6 +9,7 @@ dotenv.config();
 const moodRoutes = require("./routes/moodRoutes");
 const goalRoutes = require('./routes/goalRoutes');
 const orgRoutes = require('./routes/orgRoute');
+const statsRoutes = require("./routes/analyticsRoutes");
 const app = express();
 
 app.use(cors({
@@ -27,6 +28,7 @@ app.use("/api", routes);
 app.use("/api", taskRoutes);
 app.use("/api", moodRoutes);
 app.use('/api', orgRoutes);
+app.use('/api/status', statsRoutes);
 
 
 

@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import NewTask from "../../components/task/dashboard";
 import GetAllMoods from "../../components/moods/getallMoods";
 import GoalsPage from "../Goal/GoalsPage";
+import TeamAnalyticsCards from "../../components/analytic/TeamAnalyticsCards";
+import AnalyticsCards from "../../components/analytic/AnalyticCard";
 
 const TeamLeadDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -38,13 +40,11 @@ const TeamLeadDashboardPage = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-
         const tasksRes = await API.get("/tasks");
         const allTasks = tasksRes.data;
 
         const usersRes = await API.get("/users");
         const allUsers = usersRes.data.users || usersRes.data || [];
-
 
         const myTeamMembers = allUsers.filter(
           (u) => u.role === "employee" && u.department === user.department
@@ -56,7 +56,6 @@ const TeamLeadDashboardPage = () => {
           (task) => task.createdBy && task.createdBy === user.id
         );
 
-    
         const teamMemberIds = myTeamMembers.map((m) => m._id);
         const assignedTasks = allTasks.filter((task) => {
           if (!task.assignedTo) return false;
@@ -75,7 +74,6 @@ const TeamLeadDashboardPage = () => {
           return false;
         });
 
-    
         const completedTasks = assignedTasks.filter(
           (task) => task.status === "completed"
         );
@@ -95,7 +93,6 @@ const TeamLeadDashboardPage = () => {
           completionRate,
         }));
 
-      
         const moodsRes = await API.get("/allmood");
         const moods = moodsRes.data || [];
         const myMoods = moods.filter((m) => m.user && m.user._id === user.id);
@@ -436,7 +433,6 @@ const TeamLeadDashboardPage = () => {
                     <h3 className="text-xl font-semibold text-gray-800">
                       Your Team Members
                     </h3>
-              
                   </div>
 
                   {teamMembers.length > 0 ? (
@@ -451,7 +447,7 @@ const TeamLeadDashboardPage = () => {
                     </p>
                   )}
 
-                  {teamMembers.length > 6 }
+                  {teamMembers.length > 6}
                 </div>
               </div>
 
@@ -562,6 +558,21 @@ const TeamLeadDashboardPage = () => {
           {selectedTab === "goals" && (
             <div className="space-y-6 mt-4">
               <GoalsPage />
+            </div>
+          )}
+
+          {selectedTab === "analytics" && (
+            <div className="space-y-6 mt-4">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Team Analytics Dashboard
+              </h2>
+              <TeamAnalyticsCards />
+              <div className="mt-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-6">
+                  Your Personal Analytics
+                </h3>
+                <AnalyticsCards />
+              </div>
             </div>
           )}
         </div>

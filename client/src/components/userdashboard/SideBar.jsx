@@ -1,23 +1,26 @@
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { 
-  FaTachometerAlt, 
-  FaBalanceScale, 
-  FaSmile, 
-  FaUsers, 
-  FaTasks, 
+import {
+  FaTachometerAlt,
+  FaBalanceScale,
+  FaSmile,
+  FaUsers,
+  FaTasks,
   FaPowerOff,
-  FaBullseye,  // Icon for Goals
-  FaSitemap
+  FaBullseye, // Icon for Goals
+  FaSitemap,
+  FaChartLine, // Importing the Chart Line icon for Analytics
 } from "react-icons/fa";
 
 import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
 import AdminLogo from "../../assets/admindashb/infinityLogo.png";
 import DefaultAvatar from "../../assets/userdashboard/Customer1.png";
 
-const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) => {
+const RoleBasedSidebar = ({
+  selectedTab,
+  setSelectedTab,
+  isCollapsed = false,
+}) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -44,7 +47,9 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
 
   const role = user.role?.toLowerCase();
 
-  const baseClasses = `flex items-center ${isCollapsed ? "justify-center" : "gap-3"} px-4 py-3 rounded-md cursor-pointer transition-all duration-200`;
+  const baseClasses = `flex items-center ${
+    isCollapsed ? "justify-center" : "gap-3"
+  } px-4 py-3 rounded-md cursor-pointer transition-all duration-200`;
 
   const getNavItem = (icon, label, tabKey, path = "#") => (
     <Link
@@ -68,7 +73,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaUsers />, "Manage Users", "users"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
-
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for admin
     ],
     employee: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -76,6 +81,7 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
       getNavItem(<FaBullseye />, "My Goals", "goals"),
       getNavItem(<FaSitemap />, "Organization Chart", "orgchart"),
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for employee
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -83,13 +89,16 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
       getNavItem(<FaTasks />, "Assign Tasks", "assign"),
       getNavItem(<FaSmile />, "Add Mood", "mood"),
       getNavItem(<FaSmile />, "All Mood", "moods"),
-      getNavItem(<FaBullseye />, "Goals", "goals",),
+      getNavItem(<FaBullseye />, "Goals", "goals"),
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for team lead
     ],
   };
 
   return (
     <aside
-      className={`bg-[#0F1946] ${isCollapsed ? "w-20" : "w-64"} min-h-screen flex flex-col justify-between p-4 text-white transition-all duration-300`}
+      className={`bg-[#0F1946] ${
+        isCollapsed ? "w-20" : "w-64"
+      } min-h-screen flex flex-col justify-between p-4 text-white transition-all duration-300`}
     >
       <div>
         {/* Logo */}
@@ -101,7 +110,6 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
           />
         </div>
 
-
         <div className="flex flex-col items-center text-center mb-6">
           <img
             src={avatarToShow}
@@ -112,7 +120,9 @@ const RoleBasedSidebar = ({ selectedTab, setSelectedTab, isCollapsed = false }) 
           />
           {!isCollapsed && (
             <>
-              <h3 className="mt-2 text-lg font-semibold">{user.name || "User"}</h3>
+              <h3 className="mt-2 text-lg font-semibold">
+                {user.name || "User"}
+              </h3>
               <p className="text-sm text-gray-300 capitalize">{user.role}</p>
             </>
           )}

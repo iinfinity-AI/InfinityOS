@@ -8,6 +8,7 @@ import { FaTasks, FaSmile, FaCheckCircle, FaChartLine } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import GoalsPage from "../Goal/GoalsPage";
 import OrgChart from "../../components/OrgChart/OrgChart";
+import AnalyticsCards from "../../components/analytic/AnalyticCard";
 
 const UserDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -407,6 +408,15 @@ const UserDashboardPage = () => {
           {selectedTab === "orgchart" && (
             <div className="space-y-6 mt-4">
               <OrgChart />
+            </div>
+          )}
+
+          {selectedTab === "analytics" && (
+            <div className="space-y-6 mt-4">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Your Analytics Dashboard
+              </h2>
+              <AnalyticsCards />
             </div>
           )}
         </div>

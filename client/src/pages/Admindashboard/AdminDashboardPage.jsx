@@ -8,6 +8,7 @@ import RecentCard from "../../components/Admindashboard/RecentCard";
 import Allusers from "../../components/Admindashboard/rolechangedash";
 import Moods from "../../components/moods/getallMoods";
 import TaskFilterBar from "../../components/task/dashboard";
+import AnalyticsCards from "../../components/analytic/AnalyticCard";
 
 const DashboardPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -69,6 +70,15 @@ const DashboardPage = () => {
             {selectedTab === "users" && (
               <div className="space-y-6 mt-4">
                 <Allusers />
+              </div>
+            )}
+
+            {selectedTab === "analytics" && (
+              <div className="space-y-6 mt-4">
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                  Your Analytics Dashboard
+                </h2>
+                <AnalyticsCards />
               </div>
             )}
           </div>
