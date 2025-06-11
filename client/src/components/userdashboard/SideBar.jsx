@@ -7,9 +7,9 @@ import {
   FaUsers,
   FaTasks,
   FaPowerOff,
-  FaBullseye, 
+  FaBullseye,
   FaSitemap,
-  FaChartLine, 
+  FaChartLine,
 } from "react-icons/fa";
 
 import AdminLogo from "../../assets/admindashb/infinityLogo.png";
@@ -46,9 +46,10 @@ const RoleBasedSidebar = ({
 
   const role = user.role?.toLowerCase();
 
+  // Enhanced styling while keeping the same structure
   const baseClasses = `flex items-center ${
     isCollapsed ? "justify-center" : "gap-3"
-  } px-4 py-3 rounded-md cursor-pointer transition-all duration-200`;
+  } px-4 py-3 rounded-lg cursor-pointer transition-all duration-200`;
 
   const getNavItem = (icon, label, tabKey, path = "#") => (
     <Link
@@ -57,11 +58,15 @@ const RoleBasedSidebar = ({
       onClick={() => setSelectedTab(tabKey)}
       className={`${baseClasses} ${
         selectedTab === tabKey
-          ? "bg-yellow-400 text-black font-semibold"
-          : "hover:bg-yellow-400 hover:text-black text-white"
+          ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold shadow-md"
+          : "hover:bg-gray-800/60 hover:text-yellow-400 text-gray-300"
       }`}
     >
-      {icon}
+      <div
+        className={selectedTab === tabKey ? "text-gray-900" : "text-yellow-400"}
+      >
+        {icon}
+      </div>
       {!isCollapsed && <span className="capitalize">{label}</span>}
     </Link>
   );
@@ -72,7 +77,7 @@ const RoleBasedSidebar = ({
       getNavItem(<FaUsers />, "Manage Users", "users"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
+      getNavItem(<FaChartLine />, "Analytics", "analytics"),
     ],
     employee: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -80,7 +85,7 @@ const RoleBasedSidebar = ({
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
       getNavItem(<FaBullseye />, "My Goals", "goals"),
       getNavItem(<FaSitemap />, "Organization Chart", "orgchart"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
+      getNavItem(<FaChartLine />, "Analytics", "analytics"),
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -89,59 +94,68 @@ const RoleBasedSidebar = ({
       getNavItem(<FaSmile />, "Add Mood", "mood"),
       getNavItem(<FaSmile />, "All Mood", "moods"),
       getNavItem(<FaBullseye />, "Goals", "goals"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
+      getNavItem(<FaChartLine />, "Analytics", "analytics"),
     ],
   };
 
   return (
     <aside
-      className={`bg-[#0F1946] ${
+      className={`bg-gradient-to-b from-[#0F1946] to-[#0d1538] ${
         isCollapsed ? "w-20" : "w-64"
-      } min-h-screen flex flex-col justify-between p-4 text-white transition-all duration-300`}
+      } min-h-screen flex flex-col justify-between p-4 text-white transition-all duration-300 shadow-xl`}
     >
       <div>
         {/* Logo */}
-        <div className="flex items-center mb-6 justify-center">
-          <img
-            src={AdminLogo}
-            alt="Logo"
-            className="h-10"
-          />
+        <div className="flex items-center mb-8 justify-center">
+          <img src={AdminLogo} alt="Logo" className="h-10" />
+          {!isCollapsed && (
+            <span className="ml-2 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-200">
+              InfinityOS
+            </span>
+          )}
         </div>
 
-        <div className="flex flex-col items-center text-center mb-6">
-          <img
-            src={avatarToShow}
-            alt="User Avatar"
-            className={`rounded-full border-4 border-yellow-400 shadow-md ${
-              isCollapsed ? "w-12 h-12" : "w-20 h-20"
-            }`}
-          />
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="relative">
+            <img
+              src={avatarToShow}
+              alt="User Avatar"
+              className={`rounded-full border-2 border-yellow-400 shadow-lg ${
+                isCollapsed ? "w-12 h-12" : "w-20 h-20"
+              } object-cover`}
+            />
+          
+          </div>
           {!isCollapsed && (
             <>
-              <h3 className="mt-2 text-lg font-semibold">
+              <h3 className="mt-3 text-lg font-semibold text-white">
                 {user.name || "User"}
               </h3>
-              <p className="text-sm text-gray-300 capitalize">{user.role}</p>
+              <div className="flex items-center justify-center mt-1">
+                <span className="text-sm text-gray-300 capitalize">
+                  {user.role}
+                </span>
+               
+              </div>
             </>
           )}
         </div>
 
         {!isCollapsed && (
-          <p className="text-sm uppercase tracking-wide text-gray-400 mb-3">
+          <p className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3 px-4">
             Features
           </p>
         )}
 
         {/* Navigation */}
-        <div className="space-y-2">{tabs[role] || []}</div>
+        <div className="space-y-2 px-1">{tabs[role] || []}</div>
       </div>
 
       {/* Logout Button */}
-      <div className="mt-auto">
+      <div className="mt-auto pt-4">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 transition text-white font-semibold py-3 px-4 rounded-md"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all text-white font-semibold py-3 px-4 rounded-lg shadow-md"
         >
           <FaPowerOff />
           {!isCollapsed && <span>Log Out</span>}
