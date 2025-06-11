@@ -266,13 +266,6 @@ const TeamLeadDashboardPage = () => {
                   </p>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mt-4 md:mt-0">
-              
-                  <button
-                    onClick={() => navigate("/profile")}
-                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-blue-500 transition ml-0 md:ml-2"
-                  >
-                    Edit Profile
-                  </button>
                 </div>
               </div>
 

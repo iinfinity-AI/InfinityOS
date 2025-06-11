@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FiMenu, FiLogOut, FiCalendar } from "react-icons/fi";
+import { FiMenu, FiLogOut, FiCalendar, FiUser, FiBell } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const TopBar = ({ toggleSidebar }) => {
@@ -36,6 +36,10 @@ const TopBar = ({ toggleSidebar }) => {
     navigate("/");
   };
 
+  const goToProfile = () => {
+    navigate("/profile");
+  };
+
   return (
     <header className="bg-[#E1EAFE] px-6 py-3 flex items-center justify-between">
       <div className="flex items-center space-x-4">
@@ -52,8 +56,36 @@ const TopBar = ({ toggleSidebar }) => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-3">
-     
+      <div className="flex items-center space-x-4">
+        {/* Profile Section */}
+        <div className="flex items-center">
+          <div
+            onClick={goToProfile}
+            className="flex items-center cursor-pointer hover:bg-indigo-100 rounded-lg py-1 px-2 transition-colors"
+          >
+            <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-indigo-300 mr-2">
+              {user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt={user.name || "User"}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="h-full w-full bg-gradient-to-r from-indigo-500 to-blue-500 flex items-center justify-center text-white font-semibold">
+                  {user?.name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-sm font-medium text-gray-800 leading-tight">
+                {user?.name || "User"}
+              </p>
+              <p className="text-xs text-gray-500 leading-tight capitalize">
+                {user?.role || "User"}
+              </p>
+            </div>
+          </div>
+        </div>
 
         <button
           onClick={handleLogout}
