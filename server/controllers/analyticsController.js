@@ -48,23 +48,34 @@ const getUserStats = async (req, res) => {
       averageMood = Math.round(averageMood * 10) / 10; // Round to 1 decimal place
     }
 
-    // Calculate login streak
+    // Get login streak (improved version)
     const user = await User.findById(userId);
-    let loginStreak = 0;
+    let loginStreak = user?.currentStreak || 0; // Use the tracked streak directly
 
-    if (user && user.lastLogins && user.lastLogins.length > 0) {
+    // If we need to calculate from scratch (fallback)
+    if (!loginStreak && user && user.lastLogins && user.lastLogins.length > 0) {
       // Sort login dates in descending order
       const sortedLogins = [...user.lastLogins].sort(
         (a, b) => new Date(b) - new Date(a)
       );
 
+      // Normalize dates to start of day for accurate comparison
+      const normalizedLogins = sortedLogins.map((date) => {
+        const normalized = new Date(date);
+        normalized.setHours(0, 0, 0, 0);
+        return normalized.getTime();
+      });
+
+      // Remove duplicate dates (multiple logins on same day)
+      const uniqueDates = [...new Set(normalizedLogins)];
+
       // Calculate streak
       let streak = 1;
       const oneDayMs = 24 * 60 * 60 * 1000;
 
-      for (let i = 1; i < sortedLogins.length; i++) {
-        const current = new Date(sortedLogins[i - 1]);
-        const previous = new Date(sortedLogins[i]);
+      for (let i = 1; i < uniqueDates.length; i++) {
+        const current = uniqueDates[i - 1];
+        const previous = uniqueDates[i];
 
         // Check if logins are on consecutive days
         const diffDays = Math.round((current - previous) / oneDayMs);
@@ -78,6 +89,9 @@ const getUserStats = async (req, res) => {
 
       loginStreak = streak;
     }
+
+    // Get best streak from the user record
+    const bestStreak = user?.bestStreak || loginStreak;
 
     // Get task breakdown by status
     const pendingTasks = tasks.filter(
@@ -115,6 +129,7 @@ const getUserStats = async (req, res) => {
       tasksCompletedPercent,
       averageMood,
       loginStreak,
+      bestStreak,
       taskBreakdown: {
         completed: completedTasks.length,
         pending: pendingTasks,
@@ -137,13 +152,10 @@ const getUserStats = async (req, res) => {
  */
 const getTeamStats = async (req, res) => {
   try {
-    if (req.user.role !== "Admin" && req.user.role !== "team-lead") {
-      return res
-        .status(403)
-        .json({
-          error:
-            "Unauthorized: Only admins and team leads can access team stats",
-        });
+    if (req.user.role !== "admin" && req.user.role !== "team-lead") {
+      return res.status(403).json({
+        error: "Unauthorized: Only admins and team leads can access team stats",
+      });
     }
 
     const userId = req.user.userId;
@@ -151,7 +163,7 @@ const getTeamStats = async (req, res) => {
 
     // Get users in the same department (for team leads)
     const teamQuery =
-      req.user.role === "Admin" ? {} : { department: user.department };
+      req.user.role === "admin" ? {} : { department: user.department };
 
     const teamMembers = await User.find({
       ...teamQuery,
@@ -205,6 +217,24 @@ const getTeamStats = async (req, res) => {
       teamMoodAverage = Math.round(teamMoodAverage * 10) / 10;
     }
 
+    // Get team login streak stats
+    const teamStreakStats = {
+      averageStreak: 0,
+      maxStreak: 0,
+      totalDailyActive: 0,
+    };
+
+    if (teamMembers.length > 0) {
+      const streaks = teamMembers.map((member) => member.currentStreak || 0);
+      teamStreakStats.averageStreak = Math.round(
+        streaks.reduce((sum, streak) => sum + streak, 0) / streaks.length
+      );
+      teamStreakStats.maxStreak = Math.max(...streaks);
+      teamStreakStats.totalDailyActive = streaks.filter(
+        (streak) => streak > 0
+      ).length;
+    }
+
     // Get task distribution
     const memberTaskDistribution = await Promise.all(
       teamMembers.map(async (member) => {
@@ -227,6 +257,7 @@ const getTeamStats = async (req, res) => {
             memberTasks.length > 0
               ? Math.round((completed / memberTasks.length) * 100)
               : 0,
+          currentStreak: member.currentStreak || 0,
         };
       })
     );
@@ -236,6 +267,7 @@ const getTeamStats = async (req, res) => {
       teamSize: teamMembers.length,
       teamCompletionRate,
       teamMoodAverage,
+      teamStreakStats,
       memberTaskDistribution,
       taskBreakdown: {
         completed: completedTasks.length,

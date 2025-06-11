@@ -28,9 +28,28 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     required: false
-  }
-}, {
-  timestamps: true 
-});
+  },
+    lastLogins: {
+      type: [Date],
+      default: []
+    },
+
+    currentStreak: {
+      type: Number,
+      default: 0
+    },
+
+    bestStreak: {
+      type: Number,
+      default: 0
+    },
+
+    lastLoginDate: {
+      type: Date,
+      default: null
+    }
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("User", userSchema);

@@ -4,9 +4,7 @@ const User = require("../models/User");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
-
 const otpStore = {};
-
 
 const registerUser = async (req, res) => {
   const { name, email, password, role, phone } = req.body;
@@ -29,6 +27,10 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       role,
       phone,
+      lastLogins: [new Date()],
+      currentStreak: 1,
+      bestStreak: 1,
+      lastLoginDate: new Date(),
     });
 
     await user.save();
@@ -38,7 +40,6 @@ const registerUser = async (req, res) => {
     res.status(500).json({ error: "Server error during registration" });
   }
 };
-
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -58,6 +59,9 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
+    // Update login streak
+    await updateLoginStreak(user);
+
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -73,8 +77,10 @@ const loginUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
-        profilePicture: user.profilePicture
-      }
+        profilePicture: user.profilePicture,
+        currentStreak: user.currentStreak || 0,
+        bestStreak: user.bestStreak || 0,
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -82,19 +88,73 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Helper function to update login streak
+const updateLoginStreak = async (user) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+  // Initialize lastLogins array if it doesn't exist
+  if (!user.lastLogins) {
+    user.lastLogins = [];
+  }
+
+  // Add current login
+  user.lastLogins.push(new Date());
+
+  // Keep only last 30 logins to prevent array growth
+  if (user.lastLogins.length > 30) {
+    user.lastLogins = user.lastLogins.slice(-30);
+  }
+
+  // If lastLoginDate doesn't exist or streak tracking fields don't exist
+  if (!user.currentStreak) user.currentStreak = 0;
+  if (!user.bestStreak) user.bestStreak = 0;
+
+  // Calculate streak
+  if (!user.lastLoginDate) {
+    // First login ever
+    user.currentStreak = 1;
+    user.bestStreak = 1;
+  } else {
+    const lastLogin = new Date(user.lastLoginDate);
+    lastLogin.setHours(0, 0, 0, 0); // Normalize to start of day
+
+    // Calculate difference in days
+    const diffTime = today - lastLogin;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      // Consecutive day login
+      user.currentStreak += 1;
+      // Update best streak if current is higher
+      if (user.currentStreak > user.bestStreak) {
+        user.bestStreak = user.currentStreak;
+      }
+    } else if (diffDays === 0) {
+      // Same day login, don't change streak
+    } else {
+      // Streak broken
+      user.currentStreak = 1;
+    }
+  }
+
+  // Update last login date
+  user.lastLoginDate = today;
+
+  await user.save();
+};
+
 const sendOtp = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ error: "User not found" });
 
-
   const otp = crypto.randomInt(100000, 999999).toString();
 
   otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
 
-
   const transporter = nodemailer.createTransport({
-    service: "gmail", 
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -127,7 +187,7 @@ const sendOtp = async (req, res) => {
           &copy; ${new Date().getFullYear()} INFINITY OS. All rights reserved.
         </p>
       </div>
-    `
+    `,
   };
 
   try {
@@ -138,22 +198,22 @@ const sendOtp = async (req, res) => {
   }
 };
 
-
 const verifyOtp = (req, res) => {
   const { email, otp } = req.body;
   const record = otpStore[email];
   if (record && record.otp === otp && Date.now() < record.expires) {
-    delete otpStore[email]; 
+    delete otpStore[email];
     return res.json({ message: "OTP verified!" });
   }
   res.status(400).json({ error: "Invalid or expired OTP." });
 };
 
-
 const resetPassword = async (req, res) => {
   const { email, newPassword } = req.body;
   if (!email || !newPassword) {
-    return res.status(400).json({ error: "Email and new password are required" });
+    return res
+      .status(400)
+      .json({ error: "Email and new password are required" });
   }
   try {
     const user = await User.findOne({ email });
@@ -168,7 +228,6 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ error: "Server error during password reset" });
   }
 };
-
 
 const updateProfile = async (req, res) => {
   const { userId } = req.user;
@@ -196,8 +255,8 @@ const updateProfile = async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
-        profilePicture: user.profilePicture
-      }
+        profilePicture: user.profilePicture,
+      },
     });
   } catch (error) {
     console.error("Profile update error:", error);
@@ -219,7 +278,9 @@ const changeUserRole = async (req, res) => {
     const { role } = req.body;
 
     if (!_id || !role) {
-      return res.status(400).json({ error: "User ID and new role are required" });
+      return res
+        .status(400)
+        .json({ error: "User ID and new role are required" });
     }
 
     const user = await User.findById(_id);
@@ -230,7 +291,15 @@ const changeUserRole = async (req, res) => {
     user.role = role;
     await user.save();
 
-    res.status(200).json({ message: "User role updated successfully", user: { id: user._id, name: user.name, role: user.role, email: user.email } });
+    res.status(200).json({
+      message: "User role updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        role: user.role,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Server error while changing user role" });
   }
@@ -244,5 +313,5 @@ module.exports = {
   resetPassword,
   updateProfile,
   getUserData,
-  changeUserRole
+  changeUserRole,
 };
