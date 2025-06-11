@@ -1,73 +1,73 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaUserTie,
-  FaChevronDown,
-  FaChevronRight,
-  FaSitemap,
-} from "react-icons/fa";
+import { FaUserTie, FaSitemap, FaUsers, FaUserFriends } from "react-icons/fa";
 
 const OrgChart = () => {
   const [orgData, setOrgData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [expandedNodes, setExpandedNodes] = useState({});
 
-  // Sample data - replace with your API call
+  // Sample data matching your image structure
   const sampleData = {
-    id: "1",
-    name: "CEO",
-    role: "Chief Executive Officer",
-    email: "ceo@company.com",
-    avatar: "",
-    isCurrentUser: false,
-    children: [
+    admins: [
+      {
+        id: "1",
+        name: "Kasun putha",
+        role: "Admin",
+        email: "udayangakasun696@gmail.com",
+        phone: "0765855386"
+      },
       {
         id: "2",
-        name: "CTO",
-        role: "Chief Technology Officer",
-        email: "cto@company.com",
-        isCurrentUser: false,
-        children: [
-          {
-            id: "3",
-            name: "Dev Manager",
-            role: "Development Manager",
-            email: "dev@company.com",
-            isCurrentUser: true,
-            children: [
-              {
-                id: "4",
-                name: "Senior Developer",
-                role: "Senior Software Engineer",
-                email: "senior@company.com",
-                isCurrentUser: false,
-              },
-              {
-                id: "5",
-                name: "Junior Developer",
-                role: "Software Engineer",
-                email: "junior@company.com",
-                isCurrentUser: false,
-              },
-            ],
-          },
-          {
-            id: "6",
-            name: "QA Manager",
-            role: "Quality Assurance Manager",
-            email: "qa@company.com",
-            isCurrentUser: false,
-          },
-        ],
+        name: "DINITHS RUSIRU",
+        role: "Admin",
+        email: "dinithrusiru4@gmail.com",
+        phone: "0773508024"
+      }
+    ],
+    teamLeads: [
+      {
+        id: "3",
+        name: "DINITHid RUSIRUd",
+        role: "team-lead",
+        email: "dinithrusiru1d@gmail.com",
+        phone: "119"
       },
       {
-        id: "7",
-        name: "CFO",
-        role: "Chief Financial Officer",
-        email: "cfo@company.com",
-        isCurrentUser: false,
+        id: "4",
+        name: "DINITHr RUSIRUr",
+        role: "team-lead",
+        email: "dinithrusiru1@gmail.comm"
       },
+      {
+        id: "5",
+        name: "Kasun Udayanga",
+        role: "team-lead",
+        email: "udayangakasu696@gmail.com"
+      },
+      {
+        id: "6",
+        name: "DINITH RUSIRU",
+        role: "team-lead",
+        email: "dinithrusiru1@gmail.com",
+        phone: "0773508023"
+      }
     ],
+    employees: [
+      {
+        id: "7",
+        name: "D Udayanga",
+        role: "employee",
+        email: "kasun2001@gmail.com",
+        phone: "0765855386"
+      },
+      {
+        id: "8",
+        name: "DINITHr RUSIRUr",
+        role: "employee",
+        email: "dinithrusiru1@gmail.com",
+        phone: "0773508026"
+      }
+    ]
   };
 
   useEffect(() => {
@@ -87,130 +87,26 @@ const OrgChart = () => {
     fetchData();
   }, []);
 
-  const toggleNode = (nodeId) => {
-    setExpandedNodes((prev) => ({
-      ...prev,
-      [nodeId]: !prev[nodeId],
-    }));
-  };
-
-  const renderOrgNode = (node, level = 0, path = "0") => {
-    const hasChildren = node.children && node.children.length > 0;
-    const nodeId = path;
-    const isExpanded = expandedNodes[nodeId] !== false; // Default to expanded
-    const isCurrentUser = node.isCurrentUser;
-
-    return (
-      <div key={nodeId} className="flex flex-col items-center">
-        {/* Node Box */}
-        <div className="relative group">
-          <div
-            className={`border-2 rounded-lg p-3 shadow-md min-w-[200px] flex items-center gap-3 relative z-10 
-            ${
-              isCurrentUser
-                ? "bg-yellow-50 border-yellow-500"
-                : "bg-white border-blue-500"
-            }`}
-          >
-            {/* Avatar/Icon */}
-            {node.avatar ? (
-              <img
-                src={node.avatar}
-                alt={node.name}
-                className={`h-12 w-12 rounded-full object-cover border-2 
-                  ${isCurrentUser ? "border-yellow-400" : "border-blue-400"}`}
-              />
-            ) : (
-              <div
-                className={`h-12 w-12 rounded-full flex items-center justify-center 
-                ${
-                  isCurrentUser
-                    ? "bg-yellow-100 text-yellow-600"
-                    : "bg-blue-100 text-blue-600"
-                }`}
-              >
-                <FaUserTie size={20} />
-              </div>
-            )}
-
-            {/* Name and Role */}
-            <div className="flex-1">
-              <div
-                className={`font-semibold ${
-                  isCurrentUser ? "text-yellow-900" : "text-blue-900"
-                }`}
-              >
-                {node.name} {isCurrentUser && "(You)"}
-              </div>
-              <div className="text-sm text-gray-600">
-                {node.role || "Role not specified"}
-              </div>
-            </div>
-
-            {/* Expand/Collapse Button */}
-            {hasChildren && (
-              <button
-                className={`rounded-full w-6 h-6 flex items-center justify-center transition-colors
-                  ${
-                    isCurrentUser
-                      ? "bg-yellow-100 hover:bg-yellow-200 text-yellow-700"
-                      : "bg-blue-100 hover:bg-blue-200 text-blue-700"
-                  }`}
-                onClick={() => toggleNode(nodeId)}
-                aria-label={isExpanded ? "Collapse" : "Expand"}
-              >
-                {isExpanded ? (
-                  <FaChevronDown size={14} />
-                ) : (
-                  <FaChevronRight size={14} />
-                )}
-              </button>
-            )}
-          </div>
-
-          {/* Tooltip */}
-          <div className="absolute z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-300 bg-gray-900 text-white text-sm rounded-md py-2 px-3 shadow-lg top-full left-1/2 transform -translate-x-1/2 mt-2 whitespace-nowrap">
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
-            <p>
-              <strong>Email:</strong> {node.email || "N/A"}
-            </p>
-          </div>
+  const renderUserCard = (user) => (
+    <div
+      key={user.id}
+      className="bg-white rounded-lg shadow p-4 border border-gray-200"
+    >
+      <div className="flex items-center space-x-4">
+        <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+          <FaUserTie size={24} />
         </div>
-
-        {/* Children container with vertical line */}
-        {hasChildren && isExpanded && (
-          <div className="flex flex-col items-center">
-            {/* Vertical connector line */}
-            <div className="w-px h-8 bg-blue-500"></div>
-
-            {/* Horizontal line for multiple children */}
-            {node.children.length > 1 && (
-              <div className="relative flex items-center justify-center">
-                <div
-                  className="h-px bg-blue-500"
-                  style={{ width: `${(node.children.length - 1) * 220}px` }}
-                ></div>
-              </div>
-            )}
-
-            {/* Children nodes */}
-            <div className="flex flex-wrap justify-center gap-x-10">
-              {node.children.map((child, index) => (
-                <div
-                  key={`${path}-${index}`}
-                  className="flex flex-col items-center"
-                >
-                  {/* Vertical connector to child */}
-                  <div className="w-px h-8 bg-blue-500"></div>
-                  {renderOrgNode(child, level + 1, `${path}-${index}`)}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
+          <p className="text-sm text-gray-600 capitalize">{user.role}</p>
+          <p className="text-xs text-gray-500">{user.email}</p>
+          {user.phone && (
+            <p className="text-xs text-gray-500">Phone: {user.phone}</p>
+          )}
+        </div>
       </div>
-    );
-  };
+    </div>
+  );
 
   if (loading) {
     return (
@@ -225,13 +121,47 @@ const OrgChart = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+    <div className="bg-white rounded-lg shadow-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-        <FaSitemap className="mr-2" /> Organization Chart
+        <FaSitemap className="mr-2" /> Organization Structure
       </h2>
 
-      <div className="min-w-fit flex justify-center p-4">
-        {orgData && renderOrgNode(orgData)}
+      <div className="space-y-8">
+        {/* Administrators Section */}
+        {orgData.admins && orgData.admins.length > 0 && (
+          <div className="border-b pb-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700">
+              Administrators
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orgData.admins.map((admin) => renderUserCard(admin))}
+            </div>
+          </div>
+        )}
+
+        {/* Team Leads Section */}
+        {orgData.teamLeads && orgData.teamLeads.length > 0 && (
+          <div className="border-b pb-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700">
+              Team Leads
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orgData.teamLeads.map((lead) => renderUserCard(lead))}
+            </div>
+          </div>
+        )}
+
+        {/* Employees Section */}
+        {orgData.employees && orgData.employees.length > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-gray-700">
+              Employees
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orgData.employees.map((employee) => renderUserCard(employee))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
