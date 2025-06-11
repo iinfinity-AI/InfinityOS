@@ -14,6 +14,7 @@ const AnalyticsCards = () => {
     tasksCompletedPercent: 0,
     averageMood: 0,
     loginStreak: 0,
+    bestStreak: 0,
     taskBreakdown: {
       completed: 0,
       pending: 0,
@@ -151,7 +152,10 @@ const AnalyticsCards = () => {
             <FaCalendarCheck className="text-xl" />
           </div>
         </div>
-        <p className="text-xs text-purple-200 mt-4">Keep the streak going!</p>
+        <div className="flex justify-between text-xs text-purple-200 mt-4">
+          <span>Current streak: {stats.loginStreak} days</span>
+          <span>Best streak: {stats.bestStreak || stats.loginStreak} days</span>
+        </div>
       </div>
 
       {/* High Priority Tasks */}

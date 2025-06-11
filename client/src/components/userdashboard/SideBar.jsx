@@ -7,12 +7,11 @@ import {
   FaUsers,
   FaTasks,
   FaPowerOff,
-  FaBullseye, // Icon for Goals
+  FaBullseye, 
   FaSitemap,
-  FaChartLine, // Importing the Chart Line icon for Analytics
+  FaChartLine, 
 } from "react-icons/fa";
 
-import InfinityLogo from "../../assets/navbar/Infinitylogo.png";
 import AdminLogo from "../../assets/admindashb/infinityLogo.png";
 import DefaultAvatar from "../../assets/userdashboard/Customer1.png";
 
@@ -73,7 +72,7 @@ const RoleBasedSidebar = ({
       getNavItem(<FaUsers />, "Manage Users", "users"),
       getNavItem(<FaBalanceScale />, "Task Board", "taskboard"),
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for admin
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
     ],
     employee: [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -81,7 +80,7 @@ const RoleBasedSidebar = ({
       getNavItem(<FaSmile />, "Mood & Wellness", "mood"),
       getNavItem(<FaBullseye />, "My Goals", "goals"),
       getNavItem(<FaSitemap />, "Organization Chart", "orgchart"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for employee
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
     ],
     "team-lead": [
       getNavItem(<FaTachometerAlt />, "Dashboard", "dashboard"),
@@ -90,7 +89,7 @@ const RoleBasedSidebar = ({
       getNavItem(<FaSmile />, "Add Mood", "mood"),
       getNavItem(<FaSmile />, "All Mood", "moods"),
       getNavItem(<FaBullseye />, "Goals", "goals"),
-      getNavItem(<FaChartLine />, "Analytics", "analytics"), // Analytics tab for team lead
+      getNavItem(<FaChartLine />, "Analytics", "analytics"), 
     ],
   };
 
@@ -104,7 +103,7 @@ const RoleBasedSidebar = ({
         {/* Logo */}
         <div className="flex items-center mb-6 justify-center">
           <img
-            src={role === "admin" ? AdminLogo : InfinityLogo}
+            src={AdminLogo}
             alt="Logo"
             className="h-10"
           />
