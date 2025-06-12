@@ -124,7 +124,7 @@ const getUserStats = async (req, res) => {
       );
     }).length;
 
-    // Response with all stats
+
     res.status(200).json({
       tasksCompletedPercent,
       averageMood,
@@ -147,12 +147,9 @@ const getUserStats = async (req, res) => {
   }
 };
 
-/**
- * Get team analytics for team leads
- */
 const getTeamStats = async (req, res) => {
   try {
-    if (req.user.role !== "admin" && req.user.role !== "team-lead") {
+    if (req.user.role !== "Admin" && req.user.role !== "team-lead") {
       return res.status(403).json({
         error: "Unauthorized: Only admins and team leads can access team stats",
       });
@@ -161,31 +158,30 @@ const getTeamStats = async (req, res) => {
     const userId = req.user.userId;
     const user = await User.findById(userId);
 
-    // Get users in the same department (for team leads)
+  
     const teamQuery =
-      req.user.role === "admin" ? {} : { department: user.department };
+      req.user.role === "Admin" ? {} : { department: user.department };
 
     const teamMembers = await User.find({
       ...teamQuery,
-      _id: { $ne: userId }, // Exclude current user
+      _id: { $ne: userId },
       role: { $in: ["employee", "team-lead"] },
     });
 
     const teamMemberIds = teamMembers.map((member) => member._id);
 
-    // Get tasks assigned to team
+    
     const tasks = await Task.find({
       assignedTo: { $in: teamMemberIds },
     });
 
-    // Calculate team completion rate
     const completedTasks = tasks.filter((task) => task.status === "completed");
     const teamCompletionRate =
       tasks.length > 0
         ? Math.round((completedTasks.length / tasks.length) * 100)
         : 0;
 
-    // Get team mood average
+    
     const moods = await Mood.find({
       user: { $in: teamMemberIds },
     }).sort({ createdAt: -1 });
@@ -217,7 +213,6 @@ const getTeamStats = async (req, res) => {
       teamMoodAverage = Math.round(teamMoodAverage * 10) / 10;
     }
 
-    // Get team login streak stats
     const teamStreakStats = {
       averageStreak: 0,
       maxStreak: 0,
@@ -235,7 +230,7 @@ const getTeamStats = async (req, res) => {
       ).length;
     }
 
-    // Get task distribution
+
     const memberTaskDistribution = await Promise.all(
       teamMembers.map(async (member) => {
         const memberTasks = tasks.filter((task) =>
@@ -262,7 +257,7 @@ const getTeamStats = async (req, res) => {
       })
     );
 
-    // Response with team stats
+  
     res.status(200).json({
       teamSize: teamMembers.length,
       teamCompletionRate,
