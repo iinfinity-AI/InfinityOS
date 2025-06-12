@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import emailjs from "emailjs-com";
 import ContactBg from "../../src/assets/homepage/HomeBack.jpg";
 import { motion } from "framer-motion";
@@ -12,10 +12,12 @@ import {
   FaFacebook,
 } from "react-icons/fa";
 
-// Replace with your actual EmailJS credentials
-const serviceID = "service_x5ydxfr";
-const templateID = "template_i6bi3w4";
-const userID = "ovLpuGbawHqA6cPwh";
+const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const userID = import.meta.env.VITE_EMAILJS_USER_ID;
+const confirmationTemplateID =import.meta.env.VITE_EMAILJS_CONFIRMATION_TEMPLATE_ID ||"template_customer_confirmation";
+const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
+const supportEmail =import.meta.env.VITE_SUPPORT_EMAIL || "support@infinityos.com";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -62,7 +64,6 @@ const Contact = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -83,17 +84,47 @@ const Contact = () => {
 
     setSending(true);
 
+    // Generate ticket ID for tracking
+    const ticketId = `INQ-${Date.now().toString().slice(-8)}-${Math.floor(
+      Math.random() * 1000
+    )}`;
+
+    const now = new Date();
+    const formattedDateTime = now.toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
     const templateParams = {
       from_name: formData.name,
       from_email: formData.email,
       subject: formData.subject || "InfinityOS Contact Form",
       message: formData.message,
-      to_email: "udayangakasun696@gmail.com",
+      to_email: contactEmail,
+      received_time: formattedDateTime,
+      ticket_id: ticketId,
     };
+
+    // Check if environment variables are properly loaded
+    if (!serviceID || !templateID || !userID) {
+      console.error("EmailJS environment variables are missing");
+      setErrors({
+        submit: "Configuration error. Please contact support.",
+      });
+      setSending(false);
+      return;
+    }
 
     emailjs
       .send(serviceID, templateID, templateParams, userID)
       .then(() => {
+        // Send confirmation email to customer
+        sendConfirmationEmail(ticketId);
+
         setSubmitted(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
         setSending(false);
@@ -112,9 +143,30 @@ const Contact = () => {
       });
   };
 
+  const sendConfirmationEmail = (ticketId) => {
+    const confirmationParams = {
+      to_name: formData.name,
+      to_email: formData.email,
+      subject: `We've received your message: ${
+        formData.subject || "InfinityOS Contact Form"
+      }`,
+      message: formData.message,
+      reply_to: supportEmail,
+      ticket_id: ticketId,
+    };
+
+    emailjs
+      .send(serviceID, confirmationTemplateID, confirmationParams, userID)
+      .then(() => {
+        console.log("Confirmation email sent to customer");
+      })
+      .catch((error) => {
+        console.error("Failed to send confirmation email:", error);
+      });
+  };
+
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-indigo-900 text-white">
-      {/* Background with gradient overlay */}
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
@@ -141,7 +193,6 @@ const Contact = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          {/* Contact Information */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -240,6 +291,7 @@ const Contact = () => {
                   <FaCheck className="w-5 h-5 mr-3 text-green-400" />
                   <span>
                     Thank you for your message! We'll get back to you shortly.
+                    Check your email for confirmation and your ticket number.
                   </span>
                 </motion.div>
               )}
@@ -254,24 +306,48 @@ const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {/* Name Field */}
                   <div className="relative">
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus("name")}
-                      onBlur={handleBlur}
-                      disabled={sending}
-                      className={`w-full bg-white/20 border ${
-                        errors.name
-                          ? "border-red-400"
-                          : activeInput === "name"
-                          ? "border-blue-400"
-                          : "border-white/30"
-                      } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                      placeholder="Your Name"
-                    />
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-blue-200 mb-1"
+                    >
+                      Your Name
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-blue-300"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        onFocus={() => handleFocus("name")}
+                        onBlur={handleBlur}
+                        disabled={sending}
+                        className={`w-full bg-white/20 border pl-10 ${
+                          errors.name
+                            ? "border-red-400"
+                            : activeInput === "name"
+                            ? "border-blue-400"
+                            : "border-white/30"
+                        } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        placeholder="Enter your full name"
+                      />
+                    </div>
                     {errors.name && (
                       <p className="text-red-400 text-sm mt-1">{errors.name}</p>
                     )}
@@ -279,24 +355,48 @@ const Contact = () => {
 
                   {/* Email Field */}
                   <div className="relative">
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus("email")}
-                      onBlur={handleBlur}
-                      disabled={sending}
-                      className={`w-full bg-white/20 border ${
-                        errors.email
-                          ? "border-red-400"
-                          : activeInput === "email"
-                          ? "border-blue-400"
-                          : "border-white/30"
-                      } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                      placeholder="Your Email"
-                    />
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-blue-200 mb-1"
+                    >
+                      Your Email
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-blue-300"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onFocus={() => handleFocus("email")}
+                        onBlur={handleBlur}
+                        disabled={sending}
+                        className={`w-full bg-white/20 border pl-10 ${
+                          errors.email
+                            ? "border-red-400"
+                            : activeInput === "email"
+                            ? "border-blue-400"
+                            : "border-white/30"
+                        } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        placeholder="name@example.com"
+                      />
+                    </div>
                     {errors.email && (
                       <p className="text-red-400 text-sm mt-1">
                         {errors.email}
@@ -307,44 +407,81 @@ const Contact = () => {
 
                 {/* Subject Field */}
                 <div className="mb-6">
-                  <input
-                    type="text"
-                    name="subject"
-                    id="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    onFocus={() => handleFocus("subject")}
-                    onBlur={handleBlur}
-                    disabled={sending}
-                    className={`w-full bg-white/20 border ${
-                      activeInput === "subject"
-                        ? "border-blue-400"
-                        : "border-white/30"
-                    } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    placeholder="Subject (Optional)"
-                  />
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm font-medium text-blue-200 mb-1"
+                  >
+                    Subject
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-blue-300"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      name="subject"
+                      id="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      onFocus={() => handleFocus("subject")}
+                      onBlur={handleBlur}
+                      disabled={sending}
+                      className={`w-full bg-white/20 border pl-10 ${
+                        activeInput === "subject"
+                          ? "border-blue-400"
+                          : "border-white/30"
+                      } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                      placeholder="What is your inquiry about?"
+                    />
+                  </div>
                 </div>
 
                 {/* Message Field */}
                 <div className="mb-6">
-                  <textarea
-                    name="message"
-                    id="message"
-                    rows="6"
-                    value={formData.message}
-                    onChange={handleChange}
-                    onFocus={() => handleFocus("message")}
-                    onBlur={handleBlur}
-                    disabled={sending}
-                    className={`w-full bg-white/20 border ${
-                      errors.message
-                        ? "border-red-400"
-                        : activeInput === "message"
-                        ? "border-blue-400"
-                        : "border-white/30"
-                    } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none`}
-                    placeholder="Your Message"
-                  ></textarea>
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-blue-200 mb-1"
+                  >
+                    Your Message
+                  </label>
+                  <div className="relative">
+                    <textarea
+                      name="message"
+                      id="message"
+                      rows="6"
+                      value={formData.message}
+                      onChange={handleChange}
+                      onFocus={() => handleFocus("message")}
+                      onBlur={handleBlur}
+                      disabled={sending}
+                      className={`w-full bg-white/20 border ${
+                        errors.message
+                          ? "border-red-400"
+                          : activeInput === "message"
+                          ? "border-blue-400"
+                          : "border-white/30"
+                      } rounded-lg px-4 py-3 text-white placeholder-blue-200/60 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none`}
+                      placeholder="Please provide details about your inquiry..."
+                    ></textarea>
+                    <div className="absolute bottom-2 right-2 text-blue-300 text-xs">
+                      {formData.message.length > 0
+                        ? `${formData.message.length} characters`
+                        : ""}
+                    </div>
+                  </div>
                   {errors.message && (
                     <p className="text-red-400 text-sm mt-1">
                       {errors.message}
@@ -387,7 +524,10 @@ const Contact = () => {
                       Sending Message...
                     </>
                   ) : (
-                    "Send Message"
+                    <>
+                      <FaEnvelope className="mr-2" />
+                      Send Message
+                    </>
                   )}
                 </motion.button>
               </form>
@@ -396,7 +536,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* FAQ Section */}
+      {/* FAQ Section remains unchanged */}
       <motion.section
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

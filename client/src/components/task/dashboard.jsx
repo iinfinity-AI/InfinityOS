@@ -163,10 +163,10 @@ const TaskDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.role?.toLowerCase();
 
-  // Only Admin and team-lead can delete tasks
+
   const canDelete = role === "admin" || role === "team-lead";
 
-  // Only Admin and team-lead can add tasks
+
   const canAddTask = role === "admin" || role === "team-lead";
 
   useEffect(() => {
@@ -338,7 +338,7 @@ const TaskDashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-20 px-15">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-4xl font-bold text-blue-800 flex gap-2 items-center">
           <svg

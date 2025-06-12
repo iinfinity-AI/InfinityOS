@@ -11,7 +11,7 @@ import {
   FaChartLine,
   FaUsers,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+
 import NewTask from "../../components/task/dashboard";
 import GetAllMoods from "../../components/moods/getallMoods";
 import GoalsPage from "../Goal/GoalsPage";
@@ -22,7 +22,7 @@ const TeamLeadDashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedTab, setSelectedTab] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const navigate = useNavigate();
+
 
   const [stats, setStats] = useState({
     totalTasks: 0,

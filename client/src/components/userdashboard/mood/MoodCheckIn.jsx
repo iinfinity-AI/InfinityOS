@@ -247,7 +247,7 @@ const MoodHistory = () => {
     moodOptions.find((m) => m.value === val)?.emoji || "";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 ">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Mood History</h1>
         <div className="flex space-x-4">
@@ -309,8 +309,8 @@ const MoodHistory = () => {
             <p className="text-gray-500 text-sm mb-6">
               Your emotional patterns at a glance
             </p>
-            <div className="h-80">
-              <Bar data={chartData} options={chartOptions} />
+            <div className="h-80 ">
+              <Bar data={chartData} options={chartOptions} className="h-full" />
             </div>
           </div>
 
