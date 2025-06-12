@@ -239,18 +239,6 @@ const UserDashboardPage = () => {
                   </p>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mt-4 md:mt-0">
-                  <span className="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold shadow mb-2 md:mb-0">
-                    Role: {user?.role}
-                  </span>
-                  <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-lg font-semibold shadow mb-2 md:mb-0">
-                    {new Date().toLocaleDateString()}
-                  </span>
-                  <button
-                    onClick={() => navigate("/profile")}
-                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-blue-500 transition ml-0 md:ml-2"
-                  >
-                    Edit Profile
-                  </button>
                 </div>
               </div>
 

@@ -1,101 +1,52 @@
 import React, { useState, useEffect } from "react";
-import { FaUserTie, FaSitemap, FaUsers, FaUserFriends } from "react-icons/fa";
+import API from "../../services/api";
+import { FaUserTie, FaUsers } from "react-icons/fa";
 
 const OrgChart = () => {
-  const [orgData, setOrgData] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Sample data matching your image structure
-  const sampleData = {
-    admins: [
-      {
-        id: "1",
-        name: "Kasun putha",
-        role: "Admin",
-        email: "udayangakasun696@gmail.com",
-        phone: "0765855386"
-      },
-      {
-        id: "2",
-        name: "DINITHS RUSIRU",
-        role: "Admin",
-        email: "dinithrusiru4@gmail.com",
-        phone: "0773508024"
-      }
-    ],
-    teamLeads: [
-      {
-        id: "3",
-        name: "DINITHid RUSIRUd",
-        role: "team-lead",
-        email: "dinithrusiru1d@gmail.com",
-        phone: "119"
-      },
-      {
-        id: "4",
-        name: "DINITHr RUSIRUr",
-        role: "team-lead",
-        email: "dinithrusiru1@gmail.comm"
-      },
-      {
-        id: "5",
-        name: "Kasun Udayanga",
-        role: "team-lead",
-        email: "udayangakasu696@gmail.com"
-      },
-      {
-        id: "6",
-        name: "DINITH RUSIRU",
-        role: "team-lead",
-        email: "dinithrusiru1@gmail.com",
-        phone: "0773508023"
-      }
-    ],
-    employees: [
-      {
-        id: "7",
-        name: "D Udayanga",
-        role: "employee",
-        email: "kasun2001@gmail.com",
-        phone: "0765855386"
-      },
-      {
-        id: "8",
-        name: "DINITHr RUSIRUr",
-        role: "employee",
-        email: "dinithrusiru1@gmail.com",
-        phone: "0773508026"
-      }
-    ]
-  };
-
   useEffect(() => {
-    // Simulate API call
-    const fetchData = async () => {
-      try {
-        setTimeout(() => {
-          setOrgData(sampleData);
-          setLoading(false);
-        }, 500);
-      } catch (err) {
-        setError("Failed to load organization data");
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    fetchUsers();
   }, []);
 
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get("/users"); // Endpoint for all users
+
+      if (response.data) {
+        setUserData(response.data);
+      } else {
+        setError("No user data available");
+      }
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setError("Failed to load user data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Render user card
   const renderUserCard = (user) => (
     <div
-      key={user.id}
-      className="bg-white rounded-lg shadow p-4 border border-gray-200"
+      key={user._id}
+      className="bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-md transition-shadow hover:border-blue-300"
     >
       <div className="flex items-center space-x-4">
-        <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-          <FaUserTie size={24} />
-        </div>
+        {user.profilePicture ? (
+          <img
+            src={user.profilePicture}
+            alt={user.name}
+            className="h-14 w-14 rounded-full object-cover border-2 border-blue-400"
+          />
+        ) : (
+          <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+            <FaUserTie size={24} />
+          </div>
+        )}
         <div>
           <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
           <p className="text-sm text-gray-600 capitalize">{user.role}</p>
@@ -103,10 +54,129 @@ const OrgChart = () => {
           {user.phone && (
             <p className="text-xs text-gray-500">Phone: {user.phone}</p>
           )}
+          {user.moodAverage && (
+            <p className="text-xs mt-1">
+              <span className="font-medium">Mood:</span> {user.moodAverage}
+            </p>
+          )}
         </div>
       </div>
     </div>
   );
+
+  // Render all users by role
+  const renderAllUsers = (data) => {
+    // If data is an array (directly from API)
+    if (Array.isArray(data)) {
+      // Group users by role
+      const admins = data.filter((user) => user.role.toLowerCase() === "admin");
+      const teamLeads = data.filter(
+        (user) => user.role.toLowerCase() === "team-lead"
+      );
+      const employees = data.filter(
+        (user) => user.role.toLowerCase() === "employee"
+      );
+
+      return (
+        <div className="space-y-8">
+          {/* Admins */}
+          {admins.length > 0 && (
+            <div className="border-b pb-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+                <div className="bg-red-100 text-red-600 p-2 rounded-lg mr-2">
+                  <FaUsers />
+                </div>
+                Administrators ({admins.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {admins.map((admin) => renderUserCard(admin))}
+              </div>
+            </div>
+          )}
+
+          {/* Team Leads */}
+          {teamLeads.length > 0 && (
+            <div className="border-b pb-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+                <div className="bg-yellow-100 text-yellow-600 p-2 rounded-lg mr-2">
+                  <FaUsers />
+                </div>
+                Team Leads ({teamLeads.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {teamLeads.map((lead) => renderUserCard(lead))}
+              </div>
+            </div>
+          )}
+
+          {/* Employees */}
+          {employees.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+                <div className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-2">
+                  <FaUsers />
+                </div>
+                Employees ({employees.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {employees.map((employee) => renderUserCard(employee))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // If data is already categorized
+    return (
+      <div className="space-y-8">
+        {/* Admins */}
+        {data.admins && data.admins.length > 0 && (
+          <div className="border-b pb-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <div className="bg-red-100 text-red-600 p-2 rounded-lg mr-2">
+                <FaUsers />
+              </div>
+              Administrators ({data.admins.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.admins.map((admin) => renderUserCard(admin))}
+            </div>
+          </div>
+        )}
+
+        {/* Team Leads */}
+        {data.teamLeads && data.teamLeads.length > 0 && (
+          <div className="border-b pb-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <div className="bg-yellow-100 text-yellow-600 p-2 rounded-lg mr-2">
+                <FaUsers />
+              </div>
+              Team Leads ({data.teamLeads.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.teamLeads.map((lead) => renderUserCard(lead))}
+            </div>
+          </div>
+        )}
+
+        {/* Employees */}
+        {data.employees && data.employees.length > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+              <div className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-2">
+                <FaUsers />
+              </div>
+              Employees ({data.employees.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.employees.map((employee) => renderUserCard(employee))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -117,52 +187,33 @@ const OrgChart = () => {
   }
 
   if (error) {
-    return <div className="text-red-500 text-center p-4">{error}</div>;
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-500 text-center p-4 rounded-lg">
+        <p className="font-medium">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-        <FaSitemap className="mr-2" /> Organization Structure
-      </h2>
-
-      <div className="space-y-8">
-        {/* Administrators Section */}
-        {orgData.admins && orgData.admins.length > 0 && (
-          <div className="border-b pb-6">
-            <h3 className="text-lg font-semibold mb-4 text-gray-700">
-              Administrators
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {orgData.admins.map((admin) => renderUserCard(admin))}
-            </div>
-          </div>
-        )}
-
-        {/* Team Leads Section */}
-        {orgData.teamLeads && orgData.teamLeads.length > 0 && (
-          <div className="border-b pb-6">
-            <h3 className="text-lg font-semibold mb-4 text-gray-700">
-              Team Leads
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {orgData.teamLeads.map((lead) => renderUserCard(lead))}
-            </div>
-          </div>
-        )}
-
-        {/* Employees Section */}
-        {orgData.employees && orgData.employees.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-gray-700">
-              Employees
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {orgData.employees.map((employee) => renderUserCard(employee))}
-            </div>
-          </div>
-        )}
+    <div className="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Company Directory</h2>
+        <div className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+          {userData && Array.isArray(userData)
+            ? `${userData.length} users`
+            : userData
+            ? `${
+                (userData.admins?.length || 0) +
+                (userData.teamLeads?.length || 0) +
+                (userData.employees?.length || 0)
+              } users`
+            : "0 users"}
+        </div>
       </div>
+
+
+      {/* Users List */}
+      {userData && renderAllUsers(userData)}
     </div>
   );
 };

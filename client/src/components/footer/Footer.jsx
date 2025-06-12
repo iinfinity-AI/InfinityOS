@@ -13,14 +13,9 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <nav className="flex flex-wrap justify-center md:justify-start gap-6 text-sm font-medium">
+
           <a
-            href="/privacy"
-            className="hover:text-yellow-400 border-b-2 border-transparent hover:border-yellow-400 transition-all"
-          >
-            Privacy Policy
-          </a>
-          <a
-            href="/terms"
+            href="/services"
             className="hover:text-yellow-400 border-b-2 border-transparent hover:border-yellow-400 transition-all"
           >
             Terms & Services
@@ -36,7 +31,7 @@ const Footer = () => {
         {/* Social Media Icons */}
         <div className="flex space-x-5 justify-center md:justify-end">
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/iinfinityai?rdid=7M74vo9Dl0Be7DZl&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F14vewT6UU1%2F#"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
@@ -53,7 +48,7 @@ const Footer = () => {
           </a>
 
           <a
-            href="https://twitter.com"
+            href="https://x.com/AiIinfinit21885?t=XU7sLjOqaXFQVitQRTICtQ"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter"

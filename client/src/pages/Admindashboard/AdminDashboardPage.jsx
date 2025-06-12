@@ -9,11 +9,12 @@ import Allusers from "../../components/Admindashboard/rolechangedash";
 import Moods from "../../components/moods/getallMoods";
 import TaskFilterBar from "../../components/task/dashboard";
 import AnalyticsCards from "../../components/analytic/AnalyticCard";
+import TeamAnalyticsCards from "../../components/analytic/TeamAnalyticsCards";
 
 const DashboardPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedTab, setSelectedTab] = useState("dashboard");
-  const navigate = useNavigate();
+
 
   const toggleSidebar = () => {
     setIsCollapsed((prev) => !prev);
@@ -30,13 +31,7 @@ const DashboardPage = () => {
         <Topbar toggleSidebar={toggleSidebar} />
 
         <div className="p-8 flex-1 bg-transparent overflow-y-auto">
-          <div className="p-6 flex-1 bg-blue-50 overflow-y-auto relative">
-            <button
-              onClick={() => navigate("/profile")}
-              className="absolute top-6 right-6 bg-gradient-to-r from-blue-700 to-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:from-blue-800 hover:to-blue-600 transition"
-            >
-              Edit Profile
-            </button>
+          <div className="overflow-y-auto relative flex-auto">
 
             {selectedTab === "dashboard" && (
               <>
@@ -78,7 +73,7 @@ const DashboardPage = () => {
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">
                   Your Analytics Dashboard
                 </h2>
-                <AnalyticsCards />
+                <TeamAnalyticsCards />
               </div>
             )}
           </div>

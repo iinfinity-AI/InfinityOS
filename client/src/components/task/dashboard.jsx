@@ -159,14 +159,26 @@ const TaskDashboard = () => {
   });
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editForm, setEditForm] = useState({
+    id: "",
+    title: "",
+    description: "",
+    assignedTo: [],
+    priority: "",
+    status: "",
+    startDate: "",
+    dueDate: "",
+    tags: "",
+    project: "",
+  });
+  const [editLoading, setEditLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.role?.toLowerCase();
 
-  // Only Admin and team-lead can delete tasks
   const canDelete = role === "admin" || role === "team-lead";
 
-  // Only Admin and team-lead can add tasks
   const canAddTask = role === "admin" || role === "team-lead";
 
   useEffect(() => {
@@ -337,8 +349,136 @@ const TaskDashboard = () => {
     setConfirmDialog({ show: false, taskId: null, taskTitle: "" });
   };
 
+  const handleEditClick = (task) => {
+    // Format dates for the form
+    const startDate = task.startDate
+      ? new Date(task.startDate).toISOString().split("T")[0]
+      : "";
+    const dueDate = task.dueDate
+      ? new Date(task.dueDate).toISOString().split("T")[0]
+      : "";
+
+    // Format tags
+    const tagsString = Array.isArray(task.tags) ? task.tags.join(", ") : "";
+
+    setEditForm({
+      id: task._id,
+      title: task.title || "",
+      description: task.description || "",
+      assignedTo: Array.isArray(task.assignedTo)
+        ? task.assignedTo.map((id) => (typeof id === "object" ? id._id : id))
+        : [],
+      priority: task.priority || "Low",
+      status: task.status || "pending",
+      startDate,
+      dueDate,
+      tags: tagsString,
+      project: task.project || "",
+    });
+
+    setShowEdit(true);
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "startDate" || name === "dueDate") {
+      const otherField = name === "startDate" ? "dueDate" : "startDate";
+      const otherValue = editForm[otherField];
+
+      if (value && otherValue) {
+        const startDate =
+          name === "startDate" ? new Date(value) : new Date(otherValue);
+        const dueDate =
+          name === "dueDate" ? new Date(value) : new Date(otherValue);
+
+        if (startDate > dueDate) {
+          setAlert({
+            show: true,
+            message: "Start date cannot be after due date",
+            type: "error",
+          });
+          return;
+        }
+      }
+    }
+
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditAssignChange = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, (o) => ({
+      id: o.value,
+      role: o.getAttribute("data-role"),
+    }));
+
+    const teamLeads = selectedOptions.filter((opt) => opt.role === "team-lead");
+
+    if (teamLeads.length > 1) {
+      setAlert({
+        show: true,
+        message: "Only one team lead can be assigned to a task.",
+        type: "error",
+      });
+      return;
+    }
+
+    setEditForm((prev) => ({
+      ...prev,
+      assignedTo: selectedOptions.map((opt) => opt.id),
+    }));
+  };
+
+  const handleUpdateTask = async (e) => {
+    e.preventDefault();
+
+    if (editForm.startDate && editForm.dueDate) {
+      const startDate = new Date(editForm.startDate);
+      const dueDate = new Date(editForm.dueDate);
+
+      if (startDate > dueDate) {
+        setAlert({
+          show: true,
+          message: "Start date cannot be after due date",
+          type: "error",
+        });
+        return;
+      }
+    }
+
+    setEditLoading(true);
+
+    try {
+      await API.put(`/tasks/${editForm.id}`, {
+        ...editForm,
+        tags: editForm.tags
+          ? editForm.tags.split(",").map((t) => t.trim())
+          : [],
+      });
+
+      setAlert({
+        show: true,
+        message: "Task updated successfully!",
+        type: "success",
+      });
+
+      fetchTasks();
+      setShowEdit(false);
+    } catch (err) {
+      setAlert({
+        show: true,
+        message:
+          err.response?.data?.error ||
+          "Failed to update task. Please try again.",
+        type: "error",
+      });
+    }
+
+    setEditLoading(false);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto py-20 px-15">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-4xl font-bold text-blue-800 flex gap-2 items-center">
           <svg
@@ -507,26 +647,48 @@ const TaskDashboard = () => {
                 </td>
                 {canDelete && (
                   <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => handleDeleteClick(task._id, task.title)}
-                      className="text-red-600 hover:text-red-800 focus:outline-none"
-                      title="Delete Task"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                    <div className="flex justify-center space-x-2">
+                      <button
+                        onClick={() => handleEditClick(task)}
+                        className="text-blue-600 hover:text-blue-800 focus:outline-none"
+                        title="Edit Task"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(task._id, task.title)}
+                        className="text-red-600 hover:text-red-800 focus:outline-none"
+                        title="Delete Task"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 )}
               </tr>
@@ -701,6 +863,175 @@ const TaskDashboard = () => {
                 className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl shadow text-lg"
               >
                 {loading ? "Adding..." : "Add Task"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showEdit && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="p-6 border-b sticky top-0 bg-white z-10 flex justify-between items-center">
+              <h3 className="text-2xl font-semibold text-blue-900">
+                ✏️ Edit Task
+              </h3>
+              <button
+                className="text-2xl text-gray-400 hover:text-red-500"
+                onClick={() => setShowEdit(false)}
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="overflow-y-auto p-6 flex-grow">
+              <form onSubmit={handleUpdateTask} className="space-y-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Task Title
+                    </label>
+                    <input
+                      name="title"
+                      value={editForm.title}
+                      onChange={handleEditFormChange}
+                      required
+                      placeholder="Enter task title"
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      value={editForm.description}
+                      onChange={handleEditFormChange}
+                      required
+                      placeholder="Describe the task"
+                      rows="3"
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Assigned To
+                    </label>
+                    <select
+                      name="assignedTo"
+                      multiple
+                      value={editForm.assignedTo}
+                      onChange={handleEditAssignChange}
+                      required
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 h-24"
+                    >
+                      {users
+                        .filter(
+                          (u) => u.role === "employee" || u.role === "team-lead"
+                        )
+                        .map((u) => (
+                          <option key={u._id} value={u._id} data-role={u.role}>
+                            {u.name} ({u.role})
+                          </option>
+                        ))}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Note: Only one team lead can be assigned to a task. Hold
+                      Ctrl/Cmd to select multiple employees.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Priority
+                    </label>
+                    <select
+                      name="priority"
+                      value={editForm.priority}
+                      onChange={handleEditFormChange}
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>Low</option>
+                      <option>Medium</option>
+                      <option>High</option>
+                      <option>Critical</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Task Dates
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="w-full sm:w-1/2">
+                        <input
+                          type="date"
+                          name="startDate"
+                          value={editForm.startDate}
+                          onChange={handleEditFormChange}
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                          placeholder="Start Date"
+                          max={editForm.dueDate}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Start Date</p>
+                      </div>
+                      <div className="w-full sm:w-1/2">
+                        <input
+                          type="date"
+                          name="dueDate"
+                          value={editForm.dueDate}
+                          onChange={handleEditFormChange}
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                          placeholder="Due Date"
+                          min={editForm.startDate}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Due Date</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Note: Start date must be before or equal to due date.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Tags
+                    </label>
+                    <input
+                      name="tags"
+                      value={editForm.tags}
+                      onChange={handleEditFormChange}
+                      placeholder="Tags (comma separated)"
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Project
+                    </label>
+                    <input
+                      name="project"
+                      value={editForm.project}
+                      onChange={handleEditFormChange}
+                      placeholder="Project Name"
+                      className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div className="p-6 border-t sticky bottom-0 bg-white z-10">
+              <button
+                onClick={handleUpdateTask}
+                disabled={editLoading}
+                className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl shadow text-lg"
+              >
+                {editLoading ? "Updating..." : "Update Task"}
               </button>
             </div>
           </div>

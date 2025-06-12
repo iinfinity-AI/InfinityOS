@@ -83,7 +83,7 @@ const GetAllMoods = () => {
     );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-7xl mx-auto px-4 ">
       {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">User Mood Tracker</h1>
