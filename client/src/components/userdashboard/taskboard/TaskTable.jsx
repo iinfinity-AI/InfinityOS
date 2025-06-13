@@ -34,6 +34,73 @@ const priorityColors = {
   Critical: "bg-red-100 text-red-800 border-red-200",
 };
 
+// User Display Component
+const UserDisplayItem = ({ userId }) => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await API.get(`/users/${userId}`);
+        setUserData(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError("Failed to load user data");
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center">
+        <div className="w-6 h-6 rounded-full bg-gray-200 animate-pulse mr-2"></div>
+        <div className="h-4 w-24 bg-gray-200 animate-pulse rounded"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center">
+        <div className="w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-2 text-xs font-bold">
+          !
+        </div>
+        <span className="text-sm text-gray-500">User not found</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center">
+      {userData?.profilePicture ? (
+        <img
+          src={userData.profilePicture}
+          alt={userData.name}
+          className="w-6 h-6 rounded-full mr-2 object-cover"
+        />
+      ) : (
+        <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center mr-2 text-xs font-bold">
+          {userData?.name?.charAt(0).toUpperCase() || "U"}
+        </div>
+      )}
+      <span className="text-sm text-gray-700">
+        {userData?.name || "Unknown User"}
+      </span>
+      {userData?.role && (
+        <span className="ml-1 text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+          {userData.role}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const DashboardTable = ({ title, tasks, updatingId, handleStatusChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -565,7 +632,7 @@ const DashboardTable = ({ title, tasks, updatingId, handleStatusChange }) => {
                                 <h4 className="text-sm font-medium text-gray-500 mb-1">
                                   Assigned To
                                 </h4>
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                   {Array.isArray(task.assignedTo) &&
                                   task.assignedTo.length > 0 ? (
                                     task.assignedTo.map((user, i) => (
@@ -598,9 +665,8 @@ const DashboardTable = ({ title, tasks, updatingId, handleStatusChange }) => {
                                             )}
                                           </>
                                         ) : (
-                                          <span className="text-sm text-gray-700">
-                                            User ID: {user.id || user}
-                                          </span>
+                                          // Display user name by fetching data for this ID
+                                          <UserDisplayItem userId={user} />
                                         )}
                                       </div>
                                     ))

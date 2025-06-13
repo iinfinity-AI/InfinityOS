@@ -312,22 +312,20 @@ const deleteUser = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-
-    // Find the user to check their role before deletion
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Only allow deletion of users with 'employee' role
+
     if (user.role !== "employee") {
       return res.status(403).json({
         error: "Only users with 'employee' role can be deleted",
       });
     }
 
-    // Proceed with deletion
+
     await User.findByIdAndDelete(userId);
 
     res.status(200).json({
@@ -346,6 +344,36 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    
+    const user = await User.findById(userId).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePicture: user.profilePicture,
+      currentStreak: user.currentStreak || 0,
+      bestStreak: user.bestStreak || 0,
+    });
+  } catch (error) {
+    console.error("Get user by ID error:", error);
+    res.status(500).json({ error: "Server error retrieving user details" });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -356,4 +384,5 @@ module.exports = {
   getUserData,
   changeUserRole,
   deleteUser,
+  getUserById,
 };
