@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API from "../../services/api";
-import { FaSmile, FaMeh, FaFrown, FaAngry, FaGrinStars, FaSpinner } from "react-icons/fa";
+import { FaSmile, FaMeh, FaFrown, FaAngry, FaGrinStars, FaSpinner,FaSadCry } from "react-icons/fa";
 
 const moodIcons = {
   happy: <FaGrinStars className="text-green-600 text-3xl" />,
@@ -8,6 +8,7 @@ const moodIcons = {
   neutral: <FaMeh className="text-gray-500 text-3xl" />,
   stressed: <FaFrown className="text-yellow-600 text-3xl" />,
   frustrated: <FaAngry className="text-red-600 text-3xl" />,
+  sad: <FaSadCry className="text-black-600 text-3xl" />,
 };
 
 const moodColors = {
@@ -16,6 +17,7 @@ const moodColors = {
   neutral: "bg-gray-50 border-gray-400",
   stressed: "bg-yellow-50 border-yellow-400",
   frustrated: "bg-red-50 border-red-400",
+  sad: "bg-red-50 border-red-400",
 };
 
 const GetAllMoods = () => {
