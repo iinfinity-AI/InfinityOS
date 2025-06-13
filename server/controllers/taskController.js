@@ -78,7 +78,7 @@ const updateTask = async (req, res) => {
     const isAssigned = task.assignedTo.some(
       userId => userId.toString() === req.user.userId
     );
-    const isManager = ["Admin", "Team Lead"].includes(req.user.role);
+    const isManager = ["Admin", "team-lead"].includes(req.user.role);
 
     if (
       req.body.status &&
