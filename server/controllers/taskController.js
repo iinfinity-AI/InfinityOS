@@ -64,10 +64,8 @@ const createTask = async (req, res) => {
 
     await task.save();
 
-    // Get creator information for notification
     const creator = await User.findById(req.user.userId);
-    
-    // Create notifications for assigned users
+
     const notificationPromises = assignedTo.map(async (userId) => {
       try {
         await createNotification(

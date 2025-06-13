@@ -97,10 +97,10 @@ const TopBar = ({ toggleSidebar }) => {
   const handleNotificationClick = async (notification) => {
     try {
       if (!notification.read) {
-        // Mark as read
+   
         await API.patch(`/notifications/${notification._id}/read`);
 
-        // Update local state
+      
         setNotifications((prev) =>
           prev.map((n) =>
             n._id === notification._id ? { ...n, read: true } : n
@@ -109,9 +109,9 @@ const TopBar = ({ toggleSidebar }) => {
         setUnreadCount((prev) => Math.max(0, prev - 1));
       }
 
-      // Navigate based on notification type
+   
       if (notification.type === "task_assigned" && notification.relatedTask) {
-        navigate("/dashboard/tasks");
+        navigate(`/${user.role}/dashboard`);
       }
 
       setShowNotifications(false);
@@ -271,15 +271,6 @@ const TopBar = ({ toggleSidebar }) => {
                     ))}
                   </div>
                 )}
-              </div>
-
-              <div className="p-2 bg-indigo-50 border-t border-indigo-100 text-center">
-                <button
-                  onClick={() => navigate("/dashboard/notifications")}
-                  className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                >
-                  View all notifications
-                </button>
               </div>
             </div>
           )}
