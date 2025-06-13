@@ -1,37 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const notificationSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
   type: {
     type: String,
+    enum: ["task_assigned", "task_updated", "task_deleted", "task_completed", "reminder"],
     required: true,
-    enum: ['task_assigned', 'task_updated', 'task_completed', 'task_comment']
   },
   message: {
     type: String,
-    required: true
-  },
-  read: {
-    type: Boolean,
-    default: false
+    required: true,
   },
   relatedTask: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task'
+    ref: "Task",
+    default: null,
+  },
+  read: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-// Index for faster queries by user and read status
-notificationSchema.index({ user: 1, read: 1 });
-
-const Notification = mongoose.model('Notification', notificationSchema);
-
-module.exports = Notification;
+module.exports = mongoose.model("Notification", notificationSchema);
